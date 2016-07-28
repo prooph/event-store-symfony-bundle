@@ -1,0 +1,5 @@
+services:
+    'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\BlackHole':
+        class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\BlackHole
+        tags:
+          - { name: 'prooph_event_store.main.metadata_enricher' }

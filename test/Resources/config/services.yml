@@ -1,0 +1,12 @@
+services:
+    'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole':
+        class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole
+
+
+    'prooph_test.bundle.event_store.snapshotter':
+        class: Prooph\EventStore\Snapshot\SnapshotStore
+        arguments: ['@Prooph\EventStore\Snapshot\Adapter\InMemoryAdapter']
+    'Prooph\EventStore\Snapshot\Adapter\InMemoryAdapter':
+        class: Prooph\EventStore\Snapshot\Adapter\InMemoryAdapter
+    'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator':
+        class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator

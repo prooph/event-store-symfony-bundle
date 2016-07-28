@@ -1,0 +1,12 @@
+vendor
+composer.lock
+phpunit.xml
+/.settings
+/.project
+/.buildpath
+/vendor
+/build
+.idea
+nbproject
+composer.lock
+doc/html
