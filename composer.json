@@ -1,0 +1,94 @@
+{
+  "name": "prooph/event-store-symfony-bundle",
+  "description": "",
+  "homepage": "https://github.com/prooph/event-store-symfony-bundle",
+  "license": "BSD-3-Clause",
+  "type": "symfony-bundle",
+  "keywords": [
+    "prooph",
+    "Symfony",
+    "Bundle",
+    "EventStore",
+    "EventSourcing",
+    "DDD",
+    "PHP"
+  ],
+  "authors": [
+    {
+      "name": "Alexander Miertsch",
+      "email": "contact@prooph.de",
+      "homepage": "http://www.prooph.de",
+      "role": "maintainer"
+    },
+    {
+      "name": "Sascha-Oliver Prolic",
+      "email": "saschaprolic@googlemail.com"
+    },
+    {
+      "name": "Sandro Keil",
+      "homepage": "https://sandro-keil.de",
+      "role": "maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/prooph/event-store-symfony-bundle/issues",
+    "source": "https://github.com/prooph/event-store-symfony-bundle",
+    "docs": "http://getprooph.org/"
+  },
+  "autoload": {
+    "psr-4": {
+      "Prooph\\Bundle\\EventStore\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ProophTest\\Bundle\\EventStore\\": "test"
+    }
+  },
+  "require": {
+    "php": "^7.0",
+    "symfony/config": "~2.8 || ~3.0",
+    "symfony/dependency-injection": "~2.8 || ~3.0",
+    "symfony/http-kernel": "~2.8 || ~3.0",
+    "prooph/event-store": "^6.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.3",
+    "phpunit/php-invoker": "^1.1.4",
+    "fabpot/php-cs-fixer": "^1.11",
+    "bookdown/bookdown": "1.x-dev as 1.0.0",
+    "tobiju/bookdown-bootswatch-templates": "1.0.x-dev"
+  },
+  "suggest": {
+    "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev",
+      "dev-develop": "1.1-dev"
+    }
+  },
+  "scripts": {
+    "check": [
+      "@cs",
+      "@test"
+    ],
+    "cs": "php-cs-fixer fix -v --diff --dry-run",
+    "cs-fix": "php-cs-fixer fix -v --diff",
+    "test": "phpunit --no-coverage",
+    "test-coverage": "phpunit",
+    "docs": "bookdown doc/bookdown.json"
+  },
+  "archive": {
+    "exclude": [
+      ".coveralls.yml",
+      ".travis.yml",
+      "benchmark",
+      "build",
+      "phpunit.xml*",
+      "test"
+    ]
+  }
+}
