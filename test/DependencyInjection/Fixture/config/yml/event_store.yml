@@ -1,6 +1,6 @@
 prooph_event_store:
   stores:
-    main:
+    main_store:
       adapter: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole'
       repositories:
          todo_list:

@@ -17,17 +17,15 @@
     </parameters>
 
     <services>
-        <service id="prooph_event_store.store" class="Prooph\EventStore\EventStore" abstract="true" />
-        <service id="prooph_event_store.plugin" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
-        <service id="prooph_event_store.repository" class="Prooph\EventStore\Aggregate\AggregateRepository" abstract="true" />
-        <service id="prooph_event_store.metadata_enricher_plugin" class="%prooph_event_store.metadata_enricher_plugin.class%" public="false" abstract="true" />
-        <service id="prooph_event_store.metadata_enricher_aggregate" class="%prooph_event_store.metadata_enricher_aggregate.class%" public="false" abstract="true" />
+        <service id="prooph_event_store.store_definition" class="Prooph\EventStore\EventStore" abstract="true" />
+        <service id="prooph_event_store.plugin_definition" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
+        <service id="prooph_event_store.metadata_enricher_plugin_definition" class="%prooph_event_store.metadata_enricher_plugin.class%" public="false" abstract="true" />
+        <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="%prooph_event_store.metadata_enricher_aggregate.class%" public="false" abstract="true" />
+        <service id="prooph_event_store.repository_factory" class="%prooph_event_store.repository_factory.class%"/>
+        <service id="prooph_event_store.repository_definition" class="%prooph_event_store.repository.class%" abstract="true" />
         <service id="prooph_event_store.action_event_emitter" class="%prooph_event_store.action_event_emitter.class%" />
         <service id="prooph_event_store.message_converter" class="%prooph_event_store.message_converter.class%" />
         <service id="prooph_event_store.payload_serializer" class="%prooph_event_store.payload_serializer.class%" />
         <service id="prooph_event_store.message_factory" class="%prooph_event_store.message_factory.class%" />
-
-        <service id="prooph_event_store.repository_factory" class="%prooph_event_store.repository_factory.class%"/>
-        <service id="prooph_event_store.repository'" class="%prooph_event_store.repository.class%" abstract="true" />
     </services>
 </container>

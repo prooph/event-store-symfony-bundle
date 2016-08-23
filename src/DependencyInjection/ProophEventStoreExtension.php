@@ -7,7 +7,7 @@
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
@@ -43,7 +43,7 @@ final class ProophEventStoreExtension extends Extension
         $loader->load('event_store.xml');
 
         if (!empty($config['stores'])) {
-            $this->eventStoreLoad('store', EventStore::class, $config, $container);
+            $this->loadEventStores(EventStore::class, $config, $container);
         }
 
         $this->addClassesToCompile([
@@ -55,31 +55,28 @@ final class ProophEventStoreExtension extends Extension
      * Loads event store configuration depending on type. For configuration examples, please take look at
      * test/DependencyInjection/Fixture/config files
      *
-     * @param string $type
      * @param string $class
      * @param array $config
      * @param ContainerBuilder $container
      * @param XmlFileLoader $loader
      */
-    private function eventStoreLoad(
-        string $type,
+    private function loadEventStores(
         string $class,
         array $config,
         ContainerBuilder $container
     ) {
-        $typePlural = $type . 's';
         $eventStores = [];
 
-        foreach (array_keys($config[$typePlural]) as $name) {
-            $eventStores[$name] = sprintf('prooph_event_store.' . $type . '.%s_store', $name);
+        foreach (array_keys($config['stores']) as $name) {
+            $eventStores[$name] = 'prooph_event_store.' . $name;
         }
-        $container->setParameter('prooph_event_store.' . $typePlural, $eventStores);
+        $container->setParameter('prooph_event_store.stores', $eventStores);
 
-        $def = $container->getDefinition('prooph_event_store.' . $type);
+        $def = $container->getDefinition('prooph_event_store.store_definition');
         $def->setClass($class);
 
-        foreach ($config[$typePlural] as $name => $options) {
-            $this->loadEventStore($type, $name, $options, $container);
+        foreach ($config['stores'] as $name => $options) {
+            $this->loadEventStore($name, $options, $container);
         }
     }
 
@@ -87,7 +84,6 @@ final class ProophEventStoreExtension extends Extension
      * Initializes specific event store class with plugins and metadata enricher. Each class dependency must be set
      * via a container or reference definition.
      *
-     * @param string $type
      * @param string $name
      * @param array $options
      * @param ContainerBuilder $container
@@ -95,13 +91,13 @@ final class ProophEventStoreExtension extends Extension
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Prooph\Bundle\EventStore\Exception\RuntimeException
      */
-    private function loadEventStore(string $type, string $name, array $options, ContainerBuilder $container)
+    private function loadEventStore(string $name, array $options, ContainerBuilder $container)
     {
-        $eventStoreId = sprintf('prooph_event_store.%s.%s_store', $type, $name);
+        $eventStoreId = 'prooph_event_store.' . $name;
         $eventStoreDefinition = $container
             ->setDefinition(
                 $eventStoreId,
-                new DefinitionDecorator('prooph_event_store.' . $type)
+                new DefinitionDecorator('prooph_event_store.store_definition')
             )
             ->setArguments(
                 [
@@ -112,12 +108,10 @@ final class ProophEventStoreExtension extends Extension
 
         if (!empty($options['repositories'])) {
             foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {
-                $repositoryId = sprintf('prooph_event_store.%s.%s_repository', $type, $repositoryName);
-
                 $repositoryDefinition = $container
                     ->setDefinition(
-                        $repositoryId,
-                        new DefinitionDecorator('prooph_event_store.repository')
+                        $repositoryName,
+                        new DefinitionDecorator('prooph_event_store.repository_definition')
                     )
                     ->setFactory([new Reference('prooph_event_store.repository_factory'), 'create'])
                     ->setArguments(
@@ -140,7 +134,7 @@ final class ProophEventStoreExtension extends Extension
         $metadataEnricherAggregateDefinition = $container
             ->setDefinition(
                 $metadataEnricherAggregateId,
-                new DefinitionDecorator('prooph_event_store.metadata_enricher_aggregate')
+                new DefinitionDecorator('prooph_event_store.metadata_enricher_aggregate_definition')
             )
             ->setClass('%prooph_event_store.metadata_enricher_aggregate.class%');
 
@@ -149,7 +143,7 @@ final class ProophEventStoreExtension extends Extension
         $metadataEnricherDefinition = $container
             ->setDefinition(
                 $metadataEnricherId,
-                new DefinitionDecorator('prooph_event_store.metadata_enricher_plugin')
+                new DefinitionDecorator('prooph_event_store.metadata_enricher_plugin_definition')
             )
             ->setClass('%prooph_event_store.metadata_enricher_plugin.class%');
     }

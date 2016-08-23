@@ -1,9 +1,9 @@
 prooph_event_store:
   stores:
-    main:
+    main_store:
       adapter: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole'
       repositories:
-         todo_list:
+         main_store.todo_list:
             repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
             aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
             aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
@@ -12,10 +12,10 @@ prooph_event_store:
             one_stream_per_aggregate: true
 
     # uses defaults
-    second:
+    second_store:
       adapter: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole'
       repositories:
-         todo_list:
+         second_store.todo_list:
             repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
             aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
             aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'

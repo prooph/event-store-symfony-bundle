@@ -7,7 +7,7 @@
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection\Compiler;
 
@@ -26,8 +26,9 @@ class MetadataEnricherPass implements CompilerPassInterface
         $stores = $container->getParameter('prooph_event_store.stores');
 
         foreach ($stores as $name => $store) {
-            $plugins = $container->findTaggedServiceIds(sprintf('prooph_event_store.%s.metadata_enricher', $name));
-
+            $globalPlugins = $container->findTaggedServiceIds('prooph_event_store.metadata_enricher');
+            $storeEnricherPLugins = $container->findTaggedServiceIds(sprintf('prooph_event_store.%s.metadata_enricher', $name));
+            $plugins = array_merge($globalPlugins, $storeEnricherPLugins);
             $enrichers = [];
 
             foreach ($plugins as $id => $args) {

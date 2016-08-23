@@ -7,7 +7,7 @@
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
@@ -37,15 +37,15 @@ abstract class AbtractEventStoreExtensionTestCase extends TestCase
     {
         $container = $this->loadContainer('event_store');
 
-        $config = $container->getDefinition('prooph_event_store.store.main_store');
+        $config = $container->getDefinition('prooph_event_store.main_store');
 
         self::assertEquals(EventStore::class, $config->getClass());
 
         /* @var $eventStore EventStore */
-        $eventStore = $container->get('prooph_event_store.store.main_store');
+        $eventStore = $container->get('prooph_event_store.main_store');
         self::assertInstanceOf(EventStore::class, $eventStore);
 
-        $repository = $container->get('prooph_event_store.store.todo_list_repository');
+        $repository = $container->get('todo_list');
         self::assertInstanceOf(BlackHoleRepository::class, $repository);
 
         $snapshotter = $container->get('prooph_test.bundle.event_store.snapshotter');
@@ -59,16 +59,16 @@ abstract class AbtractEventStoreExtensionTestCase extends TestCase
     {
         $container = $this->loadContainer('event_store_multiple');
 
-        foreach (['main', 'second'] as $name) {
-            $config = $container->getDefinition('prooph_event_store.store.' . $name . '_store');
+        foreach (['main_store', 'second_store'] as $name) {
+            $config = $container->getDefinition('prooph_event_store.' . $name);
 
             self::assertEquals(EventStore::class, $config->getClass());
 
             //* @var $eventStore EventStore */
-            $eventStore = $container->get('prooph_event_store.store.main_store');
+            $eventStore = $container->get('prooph_event_store.' . $name);
             self::assertInstanceOf(EventStore::class, $eventStore);
 
-            $repository = $container->get('prooph_event_store.store.todo_list_repository');
+            $repository = $container->get($name . '.todo_list');
             self::assertInstanceOf(BlackHoleRepository::class, $repository);
         }
     }

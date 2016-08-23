@@ -7,7 +7,7 @@
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture;
 
