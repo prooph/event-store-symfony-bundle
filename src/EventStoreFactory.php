@@ -7,7 +7,7 @@
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore;
 
@@ -20,8 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EventStoreFactory
 {
     public function create(
-        string $eventStoreName, 
-        Adapter $adapter, 
+        string $eventStoreName,
+        Adapter $adapter,
         ActionEventEmitter $actionEventEmitter,
         ContainerInterface $container,
         array $pluginServiceIds
