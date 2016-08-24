@@ -12,7 +12,10 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
+use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Snapshot\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
@@ -111,19 +114,21 @@ abstract class AbtractEventStoreExtensionTestCase extends TestCase
             $map[$bundle] = 'Fixture\\Bundles\\' . $bundle . '\\' . $bundle;
         }
 
-        $map['ProophEventStoreBundle'] = '/../../src';
+        $map['ProophEventStoreBundle'] = realpath(__DIR__ . '/../../src');
 
         return new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,
             'kernel.bundles' => $map,
             'kernel.cache_dir' => sys_get_temp_dir(),
             'kernel.environment' => 'test',
-            'kernel.root_dir' => __DIR__ . '/../../src',
+            'kernel.root_dir' => realpath(__DIR__ . '/../../src'),
         ]));
     }
 
     private function compileContainer(ContainerBuilder $container)
     {
+        $bundle = new ProophEventStoreBundle();
+        $bundle->build($container);
         $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveDefinitionTemplatesPass()]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
 

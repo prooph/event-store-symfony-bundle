@@ -11,6 +11,7 @@
         <parameter key="prooph_event_store.payload_serializer.class">Prooph\EventStore\Adapter\PayloadSerializer\JsonPayloadSerializer</parameter>
         <parameter key="prooph_event_store.message_factory.class">Prooph\Common\Messaging\FQCNMessageFactory</parameter>
         <parameter key="prooph_event_store.action_event_emitter.class">Prooph\Common\Event\ProophActionEventEmitter</parameter>
+        <parameter key="prooph_event_store.store_factory.class">Prooph\Bundle\EventStore\EventStoreFactory</parameter>
         <parameter key="prooph_event_store.repository_factory.class">Prooph\Bundle\EventStore\RepositoryFactory</parameter>
         <parameter key="prooph_event_store.repository.class">Prooph\EventStore\Aggregate\AggregateRepository</parameter>
         <parameter key="prooph_event_store.stream_table_map" type="collection"></parameter>
@@ -18,6 +19,7 @@
 
     <services>
         <service id="prooph_event_store.store_definition" class="Prooph\EventStore\EventStore" abstract="true" />
+        <service id="prooph_event_store.store_factory" class="%prooph_event_store.store_factory.class%" />
         <service id="prooph_event_store.plugin_definition" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_plugin_definition" class="%prooph_event_store.metadata_enricher_plugin.class%" public="false" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="%prooph_event_store.metadata_enricher_aggregate.class%" public="false" abstract="true" />

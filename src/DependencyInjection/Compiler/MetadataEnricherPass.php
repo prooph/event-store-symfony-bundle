@@ -43,7 +43,6 @@ class MetadataEnricherPass implements CompilerPassInterface
             $metadataEnricherDefinition = $container->getDefinition($metadataEnricherId);
             $metadataEnricherDefinition->setClass('%prooph_event_store.metadata_enricher_plugin.class%');
             $metadataEnricherDefinition->setArguments([new Reference($metadataEnricherAggregateId)]);
-            $metadataEnricherDefinition->addMethodCall('setUp', [new Reference($store)]);
         }
     }
 }

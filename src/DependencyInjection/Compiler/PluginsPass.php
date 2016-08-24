@@ -31,10 +31,9 @@ class PluginsPass implements CompilerPassInterface
 
             $plugins = array_merge($globalPlugins, $storePlugins);
 
-            foreach ($plugins as $id => $args) {
-                $definition = $container->findDefinition($id);
-                $definition->addMethodCall('setUp', [new Reference($store)]);
-            }
+            $eventStoreDefinition = $container->findDefinition(sprintf('prooph_event_store.%s', $name));
+
+            $eventStoreDefinition->addArgument(array_keys($plugins));
         }
     }
 }
