@@ -64,7 +64,7 @@
     "prooph/pdo-event-store": "dev-master",
     "phpunit/phpunit": "^5.3",
     "phpunit/php-invoker": "^1.1.4",
-    "friendsofphp/php-cs-fixer": "^2.1",
+    "fabpot/php-cs-fixer": "^1.11",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.0"
   },
