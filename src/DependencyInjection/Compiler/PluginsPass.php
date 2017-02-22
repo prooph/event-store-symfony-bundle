@@ -18,7 +18,7 @@ class PluginsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->getParameter('prooph_event_store.stores')) {
+        if (!$container->hasParameter('prooph_event_store.stores')) {
             return;
         }
 

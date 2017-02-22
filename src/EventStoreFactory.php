@@ -13,7 +13,6 @@ namespace Prooph\Bundle\EventStore;
 
 use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\EventStore\ActionEventEmitterEventStore;
-use Prooph\EventStore\Adapter\Adapter;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Plugin\Plugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
