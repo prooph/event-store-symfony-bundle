@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin;
 
 use Prooph\EventStore\ActionEventEmitterEventStore;
-use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Plugin\Plugin;
 
 class BlackHole implements Plugin

@@ -11,9 +11,7 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter;
 
-use DateTimeInterface;
 use Iterator;
-
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Metadata\MetadataMatcher;
 use Prooph\EventStore\Projection\Projection;
@@ -27,7 +25,6 @@ use Prooph\EventStore\Projection\ReadModelProjectionFactory;
 
 class BlackHole implements EventStore
 {
-
     public function updateStreamMetadata(\Prooph\EventStore\StreamName $streamName, array $newMetadata): void
     {
         // TODO: Implement updateStreamMetadata() method.
