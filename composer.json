@@ -52,11 +52,11 @@
     }
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "symfony/config": "~2.8 || ~3.0",
     "symfony/dependency-injection": "~2.8 || ~3.0",
     "symfony/http-kernel": "~2.8 || ~3.0",
-    "prooph/event-store": "^7.0",
+    "prooph/event-store": "^7.1",
     "prooph/pdo-event-store": "dev-master"
   },
   "require-dev": {
@@ -64,7 +64,7 @@
     "phpunit/php-invoker": "^1.1.4",
     "fabpot/php-cs-fixer": "^1.11",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
-    "tobiju/bookdown-bootswatch-templates": "1.0.x-dev"
+    "prooph/bookdown-template": "^0.2.0"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
