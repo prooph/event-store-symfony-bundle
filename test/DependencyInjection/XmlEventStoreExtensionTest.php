@@ -15,7 +15,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class XmlEventStoreExtensionTest extends AbtractEventStoreExtensionTestCase
+class XmlEventStoreExtensionTest extends AbstractEventStoreExtensionTestCase
 {
     protected function loadFromFile(ContainerBuilder $container, $file)
     {

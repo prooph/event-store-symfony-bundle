@@ -56,11 +56,12 @@
     "symfony/config": "~2.8 || ~3.0",
     "symfony/dependency-injection": "~2.8 || ~3.0",
     "symfony/http-kernel": "~2.8 || ~3.0",
-    "prooph/event-store": "^7.0",
-    "prooph/pdo-event-store": "dev-master"
+    "prooph/event-store": "^7.0"
   },
   "require-dev": {
     "prooph/event-sourcing": "dev-develop as 5.0.0",
+    "prooph/snapshot-store": "dev-master",
+    "prooph/pdo-event-store": "dev-master",
     "phpunit/phpunit": "^5.3",
     "phpunit/php-invoker": "^1.1.4",
     "friendsofphp/php-cs-fixer": "^2.1",

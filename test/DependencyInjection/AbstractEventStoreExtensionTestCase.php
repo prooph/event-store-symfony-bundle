@@ -15,7 +15,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Snapshot\SnapshotStore;
+use Prooph\SnapshotStore\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\Dumper\YamlDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use \Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-abstract class AbtractEventStoreExtensionTestCase extends TestCase
+abstract class AbstractEventStoreExtensionTestCase extends TestCase
 {
     abstract protected function loadFromFile(ContainerBuilder $container, $file);
 
@@ -49,8 +49,8 @@ abstract class AbtractEventStoreExtensionTestCase extends TestCase
         $repository = $container->get('todo_list');
         self::assertInstanceOf(BlackHoleRepository::class, $repository);
 
-        $snapshotter = $container->get('prooph_test.bundle.event_store.snapshotter');
-        self::assertInstanceOf(SnapshotStore::class, $snapshotter);
+        $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
+        self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
     }
 
     /**
