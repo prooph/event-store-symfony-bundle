@@ -62,7 +62,7 @@
   "require-dev": {
     "phpunit/phpunit": "^5.3",
     "phpunit/php-invoker": "^1.1.4",
-    "fabpot/php-cs-fixer": "^1.11",
+    "friendsofphp/php-cs-fixer": "^2.1",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.0"
   },
