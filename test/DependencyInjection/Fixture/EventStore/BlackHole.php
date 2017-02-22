@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter;
+namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore;
 
 use Iterator;
 use Prooph\EventStore\EventStore;
