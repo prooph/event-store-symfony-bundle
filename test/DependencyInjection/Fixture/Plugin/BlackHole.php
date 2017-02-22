@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin;
 
+use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Plugin\Plugin;
 
@@ -18,8 +19,13 @@ class BlackHole implements Plugin
 {
     public $valid = false;
 
-    public function setUp(EventStore $eventStore)
+    public function attachToEventStore(ActionEventEmitterEventStore $eventStore): void
     {
         $this->valid = true;
+    }
+
+    public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
+    {
+        $this->valid = false;
     }
 }

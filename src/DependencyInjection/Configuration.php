@@ -84,7 +84,7 @@ final class Configuration implements ConfigurationInterface
                 ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')->defaultValue('prooph_event_store.action_event_emitter')->end()
-                    ->scalarNode('adapter')->end()
+                    ->scalarNode('type')->end()
                     ->append($repositoriesNode)
                 ->end()
             ->end()

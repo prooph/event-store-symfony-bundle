@@ -103,7 +103,7 @@ final class ProophEventStoreExtension extends Extension
             ->setArguments(
                 [
                     $name,
-                    new Reference($options['adapter']),
+                    new Reference($options['type']),
                     new Reference($options['event_emitter']),
                     new Reference('service_container')
                 ]

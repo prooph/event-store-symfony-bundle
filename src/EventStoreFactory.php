@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore;
 
 use Prooph\Common\Event\ActionEventEmitter;
+use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\Adapter\Adapter;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Plugin\Plugin;
@@ -21,17 +22,17 @@ class EventStoreFactory
 {
     public function create(
         string $eventStoreName,
-        Adapter $adapter,
+        EventStore $type,
         ActionEventEmitter $actionEventEmitter,
         ContainerInterface $container,
         array $pluginServiceIds
     ): EventStore {
-        $eventStore = new EventStore($adapter, $actionEventEmitter);
+        $eventStore = new ActionEventEmitterEventStore($type, $actionEventEmitter);
 
         foreach ($pluginServiceIds as $pluginServiceId) {
             /** @var Plugin $plugin */
             $plugin = $container->get($pluginServiceId);
-            $plugin->setUp($eventStore);
+            $plugin->attachToEventStore($eventStore);
         }
 
         $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $eventStoreName);
@@ -39,7 +40,7 @@ class EventStoreFactory
         /** @var Plugin $metadataEnricherPlugin */
         $metadataEnricherPlugin = $container->get($metadataEnricherId);
 
-        $metadataEnricherPlugin->setUp($eventStore);
+        $metadataEnricherPlugin->attachToEventStore($eventStore);
 
         return $eventStore;
     }

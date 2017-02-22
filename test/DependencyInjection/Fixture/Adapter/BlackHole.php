@@ -13,29 +13,147 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter;
 
 use DateTimeInterface;
 use Iterator;
-use Prooph\EventStore\Adapter\Adapter;
-use Prooph\EventStore\Stream\Stream;
-use Prooph\EventStore\Stream\StreamName;
 
-class BlackHole implements Adapter
+use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Metadata\MetadataMatcher;
+use Prooph\EventStore\Projection\Projection;
+use Prooph\EventStore\Projection\ProjectionFactory;
+use Prooph\EventStore\Projection\ProjectionOptions;
+use Prooph\EventStore\Projection\Query;
+use Prooph\EventStore\Projection\QueryFactory;
+use Prooph\EventStore\Projection\ReadModel;
+use Prooph\EventStore\Projection\ReadModelProjection;
+use Prooph\EventStore\Projection\ReadModelProjectionFactory;
+
+class BlackHole implements EventStore
 {
-    public function create(Stream $stream)
+
+    public function updateStreamMetadata(\Prooph\EventStore\StreamName $streamName, array $newMetadata): void
     {
+        // TODO: Implement updateStreamMetadata() method.
     }
 
-    public function appendTo(StreamName $streamName, Iterator $domainEvents)
+    public function create(\Prooph\EventStore\Stream $stream): void
     {
+        // TODO: Implement create() method.
     }
 
-    public function load(StreamName $streamName, $minVersion = null)
+    public function appendTo(\Prooph\EventStore\StreamName $streamName, Iterator $streamEvents): void
     {
+        // TODO: Implement appendTo() method.
     }
 
-    public function loadEvents(StreamName $streamName, array $metadata = [], $minVersion = null)
+    public function delete(\Prooph\EventStore\StreamName $streamName): void
     {
+        // TODO: Implement delete() method.
     }
 
-    public function replay(StreamName $streamName, DateTimeInterface $since = null, array $metadata = [])
+    public function createQuery(QueryFactory $factory = null): Query
     {
+        // TODO: Implement createQuery() method.
+    }
+
+    public function createProjection(
+        string $name,
+        ProjectionOptions $options = null,
+        ProjectionFactory $factory = null
+    ): Projection {
+        // TODO: Implement createProjection() method.
+    }
+
+    public function createReadModelProjection(
+        string $name,
+        ReadModel $readModel,
+        ProjectionOptions $options = null,
+        ReadModelProjectionFactory $factory = null
+    ): ReadModelProjection {
+        // TODO: Implement createReadModelProjection() method.
+    }
+
+    public function getDefaultQueryFactory(): QueryFactory
+    {
+        // TODO: Implement getDefaultQueryFactory() method.
+    }
+
+    public function getDefaultProjectionFactory(): ProjectionFactory
+    {
+        // TODO: Implement getDefaultProjectionFactory() method.
+    }
+
+    public function getDefaultReadModelProjectionFactory(): ReadModelProjectionFactory
+    {
+        // TODO: Implement getDefaultReadModelProjectionFactory() method.
+    }
+
+    public function deleteProjection(string $name, bool $deleteEmittedEvents): void
+    {
+        // TODO: Implement deleteProjection() method.
+    }
+
+    public function resetProjection(string $name): void
+    {
+        // TODO: Implement resetProjection() method.
+    }
+
+    public function stopProjection(string $name): void
+    {
+        // TODO: Implement stopProjection() method.
+    }
+
+    public function fetchStreamMetadata(\Prooph\EventStore\StreamName $streamName): array
+    {
+        // TODO: Implement fetchStreamMetadata() method.
+    }
+
+    public function hasStream(\Prooph\EventStore\StreamName $streamName): bool
+    {
+        // TODO: Implement hasStream() method.
+    }
+
+    public function load(
+        \Prooph\EventStore\StreamName $streamName,
+        int $fromNumber = 1,
+        int $count = null,
+        MetadataMatcher $metadataMatcher = null
+    ): Iterator {
+        // TODO: Implement load() method.
+    }
+
+    public function loadReverse(
+        \Prooph\EventStore\StreamName $streamName,
+        int $fromNumber = PHP_INT_MAX,
+        int $count = null,
+        MetadataMatcher $metadataMatcher = null
+    ): Iterator {
+        // TODO: Implement loadReverse() method.
+    }
+
+    /**
+     * @return \Prooph\EventStore\StreamName
+     */
+    public function fetchStreamNames(
+        ?string $filter,
+        bool $regex,
+        ?MetadataMatcher $metadataMatcher,
+        int $limit,
+        int $offset
+    ): array {
+        // TODO: Implement fetchStreamNames() method.
+    }
+
+    /**
+     * @return string[]
+     */
+    public function fetchCategoryNames(?string $filter, bool $regex, int $limit, int $offset): array
+    {
+        // TODO: Implement fetchCategoryNames() method.
+    }
+
+    /**
+     * @return string[]
+     */
+    public function fetchProjectionNames(?string $filter, bool $regex, int $limit, int $offset): array
+    {
+        // TODO: Implement fetchProjectionNames() method.
     }
 }
