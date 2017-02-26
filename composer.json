@@ -59,7 +59,7 @@
     "prooph/event-store": "dev-7.x"
   },
   "require-dev": {
-    "prooph/event-sourcing": "dev-develop as 5.0.0",
+    "prooph/event-sourcing": "dev-develop as 6.0.0",
     "prooph/snapshot-store": "dev-master",
     "prooph/pdo-event-store": "dev-master",
     "phpunit/phpunit": "^5.3",
