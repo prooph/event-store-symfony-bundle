@@ -15,6 +15,8 @@ use Prooph\EventStore\Plugin\Plugin;
 
 class GlobalBlackHole implements Plugin
 {
+    private $valid = false;
+
     public function attachToEventStore(ActionEventEmitterEventStore $eventStore): void
     {
         $this->valid = true;
