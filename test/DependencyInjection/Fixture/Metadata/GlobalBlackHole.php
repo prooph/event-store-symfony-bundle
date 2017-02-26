@@ -22,7 +22,6 @@ class GlobalBlackHole implements MetadataEnricher
         $this->valid = true;
     }
 
-
     /**
      * Return the given message with added metadata.
      */

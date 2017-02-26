@@ -26,13 +26,13 @@ final class Configuration implements ConfigurationInterface
      */
     public function __construct($debug)
     {
-        $this->debug = (Boolean)$debug;
+        $this->debug = (bool) $debug;
     }
 
     /**
      * Normalizes XML config and defines config tree
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -60,8 +60,7 @@ final class Configuration implements ConfigurationInterface
         $repositoryNode = $repositoriesNode
             ->requiresAtLeastOneElement()
             ->useAttributeAsKey('name')
-            ->prototype('array')
-        ;
+            ->prototype('array');
 
         $repositoryNode
             ->children()
@@ -71,8 +70,7 @@ final class Configuration implements ConfigurationInterface
                 ->scalarNode('snapshot_store')->defaultValue(null)->end()
                 ->scalarNode('stream_name')->defaultValue(null)->end()
                 ->booleanNode('one_stream_per_aggregate')->defaultValue(false)->end()
-            ->end()
-        ;
+            ->end();
 
         $node
             ->fixXmlConfig('store', 'stores')
@@ -87,7 +85,6 @@ final class Configuration implements ConfigurationInterface
                     ->scalarNode('type')->end()
                     ->append($repositoriesNode)
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

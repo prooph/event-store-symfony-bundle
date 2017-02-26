@@ -18,7 +18,6 @@ use Prooph\EventSourcing\Aggregate\AggregateType;
 
 class BlackHoleAggregateTranslator implements AggregateTranslator
 {
-
     /**
      * @param object $eventSourcedAggregateRoot
      */

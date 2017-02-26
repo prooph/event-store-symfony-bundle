@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\Dumper\Dumper;
 use Symfony\Component\DependencyInjection\Dumper\XmlDumper;
 use Symfony\Component\DependencyInjection\Dumper\YamlDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use \Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 abstract class AbstractEventStoreExtensionTestCase extends TestCase
 {
@@ -48,6 +48,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         // TODO Assert sth? Mocking the whole ContainerBuilder seems ugly
     }
+
     /**
      * @test
      */

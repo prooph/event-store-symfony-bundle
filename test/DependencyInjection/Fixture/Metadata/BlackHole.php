@@ -22,7 +22,6 @@ class BlackHole implements \Prooph\EventStore\Metadata\MetadataEnricher
         $this->valid = true;
     }
 
-
     /**
      * Return the given message with added metadata.
      */

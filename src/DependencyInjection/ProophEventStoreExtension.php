@@ -42,7 +42,7 @@ final class ProophEventStoreExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('event_store.xml');
 
-        if (!empty($config['stores'])) {
+        if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
 
@@ -105,11 +105,11 @@ final class ProophEventStoreExtension extends Extension
                     $name,
                     new Reference($options['type']),
                     new Reference($options['event_emitter']),
-                    new Reference('service_container')
+                    new Reference('service_container'),
                 ]
             );
 
-        if (!empty($options['repositories'])) {
+        if (! empty($options['repositories'])) {
             foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {
                 $repositoryDefinition = $container
                     ->setDefinition(

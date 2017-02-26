@@ -31,7 +31,7 @@ class MergeExtensionConfigurationPass implements CompilerPassInterface
         }
 
         foreach ($container->getExtensions() as $name => $extension) {
-            if (!$config = $container->getExtensionConfig($name)) {
+            if (! $config = $container->getExtensionConfig($name)) {
                 // this extension was not called
                 continue;
             }
