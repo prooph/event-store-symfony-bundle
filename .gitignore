@@ -10,3 +10,4 @@ phpunit.xml
 nbproject
 composer.lock
 doc/html
+.php_cs.cache

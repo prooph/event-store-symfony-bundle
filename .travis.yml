@@ -9,6 +9,7 @@ branches:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
     - vendor
 
 matrix:
