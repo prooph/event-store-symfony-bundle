@@ -17,18 +17,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    private $debug;
-
-    /**
-     * Constructor
-     *
-     * @param Boolean $debug Whether to use the debug mode
-     */
-    public function __construct($debug)
-    {
-        $this->debug = (bool) $debug;
-    }
-
     /**
      * Normalizes XML config and defines config tree
      *
