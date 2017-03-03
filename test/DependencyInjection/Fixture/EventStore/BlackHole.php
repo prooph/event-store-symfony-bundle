@@ -14,21 +14,11 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore;
 use Iterator;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Metadata\MetadataMatcher;
-use Prooph\EventStore\Projection\Projection;
-use Prooph\EventStore\Projection\ProjectionFactory;
-use Prooph\EventStore\Projection\ProjectionOptions;
-use Prooph\EventStore\Projection\Query;
-use Prooph\EventStore\Projection\QueryFactory;
-use Prooph\EventStore\Projection\ReadModel;
-use Prooph\EventStore\Projection\ReadModelProjection;
-use Prooph\EventStore\Projection\ReadModelProjectionFactory;
-use Prooph\EventStore\ReadOnlyEventStore;
 use Prooph\EventStore\Stream;
 use Prooph\EventStore\StreamName;
 
 class BlackHole implements EventStore
 {
-
     public function updateStreamMetadata(StreamName $streamName, array $newMetadata): void
     {
         // TODO: Implement updateStreamMetadata() method.
