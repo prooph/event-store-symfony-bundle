@@ -22,93 +22,45 @@ use Prooph\EventStore\Projection\QueryFactory;
 use Prooph\EventStore\Projection\ReadModel;
 use Prooph\EventStore\Projection\ReadModelProjection;
 use Prooph\EventStore\Projection\ReadModelProjectionFactory;
+use Prooph\EventStore\ReadOnlyEventStore;
+use Prooph\EventStore\Stream;
+use Prooph\EventStore\StreamName;
 
 class BlackHole implements EventStore
 {
-    public function updateStreamMetadata(\Prooph\EventStore\StreamName $streamName, array $newMetadata): void
+
+    public function updateStreamMetadata(StreamName $streamName, array $newMetadata): void
     {
         // TODO: Implement updateStreamMetadata() method.
     }
 
-    public function create(\Prooph\EventStore\Stream $stream): void
+    public function create(Stream $stream): void
     {
         // TODO: Implement create() method.
     }
 
-    public function appendTo(\Prooph\EventStore\StreamName $streamName, Iterator $streamEvents): void
+    public function appendTo(StreamName $streamName, Iterator $streamEvents): void
     {
         // TODO: Implement appendTo() method.
     }
 
-    public function delete(\Prooph\EventStore\StreamName $streamName): void
+    public function delete(StreamName $streamName): void
     {
         // TODO: Implement delete() method.
     }
 
-    public function createQuery(QueryFactory $factory = null): Query
-    {
-        // TODO: Implement createQuery() method.
-    }
-
-    public function createProjection(
-        string $name,
-        ProjectionOptions $options = null,
-        ProjectionFactory $factory = null
-    ): Projection {
-        // TODO: Implement createProjection() method.
-    }
-
-    public function createReadModelProjection(
-        string $name,
-        ReadModel $readModel,
-        ProjectionOptions $options = null,
-        ReadModelProjectionFactory $factory = null
-    ): ReadModelProjection {
-        // TODO: Implement createReadModelProjection() method.
-    }
-
-    public function getDefaultQueryFactory(): QueryFactory
-    {
-        // TODO: Implement getDefaultQueryFactory() method.
-    }
-
-    public function getDefaultProjectionFactory(): ProjectionFactory
-    {
-        // TODO: Implement getDefaultProjectionFactory() method.
-    }
-
-    public function getDefaultReadModelProjectionFactory(): ReadModelProjectionFactory
-    {
-        // TODO: Implement getDefaultReadModelProjectionFactory() method.
-    }
-
-    public function deleteProjection(string $name, bool $deleteEmittedEvents): void
-    {
-        // TODO: Implement deleteProjection() method.
-    }
-
-    public function resetProjection(string $name): void
-    {
-        // TODO: Implement resetProjection() method.
-    }
-
-    public function stopProjection(string $name): void
-    {
-        // TODO: Implement stopProjection() method.
-    }
-
-    public function fetchStreamMetadata(\Prooph\EventStore\StreamName $streamName): array
+    public function fetchStreamMetadata(StreamName $streamName): array
     {
         // TODO: Implement fetchStreamMetadata() method.
     }
 
-    public function hasStream(\Prooph\EventStore\StreamName $streamName): bool
+    public function hasStream(StreamName $streamName): bool
     {
         // TODO: Implement hasStream() method.
     }
 
     public function load(
-        \Prooph\EventStore\StreamName $streamName,
+        StreamName $streamName,
         int $fromNumber = 1,
         int $count = null,
         MetadataMatcher $metadataMatcher = null
@@ -117,7 +69,7 @@ class BlackHole implements EventStore
     }
 
     public function loadReverse(
-        \Prooph\EventStore\StreamName $streamName,
+        StreamName $streamName,
         int $fromNumber = PHP_INT_MAX,
         int $count = null,
         MetadataMatcher $metadataMatcher = null
@@ -126,22 +78,33 @@ class BlackHole implements EventStore
     }
 
     /**
-     * @return \Prooph\EventStore\StreamName
+     * @return StreamName[]
      */
     public function fetchStreamNames(
         ?string $filter,
-        bool $regex,
         ?MetadataMatcher $metadataMatcher,
-        int $limit,
-        int $offset
+        int $limit = 20,
+        int $offset = 0
     ): array {
         // TODO: Implement fetchStreamNames() method.
     }
 
     /**
+     * @return StreamName[]
+     */
+    public function fetchStreamNamesRegex(
+        string $filter,
+        ?MetadataMatcher $metadataMatcher,
+        int $limit = 20,
+        int $offset = 0
+    ): array {
+        // TODO: Implement fetchStreamNamesRegex() method.
+    }
+
+    /**
      * @return string[]
      */
-    public function fetchCategoryNames(?string $filter, bool $regex, int $limit, int $offset): array
+    public function fetchCategoryNames(?string $filter, int $limit = 20, int $offset = 0): array
     {
         // TODO: Implement fetchCategoryNames() method.
     }
@@ -149,8 +112,8 @@ class BlackHole implements EventStore
     /**
      * @return string[]
      */
-    public function fetchProjectionNames(?string $filter, bool $regex, int $limit, int $offset): array
+    public function fetchCategoryNamesRegex(string $filter, int $limit = 20, int $offset = 0): array
     {
-        // TODO: Implement fetchProjectionNames() method.
+        // TODO: Implement fetchCategoryNamesRegex() method.
     }
 }
