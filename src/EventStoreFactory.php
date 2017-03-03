@@ -51,9 +51,9 @@ class EventStoreFactory
      * @param ContainerInterface $container
      * @return Plugin
      */
-    public function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
+    private function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
     {
-        $metadataEnricherId = $this->getMetadataEnricherIdForStore($eventStoreName);
+        $metadataEnricherId = $this->buildMetadataEnricherIdForStore($eventStoreName);
 
         /** @var Plugin $metadataEnricherPlugin */
         $metadataEnricherPlugin = $container->get($metadataEnricherId);
@@ -61,16 +61,21 @@ class EventStoreFactory
         return $metadataEnricherPlugin;
     }
 
-    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container)
+    /**
+     * @param string $eventStoreName The container id of the concrete event store
+     * @param ContainerInterface $container
+     * @return bool
+     */
+    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container) : bool
     {
-        return $container->has($this->getMetadataEnricherIdForStore($eventStoreName));
+        return $container->has($this->buildMetadataEnricherIdForStore($eventStoreName));
     }
 
     /**
-     * @param string $eventStoreName
+     * @param string $eventStoreName Short name from configuration
      * @return string
      */
-    public function getMetadataEnricherIdForStore(string $eventStoreName): string
+    private function buildMetadataEnricherIdForStore(string $eventStoreName): string
     {
         return sprintf('prooph_event_store.metadata_enricher_plugin.%s', $eventStoreName);
     }
