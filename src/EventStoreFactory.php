@@ -26,7 +26,12 @@ class EventStoreFactory
         ContainerInterface $container,
         array $pluginServiceIds
     ): EventStore {
-        $eventStore = new ActionEventEmitterEventStore($type, $actionEventEmitter);
+        $eventStore = $type;
+
+        // Wrap in ActionEventEmitter for BC plugin support (?)
+        if (count($pluginServiceIds) > 0 || $this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
+            $eventStore = new ActionEventEmitterEventStore($type, $actionEventEmitter);
+        }
 
         foreach ($pluginServiceIds as $pluginServiceId) {
             /** @var Plugin $plugin */
@@ -34,13 +39,39 @@ class EventStoreFactory
             $plugin->attachToEventStore($eventStore);
         }
 
-        $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $eventStoreName);
+        if ($this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
+            $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($eventStore);
+        }
+
+        return $eventStore;
+    }
+
+    /**
+     * @param string $eventStoreName
+     * @param ContainerInterface $container
+     * @return Plugin
+     */
+    public function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
+    {
+        $metadataEnricherId = $this->getMetadataEnricherIdForStore($eventStoreName);
 
         /** @var Plugin $metadataEnricherPlugin */
         $metadataEnricherPlugin = $container->get($metadataEnricherId);
 
-        $metadataEnricherPlugin->attachToEventStore($eventStore);
+        return $metadataEnricherPlugin;
+    }
 
-        return $eventStore;
+    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container)
+    {
+        return $container->has($this->getMetadataEnricherIdForStore($eventStoreName));
+    }
+
+    /**
+     * @param string $eventStoreName
+     * @return string
+     */
+    public function getMetadataEnricherIdForStore(string $eventStoreName): string
+    {
+        return sprintf('prooph_event_store.metadata_enricher_plugin.%s', $eventStoreName);
     }
 }
