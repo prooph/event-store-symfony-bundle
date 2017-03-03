@@ -66,7 +66,7 @@ class EventStoreFactory
      * @param ContainerInterface $container
      * @return bool
      */
-    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container) : bool
+    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): bool
     {
         return $container->has($this->buildMetadataEnricherIdForStore($eventStoreName));
     }
