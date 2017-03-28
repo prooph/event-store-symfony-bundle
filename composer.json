@@ -1,7 +1,6 @@
 {
   "name": "prooph/event-store-symfony-bundle",
   "description": "",
-  "homepage": "https://github.com/prooph/event-store-symfony-bundle",
   "license": "BSD-3-Clause",
   "type": "symfony-bundle",
   "homepage": "http://getprooph.org/",
@@ -37,23 +36,6 @@
     "DDD",
     "PHP"
   ],
-  "authors": [
-    {
-      "name": "Alexander Miertsch",
-      "email": "contact@prooph.de",
-      "homepage": "http://www.prooph.de",
-      "role": "maintainer"
-    },
-    {
-      "name": "Sascha-Oliver Prolic",
-      "email": "saschaprolic@googlemail.com"
-    },
-    {
-      "name": "Sandro Keil",
-      "homepage": "https://sandro-keil.de",
-      "role": "maintainer"
-    }
-  ],
   "support": {
     "issues": "https://github.com/prooph/event-store-symfony-bundle/issues",
     "source": "https://github.com/prooph/event-store-symfony-bundle",
@@ -70,18 +52,21 @@
     }
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "symfony/config": "~2.8 || ~3.0",
     "symfony/dependency-injection": "~2.8 || ~3.0",
     "symfony/http-kernel": "~2.8 || ~3.0",
-    "prooph/event-store": "^6.3"
+    "prooph/event-store": "dev-develop as 7.0.0"
   },
   "require-dev": {
+    "prooph/event-sourcing": "dev-develop as 6.0.0",
+    "prooph/snapshot-store": "dev-master",
+    "prooph/pdo-event-store": "dev-master",
     "phpunit/phpunit": "^5.3",
     "phpunit/php-invoker": "^1.1.4",
-    "fabpot/php-cs-fixer": "^1.11",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
-    "tobiju/bookdown-bootswatch-templates": "1.0.x-dev"
+    "prooph/bookdown-template": "^0.2.0",
+    "prooph/php-cs-fixer-config": "^0.1.1"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
@@ -90,8 +75,8 @@
   "prefer-stable": true,
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0-dev",
-      "dev-develop": "1.1-dev"
+      "dev-prooph_v7" : "0.3-dev",
+      "dev-master": "1.0-dev"
     }
   },
   "scripts": {

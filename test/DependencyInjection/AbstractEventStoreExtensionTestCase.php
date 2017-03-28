@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Snapshot\SnapshotStore;
+use Prooph\SnapshotStore\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -25,11 +27,27 @@ use Symfony\Component\DependencyInjection\Dumper\Dumper;
 use Symfony\Component\DependencyInjection\Dumper\XmlDumper;
 use Symfony\Component\DependencyInjection\Dumper\YamlDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use \Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-abstract class AbtractEventStoreExtensionTestCase extends TestCase
+abstract class AbstractEventStoreExtensionTestCase extends TestCase
 {
     abstract protected function loadFromFile(ContainerBuilder $container, $file);
+
+    /**
+     * @test
+     */
+    public function it_does_not_process_compiler_passes_without_configured_store()
+    {
+        $container = $this->loadContainer('unconfigured');
+
+        $pass = new PluginsPass();
+        $pass->process($container);
+
+        $pass = new MetadataEnricherPass();
+        $pass->process($container);
+
+        // TODO Assert sth? Mocking the whole ContainerBuilder seems ugly
+    }
 
     /**
      * @test
@@ -49,8 +67,8 @@ abstract class AbtractEventStoreExtensionTestCase extends TestCase
         $repository = $container->get('todo_list');
         self::assertInstanceOf(BlackHoleRepository::class, $repository);
 
-        $snapshotter = $container->get('prooph_test.bundle.event_store.snapshotter');
-        self::assertInstanceOf(SnapshotStore::class, $snapshotter);
+        $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
+        self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
     }
 
     /**

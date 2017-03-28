@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PluginsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->getParameter('prooph_event_store.stores')) {
+        if (! $container->hasParameter('prooph_event_store.stores')) {
             return;
         }
 

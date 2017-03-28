@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore;
 
-use Prooph\EventStore\Aggregate\AggregateTranslator;
-use Prooph\EventStore\Aggregate\AggregateType;
+use Prooph\EventSourcing\Aggregate\AggregateTranslator;
+use Prooph\EventSourcing\Aggregate\AggregateType;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Snapshot\SnapshotStore;
-use Prooph\EventStore\Stream\StreamName;
+use Prooph\EventStore\StreamName;
+use Prooph\SnapshotStore\SnapshotStore;
 
 class RepositoryFactory
 {

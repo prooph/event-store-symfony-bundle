@@ -13,32 +13,28 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model;
 
 use Iterator;
 use Prooph\Common\Messaging\Message;
-use Prooph\EventStore\Aggregate\AggregateType;
+use Prooph\EventSourcing\Aggregate\AggregateTranslator;
+use Prooph\EventSourcing\Aggregate\AggregateType;
 
-class BlackHoleAggregateTranslator implements \Prooph\EventStore\Aggregate\AggregateTranslator
+class BlackHoleAggregateTranslator implements AggregateTranslator
 {
-
     /**
      * @param object $eventSourcedAggregateRoot
-     * @return int
      */
-    public function extractAggregateVersion($eventSourcedAggregateRoot)
+    public function extractAggregateVersion($eventSourcedAggregateRoot): int
     {
         // TODO: Implement extractAggregateVersion() method.
     }
 
     /**
      * @param object $eventSourcedAggregateRoot
-     * @return string
      */
-    public function extractAggregateId($eventSourcedAggregateRoot)
+    public function extractAggregateId($eventSourcedAggregateRoot): string
     {
         // TODO: Implement extractAggregateId() method.
     }
 
     /**
-     * @param AggregateType $aggregateType
-     * @param Iterator $historyEvents
      * @return object reconstructed EventSourcedAggregateRoot
      */
     public function reconstituteAggregateFromHistory(AggregateType $aggregateType, Iterator $historyEvents)
@@ -48,18 +44,19 @@ class BlackHoleAggregateTranslator implements \Prooph\EventStore\Aggregate\Aggre
 
     /**
      * @param object $eventSourcedAggregateRoot
+     *
      * @return Message[]
      */
-    public function extractPendingStreamEvents($eventSourcedAggregateRoot)
+    public function extractPendingStreamEvents($eventSourcedAggregateRoot): array
     {
         // TODO: Implement extractPendingStreamEvents() method.
     }
 
     /**
-     * @param $anEventSourcedAggregateRoot
+     * @param object $eventSourcedAggregateRoot
      * @param Iterator $events
      */
-    public function replayStreamEvents($anEventSourcedAggregateRoot, Iterator $events)
+    public function replayStreamEvents($eventSourcedAggregateRoot, Iterator $events): void
     {
         // TODO: Implement replayStreamEvents() method.
     }

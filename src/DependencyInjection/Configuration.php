@@ -17,22 +17,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    private $debug;
-
-    /**
-     * Constructor
-     *
-     * @param Boolean $debug Whether to use the debug mode
-     */
-    public function __construct($debug)
-    {
-        $this->debug = (Boolean)$debug;
-    }
-
     /**
      * Normalizes XML config and defines config tree
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -60,8 +48,7 @@ final class Configuration implements ConfigurationInterface
         $repositoryNode = $repositoriesNode
             ->requiresAtLeastOneElement()
             ->useAttributeAsKey('name')
-            ->prototype('array')
-        ;
+            ->prototype('array');
 
         $repositoryNode
             ->children()
@@ -71,8 +58,7 @@ final class Configuration implements ConfigurationInterface
                 ->scalarNode('snapshot_store')->defaultValue(null)->end()
                 ->scalarNode('stream_name')->defaultValue(null)->end()
                 ->booleanNode('one_stream_per_aggregate')->defaultValue(false)->end()
-            ->end()
-        ;
+            ->end();
 
         $node
             ->fixXmlConfig('store', 'stores')
@@ -84,10 +70,9 @@ final class Configuration implements ConfigurationInterface
                 ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')->defaultValue('prooph_event_store.action_event_emitter')->end()
-                    ->scalarNode('adapter')->end()
+                    ->scalarNode('type')->end()
                     ->append($repositoriesNode)
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

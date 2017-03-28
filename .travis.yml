@@ -9,12 +9,13 @@ branches:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
     - vendor
 
 matrix:
   fast_finish: true
   include:
-    - php: 7
+    - php: 7.1
       env:
         - EXECUTE_CS_CHECK=true
         - EXECUTE_TEST_COVERALLS=true

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata;
 
+use Prooph\Common\Messaging\Message;
+
 class BlackHole implements \Prooph\EventStore\Metadata\MetadataEnricher
 {
     public $valid = false;
@@ -20,7 +22,11 @@ class BlackHole implements \Prooph\EventStore\Metadata\MetadataEnricher
         $this->valid = true;
     }
 
-    public function enrich(\Prooph\Common\Messaging\Message $message)
+    /**
+     * Return the given message with added metadata.
+     */
+    public function enrich(Message $message): Message
     {
+        return $message;
     }
 }

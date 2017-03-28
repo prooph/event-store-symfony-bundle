@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore;
 
 use Prooph\Common\Event\ActionEventEmitter;
-use Prooph\EventStore\Adapter\Adapter;
+use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Plugin\Plugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,26 +21,62 @@ class EventStoreFactory
 {
     public function create(
         string $eventStoreName,
-        Adapter $adapter,
+        EventStore $type,
         ActionEventEmitter $actionEventEmitter,
         ContainerInterface $container,
         array $pluginServiceIds
     ): EventStore {
-        $eventStore = new EventStore($adapter, $actionEventEmitter);
+        $eventStore = $type;
+
+        // Wrap in ActionEventEmitter for BC plugin support (?)
+        if (count($pluginServiceIds) > 0 || $this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
+            $eventStore = new ActionEventEmitterEventStore($type, $actionEventEmitter);
+        }
 
         foreach ($pluginServiceIds as $pluginServiceId) {
             /** @var Plugin $plugin */
             $plugin = $container->get($pluginServiceId);
-            $plugin->setUp($eventStore);
+            $plugin->attachToEventStore($eventStore);
         }
 
-        $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $eventStoreName);
+        if ($this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
+            $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($eventStore);
+        }
+
+        return $eventStore;
+    }
+
+    /**
+     * @param string $eventStoreName
+     * @param ContainerInterface $container
+     * @return Plugin
+     */
+    private function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
+    {
+        $metadataEnricherId = $this->buildMetadataEnricherIdForStore($eventStoreName);
 
         /** @var Plugin $metadataEnricherPlugin */
         $metadataEnricherPlugin = $container->get($metadataEnricherId);
 
-        $metadataEnricherPlugin->setUp($eventStore);
+        return $metadataEnricherPlugin;
+    }
 
-        return $eventStore;
+    /**
+     * @param string $eventStoreName The container id of the concrete event store
+     * @param ContainerInterface $container
+     * @return bool
+     */
+    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): bool
+    {
+        return $container->has($this->buildMetadataEnricherIdForStore($eventStoreName));
+    }
+
+    /**
+     * @param string $eventStoreName Short name from configuration
+     * @return string
+     */
+    private function buildMetadataEnricherIdForStore(string $eventStoreName): string
+    {
+        return sprintf('prooph_event_store.metadata_enricher_plugin.%s', $eventStoreName);
     }
 }

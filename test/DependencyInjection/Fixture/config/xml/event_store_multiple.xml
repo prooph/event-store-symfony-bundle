@@ -6,18 +6,18 @@
                xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
                         http://getprooph.org/schemas/symfony-dic/prooph http://getprooph.org/schemas/symfony-dic/prooph/event_store-5.1.xsd">
     <config>
-        <store name="main_store" adapter="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole">
+        <store name="main_store" type="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
             <repository name="main_store.todo_list">
                 <repository_class>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository</repository_class>
                 <aggregate_type>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate</aggregate_type>
                 <aggregate_translator>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator</aggregate_translator>
-                <snapshot_store>prooph_test.bundle.event_store.snapshotter</snapshot_store>
+                <snapshot_store>prooph_test.bundle.snapshot_store.in_memory</snapshot_store>
                 <stream_name>test</stream_name>
                 <one_stream_per_aggregate>true</one_stream_per_aggregate>
             </repository>
         </store>
         <!-- uses default values -->
-        <store name="second_store" adapter="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Adapter\BlackHole">
+        <store name="second_store" type="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
             <repository name="second_store.todo_list">
                 <repository_class>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository</repository_class>
                 <aggregate_type>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate</aggregate_type>
