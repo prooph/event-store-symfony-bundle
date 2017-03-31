@@ -58,26 +58,7 @@ class BlackHole implements EventStore
         // TODO: Implement load() method.
     }
 
-    public function loadReverse(
-        StreamName $streamName,
-        int $fromNumber = PHP_INT_MAX,
-        int $count = null,
-        MetadataMatcher $metadataMatcher = null
-    ): Iterator {
-        // TODO: Implement loadReverse() method.
-    }
 
-    /**
-     * @return StreamName[]
-     */
-    public function fetchStreamNames(
-        ?string $filter,
-        ?MetadataMatcher $metadataMatcher,
-        int $limit = 20,
-        int $offset = 0
-    ): array {
-        // TODO: Implement fetchStreamNames() method.
-    }
 
     /**
      * @return StreamName[]
@@ -105,5 +86,26 @@ class BlackHole implements EventStore
     public function fetchCategoryNamesRegex(string $filter, int $limit = 20, int $offset = 0): array
     {
         // TODO: Implement fetchCategoryNamesRegex() method.
+    }
+
+    public function loadReverse(
+        StreamName $streamName,
+        int $fromNumber = null,
+        int $count = null,
+        MetadataMatcher $metadataMatcher = null
+    ): Iterator {
+        // TODO: Implement loadReverse() method.
+    }
+
+    /**
+     * @return StreamName[]
+     */
+    public function fetchStreamNames(
+        ?string $filter,
+        ?MetadataMatcher $metadataMatcher,
+        int $limit = 20,
+        int $offset = 0
+    ): array {
+        // TODO: Implement fetchStreamNames() method.
     }
 }

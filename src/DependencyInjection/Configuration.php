@@ -27,6 +27,19 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('prooph_event_store');
 
+        $rootNode
+            ->children()
+                ->arrayNode('pdo')
+                ->isRequired()
+                ->children()
+                    ->scalarNode('dbname')->isRequired()->end()
+                    ->scalarNode('host')->defaultValue('localhost')->end()
+                    ->scalarNode('port')->isRequired()->end()
+                    ->scalarNode('user')->defaultValue('root')->end()
+                    ->scalarNode('password')->defaultNull()->end()
+                    ->scalarNode('driver')->isRequired()->end()
+                ->end()
+            ->end();
         $this->addEventStoreSection($rootNode);
 
         return $treeBuilder;
