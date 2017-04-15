@@ -1,0 +1,168 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{# @var collector \Prooph\Bundle\EventStore\DataCollector\DebugPlugin #}
+
+{% block toolbar %}
+    {% set icon %}
+        <span class="icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 236.6 254.1" enable-background="new 0 0 236.6 254.1" xml:space="preserve" height="24" width="24">
+<path fill="#AAAAAA" d="M116.4,0l120,65c0.1,13.1,0.1,9.8,0.2,22.9L118.4,154L0.4,87c0-12.3,0-9.7,0.1-22
+	L116.4,0z M18.4,105c23.8,12.2,82.1,46.1,100,56c32.5-18.3,65.1-37.5,97.6-55.8c10,5.9,8.4,4.9,18.4,10.8v22c-39,22-77,44-116,66
+	C78.7,181.7,40,160.3,0.3,138c0-12.9,0-10,0.1-23L18.4,105z M18.1,155.1c33.3,18.3,66.7,36.7,100,55l100-55c9.7,5.8,8.3,4.9,18,10.6
+	v22.4c-39,22-79,44-118,66c-39.7-22.3-78.3-44.7-118-67c-0.1-8.1-0.1-15.8,0-21C5.4,163.1,13.4,158.1,18.1,155.1z"></path>
+</svg>
+        </span>
+        <span class="sf-toolbar-label">ES</span>
+        <span class="sf-toolbar-value">{{ collector.metrics.total_events|default('0') }}</span>
+        <span class="sf-toolbar-info-piece-additional-detail">
+            <span class="sf-toolbar-label">/</span>
+            <span class="sf-toolbar-value">{{ collector.metrics.total_streams|default('0') }}</span>
+            <span class="sf-toolbar-label">/</span>
+            <span class="sf-toolbar-value">{{ collector.metrics.total_messages|default('0') }}</span>
+            <span class="sf-toolbar-label">in</span>
+            <span class="sf-toolbar-value">{{ collector.metrics.total_duration|default('0') }}</span>
+            <span class="sf-toolbar-label">ms</span>
+        </span>
+
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Total Events</b>
+            <span class="sf-toolbar-status">{{ collector.metrics.total_events|default('0') }}</span>
+        </div>
+
+        <div class="sf-toolbar-info-piece">
+            <b>Total Streams</b>
+            <span class="sf-toolbar-status">{{ collector.metrics.total_streams|default('0') }}</span>
+        </div>
+
+        <div class="sf-toolbar-info-piece">
+            <b>Total Messages</b>
+            <span class="sf-toolbar-status">{{ collector.metrics.total_messages|default('0') }}</span>
+        </div>
+
+        {% for event in collector.eventStoreActions %}
+            <div class="sf-toolbar-info-piece">
+                <b><a href="{{ path('_profiler', { panel: 'event_store', token: token }) }}#{{ event.stream_name }}-{{ event.event_name }}">{{ event.event_name }}</a></b>
+                <b>{{ event.stream_name }}</b>
+                {#<span>{{ data.stream_events|length }}</span>#}
+            </div>
+        {% endfor %}
+
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+{% endblock %}
+
+{% block head %}
+    {# Optional. Here you can link to or define your own CSS and JS contents. #}
+    {# Use {{ parent() }} to extend the default styles instead of overriding them. #}
+    {{ parent() }}
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label">
+        <span class="icon">
+               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 236.6 254.1" enable-background="new 0 0 236.6 254.1" xml:space="preserve" height="24" width="24">
+<path fill="#AAAAAA" d="M116.4,0l120,65c0.1,13.1,0.1,9.8,0.2,22.9L118.4,154L0.4,87c0-12.3,0-9.7,0.1-22
+	L116.4,0z M18.4,105c23.8,12.2,82.1,46.1,100,56c32.5-18.3,65.1-37.5,97.6-55.8c10,5.9,8.4,4.9,18.4,10.8v22c-39,22-77,44-116,66
+	C78.7,181.7,40,160.3,0.3,138c0-12.9,0-10,0.1-23L18.4,105z M18.1,155.1c33.3,18.3,66.7,36.7,100,55l100-55c9.7,5.8,8.3,4.9,18,10.6
+	v22.4c-39,22-79,44-118,66c-39.7-22.3-78.3-44.7-118-67c-0.1-8.1-0.1-15.8,0-21C5.4,163.1,13.4,158.1,18.1,155.1z"></path>
+</svg>
+        </span>
+        <strong>Eventstore</strong>
+        {% if collector.metrics is defined %}
+            <span class="count">
+                <span>{{ collector.metrics.total_events }}</span>
+                <span>{{ collector.metrics.total_duration }} ms</span>
+            </span>
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Event Store Metrics</h2>
+
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.metrics.total_events|default('0') }}</span>
+            <span class="label">Actions</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.metrics.total_streams|default('0') }}</span>
+            <span class="label">Streams</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.metrics.total_messages|default('0') }}</span>
+            <span class="label">Messages</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.metrics.total_duration|default('0') }} ms</span>
+            <span class="label">Execution Time</span>
+        </div>
+
+    </div>
+
+    <h2>Event Store</h2>
+
+    <table>
+        <thead>
+        <th>Action</th>
+        <th>Stream</th>
+        <th>Messages</th>
+        <th>Duration</th>
+        </thead>
+        {% for i, action in collector.eventStoreActions %}
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ path('_profiler', { panel: 'event_store', token: token }) }}#{{ action.stream_name }}-{{ action.event_name }}">{{ action.event_name }}</a>
+                </td>
+                <td>{{ action.stream_name|default('-') }}</td>
+                <td>{%  if action.stream_events|length > 0 %}
+                        <a href="#" class="sf-toggle link-inverse" data-toggle-selector="#stream-details-{{ i }}" data-toggle-alt-content="Hide">Show</a>
+                    {% endif %} <span class="value">{{ action.stream_events|length|default('') }}</span></td>
+                <td>{{ action.duration }} ms</td>
+            </tr>
+
+                {% if action.stream_events|length > 0 %}
+
+            <tr>
+                <td colspan="4">
+                    <div id="stream-details-{{ i }}" class="sf-toggle-content sf-toggle-hidden">
+                        <table>
+                            {% for streamEvent in action.stream_events %}
+                                <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>{{ streamEvent.messageName }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Payload</th>
+                                    <td>
+                                        {{ profiler_dump(streamEvent.payload, maxDepth=3) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Metadata</th>
+                                    <td>{{ profiler_dump(streamEvent.metadata, maxDepth=1) }}</td>
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </td>
+            </tr>
+                {% endif %}
+
+            </tbody>
+        {% endfor %}
+    </table>
+{% endblock %}
