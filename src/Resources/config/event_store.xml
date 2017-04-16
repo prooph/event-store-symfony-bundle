@@ -9,8 +9,9 @@
         <parameter key="prooph_event_store.metadata_enricher_aggregate.class">Prooph\EventStore\Metadata\MetadataEnricherAggregate</parameter>
         <parameter key="prooph_event_store.message_converter.class">Prooph\Common\Messaging\NoOpMessageConverter</parameter>
         <parameter key="prooph_event_store.message_factory.class">Prooph\Common\Messaging\FQCNMessageFactory</parameter>
+        <parameter key="prooph_event_store.action_event_emitter_factory.class">Prooph\Bundle\EventStore\Factory\DefaultActionEventEmitterFactory</parameter>
         <parameter key="prooph_event_store.action_event_emitter.class">Prooph\Common\Event\ProophActionEventEmitter</parameter>
-        <parameter key="prooph_event_store.store_factory.class">Prooph\Bundle\EventStore\EventStoreFactory</parameter>
+        <parameter key="prooph_event_store.store_factory.class">Prooph\Bundle\EventStore\Factory\DefaultEventStoreFactory</parameter>
         <parameter key="prooph_event_store.repository_factory.class">Prooph\Bundle\EventStore\RepositoryFactory</parameter>
         <parameter key="prooph_event_store.repository.class">Prooph\EventSourcing\Aggregate\AggregateRepository</parameter>
         <parameter key="prooph_event_store.stream_table_map" type="collection"></parameter>
@@ -24,6 +25,7 @@
         <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="%prooph_event_store.metadata_enricher_aggregate.class%" public="true" abstract="true" />
         <service id="prooph_event_store.repository_factory" class="%prooph_event_store.repository_factory.class%"/>
         <service id="prooph_event_store.repository_definition" class="%prooph_event_store.repository.class%" abstract="true" />
+        <service id="prooph_event_store.action_event_emitter_factory" class="%prooph_event_store.action_event_emitter_factory.class%" />
         <service id="prooph_event_store.action_event_emitter" class="%prooph_event_store.action_event_emitter.class%" />
         <service id="prooph_event_store.message_converter" class="%prooph_event_store.message_converter.class%" />
         <service id="prooph_event_store.message_factory" class="%prooph_event_store.message_factory.class%" />
