@@ -29,5 +29,15 @@
         <service id="prooph_event_store.action_event_emitter" class="%prooph_event_store.action_event_emitter.class%" />
         <service id="prooph_event_store.message_converter" class="%prooph_event_store.message_converter.class%" />
         <service id="prooph_event_store.message_factory" class="%prooph_event_store.message_factory.class%" />
+        <service id="prooph_event_store.datacollector_debug_plugin" class="Prooph\Bundle\EventStore\DataCollector\DebugPlugin">
+            <argument id="debug.stopwatch" type="service"/>
+            <tag name="prooph_event_store.plugin" />
+            <tag name="data_collector" id="event_store" template="@ProophEventStore/Collector/debug_view.html.twig" />
+        </service>
+        <service id="prooph_event_store.datacollector_logger_plugin" class="Prooph\Bundle\EventStore\Plugin\LoggerPlugin">
+            <argument id="logger" type="service" on-invalid="ignore"/>
+            <tag name="prooph_event_store.plugin" />
+            <tag name="monolog.logger" channel="prooph.event_store"/>
+        </service>
     </services>
 </container>
