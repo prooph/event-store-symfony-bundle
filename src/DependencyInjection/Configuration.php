@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
+use Prooph\Common\Event\ActionEventEmitter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -100,8 +101,25 @@ final class Configuration implements ConfigurationInterface
                 ->prototype('array')
                 ->fixXmlConfig('repository', 'repositories')
                 ->children()
-                    ->scalarNode('event_emitter')->defaultValue('prooph_event_store.action_event_emitter')->end()
-                    ->scalarNode('type')->end()
+                    ->scalarNode('event_emitter')
+                        ->defaultValue('%prooph_event_store.action_event_emitter.class%')
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                return !class_exists($v);
+                            })
+                            ->thenInvalid('Class %s does not exist')
+                        ->end()
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                return !in_array(ActionEventEmitter::class, class_implements($v));
+                            })
+                            ->then(function ($v) {
+                                throw new \InvalidArgumentException(sprintf('%s must implement %s', $v, ActionEventEmitter::class));
+                            })
+                        ->end()
+                    ->end()
+                    ->booleanNode('wrap_action_event_emitter')->defaultValue(true)->end()
+                    ->scalarNode('event_store')->end()
                     ->append($repositoriesNode)
                 ->end()
             ->end();

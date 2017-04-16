@@ -152,12 +152,14 @@ final class ProophEventStoreExtension extends Extension
                 $eventStoreId,
                 new DefinitionDecorator('prooph_event_store.store_definition')
             )
-            ->setFactory([new Reference('prooph_event_store.store_factory'), 'create'])
+            ->setFactory([new Reference('prooph_event_store.store_factory'), 'createEventStore'])
             ->setArguments(
                 [
                     $name,
-                    new Reference($options['type']),
-                    new Reference($options['event_emitter']),
+                    new Reference($options['event_store']),
+                    new Reference('prooph_event_store.action_event_emitter_factory'),
+                    $options['event_emitter'],
+                    $options['wrap_action_event_emitter'],
                     new Reference('service_container'),
                 ]
             );
