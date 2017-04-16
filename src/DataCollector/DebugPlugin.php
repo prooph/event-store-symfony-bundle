@@ -107,8 +107,10 @@ class DebugPlugin extends DataCollector implements Plugin
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         $this->data = [];
+        $allStreams = [];
         foreach ($this->eventStoreActions as $debugEvent) {
             // Don't count non-returned streams
+
             $debugEvent->getStreamName() === null ?: $allStreams[] = $debugEvent->getStreamName();
 
             /** @var DebugEvent $debugEvent */
