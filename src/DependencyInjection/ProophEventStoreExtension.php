@@ -115,7 +115,7 @@ final class ProophEventStoreExtension extends Extension
         $eventStoreLoggerDefinition = $container
             ->setDefinition(
                 sprintf('%s.plugin.psr_logger', $eventStoreId),
-                new ChildDefinition('prooph_event_store.logger_plugin')
+                new ChildDefinition('prooph_event_store.psr_logger_plugin')
             )
             ->setArguments(
                 [

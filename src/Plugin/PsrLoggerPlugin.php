@@ -10,7 +10,7 @@ use Prooph\EventStore\Plugin\Plugin;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class LoggerPlugin implements Plugin
+class PsrLoggerPlugin implements Plugin
 {
     /**
      * @var LoggerInterface
