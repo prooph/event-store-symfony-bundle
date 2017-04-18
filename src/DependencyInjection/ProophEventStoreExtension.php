@@ -13,7 +13,9 @@ namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\EventStore\EventStore;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -110,6 +112,21 @@ final class ProophEventStoreExtension extends Extension
                     new Reference('service_container'),
                 ]
             );
+
+        // Logging for each configured event_store
+        $eventStoreLoggerDefinition = $container
+            ->setDefinition(
+                sprintf('%s.plugin.psr_logger', $eventStoreId),
+                new ChildDefinition('prooph_event_store.logger_plugin')
+            )
+            ->setArguments(
+                [
+                    new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE)
+                ]
+            )
+            ->addTag('monolog.logger', ['channel' => sprintf('event_store.%s', $name)])
+            ->addTag(sprintf('prooph_event_store.%s.plugin', $name))
+        ;
 
         if (! empty($options['repositories'])) {
             foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {

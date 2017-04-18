@@ -34,10 +34,8 @@
             <tag name="prooph_event_store.plugin" />
             <tag name="data_collector" id="event_store" template="@ProophEventStore/Collector/debug_view.html.twig" />
         </service>
-        <service id="prooph_event_store.datacollector_logger_plugin" class="Prooph\Bundle\EventStore\Plugin\LoggerPlugin">
-            <argument id="logger" type="service" on-invalid="ignore"/>
-            <tag name="prooph_event_store.plugin" />
-            <tag name="monolog.logger" channel="prooph.event_store"/>
-        </service>
+
+        <service id="prooph_event_store.logger_plugin" class="Prooph\Bundle\EventStore\Plugin\LoggerPlugin" abstract="true" />
+
     </services>
 </container>
