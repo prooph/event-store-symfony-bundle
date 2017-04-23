@@ -158,8 +158,7 @@ final class ProophEventStoreExtension extends Extension
             ->setDefinition(
                 $metadataEnricherAggregateId,
                 new DefinitionDecorator('prooph_event_store.metadata_enricher_aggregate_definition')
-            )
-            ->setClass('%prooph_event_store.metadata_enricher_aggregate.class%');
+            );
 
         $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
 
@@ -167,7 +166,6 @@ final class ProophEventStoreExtension extends Extension
             ->setDefinition(
                 $metadataEnricherId,
                 new DefinitionDecorator('prooph_event_store.metadata_enricher_plugin_definition')
-            )
-            ->setClass('%prooph_event_store.metadata_enricher_plugin.class%');
+            );
     }
 }

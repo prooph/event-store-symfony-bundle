@@ -71,7 +71,7 @@ final class Configuration implements ConfigurationInterface
                 ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')
-                        ->defaultValue('%prooph_event_store.action_event_emitter.class%')
+                        ->defaultValue('Prooph\Common\Event\ProophActionEventEmitter')
                         ->validate()
                             ->ifTrue(function ($v) {
                                 return !class_exists($v);
