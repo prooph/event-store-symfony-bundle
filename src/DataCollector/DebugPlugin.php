@@ -24,9 +24,10 @@ class DebugPlugin extends DataCollector implements Plugin
      */
     private $stopwatch;
 
-    public function __construct(Stopwatch $stopwatch)
+    public function __construct(Stopwatch $stopwatch, array $config = [])
     {
         $this->stopwatch = $stopwatch;
+        $this->config = $config;
     }
 
     /**
@@ -91,6 +92,11 @@ class DebugPlugin extends DataCollector implements Plugin
 
     public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
     {
+    }
+
+    public function config(string $eventStore): array
+    {
+        return $this->data['config'][$eventStore] ?? [];
     }
 
     /**

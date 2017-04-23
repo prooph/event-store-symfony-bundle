@@ -48,6 +48,7 @@ final class ProophEventStoreExtension extends Extension
             $this->loadEventStores(EventStore::class, $config, $container);
         }
 
+        $container->setParameter('prooph_event_store.configuration', $config);
         $this->addClassesToCompile([
             EventStore::class,
         ]);
