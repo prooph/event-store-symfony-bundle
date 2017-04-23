@@ -6,21 +6,16 @@ namespace Prooph\Bundle\EventStore\Plugin;
 
 use Prooph\Common\Event\ActionEvent;
 use Prooph\EventStore\ActionEventEmitterEventStore;
-use Prooph\EventStore\Plugin\Plugin;
+use Prooph\EventStore\Plugin\AbstractPlugin;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class PsrLoggerPlugin implements Plugin
+class PsrLoggerPlugin extends AbstractPlugin
 {
     /**
      * @var LoggerInterface
      */
     protected $logger;
-
-    /**
-     * @var array
-     */
-    protected $eventStoreListener;
 
     public function __construct(LoggerInterface $logger = null)
     {
@@ -31,7 +26,7 @@ class PsrLoggerPlugin implements Plugin
     public function attachToEventStore(ActionEventEmitterEventStore $eventStore): void
     {
         foreach ($eventStore::ALL_EVENTS as $eventStoreEvent) {
-            $this->eventStoreListener[] = $eventStore->attach($eventStoreEvent, function (ActionEvent $event) use ($eventStoreEvent, $eventStore) {
+            $this->listenerHandlers[] = $eventStore->attach($eventStoreEvent, function (ActionEvent $event) use ($eventStoreEvent, $eventStore) {
                 $context = [];
                 if ($event->getParam('stream', null) !== null) {
                     $context['stream_name'] = (string)$event->getParam('stream')->streamName();
@@ -43,13 +38,6 @@ class PsrLoggerPlugin implements Plugin
                 }
 
             }, 1000);
-        }
-    }
-
-    public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
-    {
-        foreach ($this->eventStoreListener as $listener) {
-            $eventStore->detach($listener);
         }
     }
 }
