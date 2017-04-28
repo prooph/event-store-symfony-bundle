@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractReadModelProjectionRunner extends Command
+abstract class AbstractProjectionRunner extends Command
 {
     const ARGUMENT_ACTION = 'action';
     const OPTION_RUN_ONCE = 'run-once';
