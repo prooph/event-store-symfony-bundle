@@ -30,14 +30,17 @@ abstract class AbstractProjectionRunner extends Command
      * @var ProjectionManager
      */
     private $projectionManager;
+
     /**
      * @var string
      */
     private $projectionName;
+
     /**
-     * @var ReadModel
+     * @var ReadModel|null
      */
     private $readModel;
+
     /**
      * @var ReadModelProjector|Projector
      */
@@ -258,7 +261,6 @@ TXT
 
     private function colors(OutputInterface $output): OutputInterface
     {
-
         $outputFormatter = $output->getFormatter();
         $outputFormatter->setStyle('header', new OutputFormatterStyle('green', null));
         $outputFormatter->setStyle('highlight', new OutputFormatterStyle('green', null, ['bold']));
