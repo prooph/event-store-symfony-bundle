@@ -25,7 +25,7 @@ use Prooph\EventStore\Projection\ReadModelProjector;
 use Prooph\SnapshotStore\SnapshotStore;
 use PDO;
 
-class ProjectionFactory
+class ProjectionManagerFactory
 {
     public function createProjectionManager(
         EventStore $eventStore,
