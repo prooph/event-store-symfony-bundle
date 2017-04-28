@@ -266,7 +266,6 @@ TXT
         $outputFormatter->setStyle('highlight', new OutputFormatterStyle('green', null, ['bold']));
         $outputFormatter->setStyle('action', new OutputFormatterStyle('blue', null));
 
-
         return $output;
     }
 }
