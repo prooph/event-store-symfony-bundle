@@ -13,6 +13,7 @@ namespace Prooph\Bundle\EventStore;
 
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\ProjectorPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,5 +25,6 @@ final class ProophEventStoreBundle extends Bundle
 
         $container->addCompilerPass(new PluginsPass());
         $container->addCompilerPass(new MetadataEnricherPass());
+        $container->addCompilerPass(new ProjectorPass());
     }
 }

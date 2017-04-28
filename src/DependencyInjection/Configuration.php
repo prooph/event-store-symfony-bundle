@@ -28,10 +28,44 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('prooph_event_store');
 
         $this->addEventStoreSection($rootNode);
+        $this->addProjectionManagerSection($rootNode);
+        $this->addProjectionSection($rootNode);
 
         return $treeBuilder;
     }
 
+    public function addProjectionManagerSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+            ->arrayNode('projection_managers')
+                ->requiresAtLeastOneElement()
+                ->useAttributeAsKey('name')
+                ->prototype('array')
+                ->children()
+                    ->scalarNode('event_store')->isRequired()->end()
+                    ->scalarNode('connection')->end()
+                    ->scalarNode('event_streams_table')->defaultValue('event_streams')->end()
+                    ->scalarNode('projections_table')->defaultValue('projections')->end()
+                ->end()
+            ->end();
+    }
+
+    public function addProjectionSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+            ->arrayNode('projections')
+                ->requiresAtLeastOneElement()
+                ->useAttributeAsKey('name')
+                ->prototype('array')
+                ->children()
+                    ->scalarNode('read_model')->end()
+                    ->scalarNode('projection_class')->end()
+                    ->scalarNode('projection_manager')->end()
+                ->end()
+            ->end();
+    }
     /**
      * Add event store section to configuration tree
      *
