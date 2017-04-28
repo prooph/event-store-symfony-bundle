@@ -11,24 +11,23 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection\Compiler;
 
+use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ProjectorPass implements CompilerPassInterface
+final class ProjectorPass implements CompilerPassInterface
 {
-    const TAGNAME = 'prooph_event_store.projection';
 
     public function process(ContainerBuilder $container)
     {
-
-        $projectors = $container->findTaggedServiceIds(static::TAGNAME);
+        $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
 
         foreach ($projectors as $id => $projector) {
             $projectorDefinition = $container->getDefinition($id);
 
-            $tags = $projectorDefinition->getTag(static::TAGNAME);
+            $tags = $projectorDefinition->getTag(ProophEventStoreExtension::TAG_PROJECTION);
             foreach ($tags as $tag) {
                 if (!isset($tag['projection_name'])) {
                     throw new RuntimeException(sprintf('"projection_name" argument is missing from on "prooph_event_store.projection" tagged service "%s"',

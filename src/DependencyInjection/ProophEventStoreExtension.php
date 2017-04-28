@@ -27,6 +27,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 final class ProophEventStoreExtension extends Extension
 {
+    public const TAG_PROJECTION = 'prooph_event_store.projection';
+
     public function getNamespace()
     {
         return 'http://getprooph.org/schemas/symfony-dic/prooph';
@@ -88,10 +90,10 @@ final class ProophEventStoreExtension extends Extension
         foreach ($config['projections'] as $projectionName => $projectionConfig) {
             $container
                 ->setDefinition(
-                    sprintf('prooph_event_store.projection.%s', $projectionName),
+                    sprintf('%s.%s',static::TAG_PROJECTION, $projectionName),
                     (new Definition())
                     ->setClass($projectionConfig['projection_class'])
-                    ->addTag('prooph_event_store.projection', [
+                    ->addTag(static::TAG_PROJECTION, [
                         'projection_name' => $projectionName,
                         'read_model' => $projectionConfig['read_model'],
                         'projection_manager' => $projectionConfig['projection_manager']
