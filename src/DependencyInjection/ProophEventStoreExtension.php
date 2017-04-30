@@ -13,9 +13,7 @@ namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\EventStore\EventStore;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -78,23 +76,30 @@ final class ProophEventStoreExtension extends Extension
                 $projectorManagerId,
                 $projectionManagerDefintion
             );
+
+            $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);
         }
     }
 
-    public function loadProjections(array $config, ContainerBuilder $container)
+    public function loadProjections(array $config, string $projectionManager, ContainerBuilder $container)
     {
         foreach ($config['projections'] as $projectionName => $projectionConfig) {
+            $tag = [
+                'projection_name' => $projectionName,
+                'projection_manager' => $projectionManager,
+            ];
+
+            if (isset($projectionConfig['read_model'])) {
+                $tag['read_model'] = $projectionConfig['read_model'];
+            }
+
             $container
                 ->setDefinition(
-                    sprintf('%s.%s',static::TAG_PROJECTION, $projectionName),
+                    sprintf('%s.%s', static::TAG_PROJECTION, $projectionName),
                     (new Definition())
-                    ->setClass($projectionConfig['projection_class'])
-                    ->addTag(static::TAG_PROJECTION, [
-                        'projection_name' => $projectionName,
-                        'read_model' => $projectionConfig['read_model'],
-                        'projection_manager' => $projectionConfig['projection_manager']
-                    ])
-            );
+                        ->setClass($projectionConfig['projection'])
+                        ->addTag(static::TAG_PROJECTION, $tag)
+                );
         }
     }
     /**

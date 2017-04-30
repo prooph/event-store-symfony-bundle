@@ -13,13 +13,14 @@ namespace Prooph\Bundle\EventStore\DependencyInjection\Compiler;
 
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
+use Prooph\Bundle\EventStore\Projection\Projection;
+use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 final class ProjectorPass implements CompilerPassInterface
 {
-
     public function process(ContainerBuilder $container)
     {
         $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
@@ -27,34 +28,44 @@ final class ProjectorPass implements CompilerPassInterface
         foreach ($projectors as $id => $projector) {
             $projectorDefinition = $container->getDefinition($id);
 
+            $reflClass = new ReflectionClass($projectorDefinition->getClass());
+            if (!$reflClass->implementsInterface(ReadModelProjection::class) && !$reflClass->implementsInterface(Projection::class)) {
+                throw new RuntimeException(sprintf('Tagged service "%" must implement "%s" or "%s" ', $id, ReadModelProjection::class, Projection::class));
+            }
+
             $tags = $projectorDefinition->getTag(ProophEventStoreExtension::TAG_PROJECTION);
             foreach ($tags as $tag) {
                 if (!isset($tag['projection_name'])) {
                     throw new RuntimeException(sprintf('"projection_name" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                         $id));
                 }
-                if (!isset($tag['read_model'])) {
-                    throw new RuntimeException(sprintf('"read_model" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
-                        $id));
-                }
+
                 if (!isset($tag['projection_manager'])) {
-                    throw new RuntimeException(sprintf('"event_store" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
+                    throw new RuntimeException(sprintf('"projection_manager" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                         $id));
                 }
 
-                $projectorDefinition
-                    ->setArguments([sprintf('projection:%s', $tag['projection_name'])])
-                    ->addMethodCall('setDescription', [sprintf('%s Projection', $tag['projection_name'])])
-                    ->addMethodCall('setProjectionName', [$tag['projection_name']])
-                    ->addMethodCall('setReadModel', [new Reference($tag['read_model'])])
-                    ->addMethodCall('setProjectionManager', [new Reference(sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager']))]);
+                if (in_array(ReadModelProjection::class, class_implements($projectorDefinition->getClass()))) {
+                    if (!isset($tag['read_model'])) {
+                        throw new RuntimeException(sprintf('"read_model" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
+                            $id));
+                    }
+                    $container->setAlias(
+                        sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
+                        $tag['read_model']
+                    );
+                }
+
+                //alias definition for using the correct ProjectionManager
+                $container->setAlias(
+                    sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
+                    sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager'])
+                );
+
+                if ($id !== sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name'])) {
+                    $container->setAlias(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']), $id);
+                }
             }
-            $container->setDefinition(
-                $id,
-                $projectorDefinition
-            );
-            // AddConsoleCommandPass is called before, so we have to manually add the command
-            $container->setParameter('console.command.ids', array_merge($container->getParameter('console.command.ids'), [$id]));
         }
     }
 }
