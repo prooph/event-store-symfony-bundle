@@ -45,10 +45,6 @@ final class ProophEventStoreExtension extends Extension
         if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
-
-        $this->addClassesToCompile([
-            EventStore::class,
-        ]);
     }
 
     /**
