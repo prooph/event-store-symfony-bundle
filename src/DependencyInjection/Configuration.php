@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\Common\Event\ActionEventEmitter;
+use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -29,8 +30,39 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('prooph_event_store');
 
         $this->addEventStoreSection($rootNode);
+        $this->addProjectionManagerSection($rootNode);
 
         return $treeBuilder;
+    }
+
+    public function addProjectionManagerSection(ArrayNodeDefinition $node): void
+    {
+        $treeBuilder = new TreeBuilder();
+        $projectionsNode = $treeBuilder->root('projections');
+
+        $projectionsNode
+            ->requiresAtLeastOneElement()
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+            ->children()
+                ->scalarNode('read_model')->end()
+                ->scalarNode('projection')->isRequired()->end()
+            ->end();
+
+        $node
+            ->children()
+            ->arrayNode('projection_managers')
+                ->requiresAtLeastOneElement()
+                ->useAttributeAsKey('name')
+                ->prototype('array')
+                ->children()
+                    ->scalarNode('event_store')->isRequired()->end()
+                    ->scalarNode('connection')->end()
+                    ->scalarNode('event_streams_table')->defaultValue('event_streams')->end()
+                    ->scalarNode('projections_table')->defaultValue('projections')->end()
+                    ->append($projectionsNode)
+                ->end()
+            ->end();
     }
 
     /**
@@ -40,7 +72,7 @@ final class Configuration implements ConfigurationInterface
      *
      * @param ArrayNodeDefinition $node
      */
-    private function addEventStoreSection(ArrayNodeDefinition $node)
+    private function addEventStoreSection(ArrayNodeDefinition $node): void
     {
         $treeBuilder = new TreeBuilder();
         $repositoriesNode = $treeBuilder->root('repositories');

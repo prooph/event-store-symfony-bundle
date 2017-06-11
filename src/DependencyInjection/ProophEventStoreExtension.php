@@ -16,6 +16,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -26,6 +27,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 final class ProophEventStoreExtension extends Extension
 {
+    public const TAG_PROJECTION = 'prooph_event_store.projection';
+
     public function getNamespace()
     {
         return 'http://getprooph.org/schemas/symfony-dic/prooph';
@@ -44,6 +47,14 @@ final class ProophEventStoreExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('event_store.xml');
 
+        if (! empty($config['projection_managers'])) {
+            $this->loadProjectionManagers($config, $container);
+        }
+
+        if (! empty($config['projections'])) {
+            $this->loadProjections($config, $container);
+        }
+
         if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
@@ -54,6 +65,50 @@ final class ProophEventStoreExtension extends Extension
         ]);
     }
 
+    public function loadProjectionManagers(array $config, ContainerBuilder $container)
+    {
+        foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
+            $projectionManagerDefintion = new Definition();
+            $projectionManagerDefintion
+                ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
+                ->setArguments([
+                    new Reference($projectionManagerConfig['event_store']),
+                    new Reference($projectionManagerConfig['connection']),
+                    $projectionManagerConfig['event_streams_table'],
+                    $projectionManagerConfig['projections_table'],
+                ]);
+
+            $projectorManagerId = sprintf('prooph_event_store.projection_manager.%s', $projectionManagerName);
+            $container->setDefinition(
+                $projectorManagerId,
+                $projectionManagerDefintion
+            );
+
+            $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);
+        }
+    }
+
+    public function loadProjections(array $config, string $projectionManager, ContainerBuilder $container)
+    {
+        foreach ($config['projections'] as $projectionName => $projectionConfig) {
+            $tag = [
+                'projection_name' => $projectionName,
+                'projection_manager' => $projectionManager,
+            ];
+
+            if (isset($projectionConfig['read_model'])) {
+                $tag['read_model'] = $projectionConfig['read_model'];
+            }
+
+            $container
+                ->setDefinition(
+                    sprintf('%s.%s', static::TAG_PROJECTION, $projectionName),
+                    (new Definition())
+                        ->setClass($projectionConfig['projection'])
+                        ->addTag(static::TAG_PROJECTION, $tag)
+                );
+        }
+    }
     /**
      * Loads event store configuration depending on type. For configuration examples, please take look at
      * test/DependencyInjection/Fixture/config files
