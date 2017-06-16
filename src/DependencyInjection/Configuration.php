@@ -27,6 +27,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('prooph_event_store');
 
+        $this->addPdoSection($rootNode);
         $this->addEventStoreSection($rootNode);
 
         return $treeBuilder;
@@ -73,6 +74,26 @@ final class Configuration implements ConfigurationInterface
                     ->scalarNode('type')->end()
                     ->append($repositoriesNode)
                 ->end()
+            ->end();
+    }
+
+    /**
+     * @param $rootNode
+     */
+    public function addPdoSection(ArrayNodeDefinition $rootNode): void
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('pdo')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('dbname')->defaultValue('%database_name%')->end()
+                    ->scalarNode('host')->defaultValue('%database_host%')->end()
+                    ->scalarNode('port')->defaultValue('%database_port%')->end()
+                    ->scalarNode('user')->defaultValue('%database_user%')->end()
+                    ->scalarNode('password')->defaultValue('%database_password%')->end()
+                    ->scalarNode('driver')->defaultValue('%database_driver%')->end()
+                    ->end()
             ->end();
     }
 }

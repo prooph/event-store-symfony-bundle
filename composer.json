@@ -54,6 +54,7 @@
   "require": {
     "php": "^7.1",
     "symfony/config": "~2.8 || ~3.0",
+    "symfony/yaml": "~2.8 || ~3.0",
     "symfony/dependency-injection": "~2.8 || ~3.0",
     "symfony/http-kernel": "~2.8 || ~3.0",
     "prooph/event-store": "^7.0"
@@ -65,7 +66,8 @@
     "phpunit/phpunit": "^6",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
-    "prooph/php-cs-fixer-config": "^0.1.1"
+    "prooph/php-cs-fixer-config": "^0.1.1",
+    "matthiasnoback/symfony-config-test": "^3.0"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
