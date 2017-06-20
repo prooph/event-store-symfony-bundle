@@ -40,8 +40,9 @@ class DebugPlugin extends DataCollector implements Plugin
         if ($eventStore instanceof TransactionalActionEventEmitterEventStore) {
 
             $eventStore->attach(TransactionalActionEventEmitterEventStore::EVENT_BEGIN_TRANSACTION, function (ActionEvent $event) {
-                static $transactionInstance = 0;
-                $transactionInstance++;
+                $transactionInstance = 1;
+//                static $transactionInstance = 0;
+//                $transactionInstance++;
 
                 $time = $this->stopwatch->start('event_store.transaction_'.$transactionInstance, 'section');
                 $this->eventStoreActions[] = new DebugEvent($event, $time);
@@ -49,8 +50,9 @@ class DebugPlugin extends DataCollector implements Plugin
 
             foreach ([TransactionalActionEventEmitterEventStore::EVENT_COMMIT, TransactionalActionEventEmitterEventStore::EVENT_ROLLBACK] as $eventStoreEvent) {
                 $eventStore->attach($eventStoreEvent, function (ActionEvent $event) {
-                    static $transactionInstance = 0;
-                    $transactionInstance++;
+                    //                    static $transactionInstance = 0;
+//                    $transactionInstance++;
+                    $transactionInstance = 1;
                     $time = $this->stopwatch->stop('event_store.transaction_'.$transactionInstance);
                     $this->eventStoreActions[] = new DebugEvent($event, $time);
                 }, -1000);
