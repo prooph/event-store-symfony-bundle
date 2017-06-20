@@ -18,7 +18,7 @@ class DebugPlugin extends DataCollector implements Plugin
     /**
      * @var DebugEvent[]
      */
-    private $eventStoreActions;
+    private $eventStoreActions = [];
     /**
      * @var Stopwatch
      */
