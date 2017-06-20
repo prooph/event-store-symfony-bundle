@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
-use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
@@ -38,15 +36,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
      */
     public function it_does_not_process_compiler_passes_without_configured_store()
     {
-        $container = $this->loadContainer('unconfigured');
-
-        $pass = new PluginsPass();
-        $pass->process($container);
-
-        $pass = new MetadataEnricherPass();
-        $pass->process($container);
-
-        // TODO Assert sth? Mocking the whole ContainerBuilder seems ugly
+        self::assertInstanceOf(ContainerBuilder::class, $this->loadContainer('unconfigured'));
     }
 
     /**
