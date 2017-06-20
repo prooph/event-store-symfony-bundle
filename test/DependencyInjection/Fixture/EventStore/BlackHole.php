@@ -60,7 +60,7 @@ class BlackHole implements EventStore
 
     public function loadReverse(
         StreamName $streamName,
-        int $fromNumber = PHP_INT_MAX,
+        int $fromNumber = null,
         int $count = null,
         MetadataMatcher $metadataMatcher = null
     ): Iterator {
