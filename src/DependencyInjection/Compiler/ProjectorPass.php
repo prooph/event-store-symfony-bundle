@@ -29,24 +29,24 @@ final class ProjectorPass implements CompilerPassInterface
             $projectorDefinition = $container->getDefinition($id);
 
             $reflClass = new ReflectionClass($projectorDefinition->getClass());
-            if (!$reflClass->implementsInterface(ReadModelProjection::class) && !$reflClass->implementsInterface(Projection::class)) {
+            if (! $reflClass->implementsInterface(ReadModelProjection::class) && ! $reflClass->implementsInterface(Projection::class)) {
                 throw new RuntimeException(sprintf('Tagged service "%" must implement "%s" or "%s" ', $id, ReadModelProjection::class, Projection::class));
             }
 
             $tags = $projectorDefinition->getTag(ProophEventStoreExtension::TAG_PROJECTION);
             foreach ($tags as $tag) {
-                if (!isset($tag['projection_name'])) {
+                if (! isset($tag['projection_name'])) {
                     throw new RuntimeException(sprintf('"projection_name" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                         $id));
                 }
 
-                if (!isset($tag['projection_manager'])) {
+                if (! isset($tag['projection_manager'])) {
                     throw new RuntimeException(sprintf('"projection_manager" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                         $id));
                 }
 
                 if (in_array(ReadModelProjection::class, class_implements($projectorDefinition->getClass()))) {
-                    if (!isset($tag['read_model'])) {
+                    if (! isset($tag['read_model'])) {
                         throw new RuntimeException(sprintf('"read_model" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                             $id));
                     }

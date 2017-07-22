@@ -23,7 +23,7 @@ class ProjectionRunCommand extends AbstractProjectionCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $keepRunning = !$input->getOption(static::OPTION_RUN_ONCE);
+        $keepRunning = ! $input->getOption(static::OPTION_RUN_ONCE);
         $output->writeln(
             sprintf(
                 '<action>Starting projection <highlight>%s</highlight>. Keep running: <highlight>%s</highlight></action>', $this->projectionName,
@@ -32,7 +32,7 @@ class ProjectionRunCommand extends AbstractProjectionCommand
         );
 
         $projector = $this->projection->project($this->projector);
-        $projector->run((bool)$keepRunning);
+        $projector->run((bool) $keepRunning);
         $output->writeln(sprintf('<action>Projection <highlight>%s</highlight> completed.</action>', $this->projectionName));
     }
 }
