@@ -88,7 +88,7 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
         }
 
         if (null === $this->projector) {
-            throw new RuntimeException('Projection was not be created');
+            throw new RuntimeException('Projection was not created');
         }
         $output->writeln(sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
         try {
