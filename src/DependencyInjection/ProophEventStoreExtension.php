@@ -42,7 +42,7 @@ final class ProophEventStoreExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('event_store.xml');
 
         if (! empty($config['projection_managers'])) {
@@ -102,14 +102,15 @@ final class ProophEventStoreExtension extends Extension
                 );
         }
     }
+
     /**
      * Loads event store configuration depending on type. For configuration examples, please take look at
      * test/DependencyInjection/Fixture/config files
      *
-     * @param string $class
-     * @param array $config
+     * @param string           $class
+     * @param array            $config
      * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
+     * @param XmlFileLoader    $loader
      */
     private function loadEventStores(
         string $class,
@@ -119,7 +120,7 @@ final class ProophEventStoreExtension extends Extension
         $eventStores = [];
 
         foreach (array_keys($config['stores']) as $name) {
-            $eventStores[$name] = 'prooph_event_store.' . $name;
+            $eventStores[$name] = 'prooph_event_store.'.$name;
         }
         $container->setParameter('prooph_event_store.stores', $eventStores);
 
@@ -135,16 +136,17 @@ final class ProophEventStoreExtension extends Extension
      * Initializes specific event store class with plugins and metadata enricher. Each class dependency must be set
      * via a container or reference definition.
      *
-     * @param string $name
-     * @param array $options
+     * @param string           $name
+     * @param array            $options
      * @param ContainerBuilder $container
+     *
      * @throws \Symfony\Component\DependencyInjection\Exception\BadMethodCallException
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Prooph\Bundle\EventStore\Exception\RuntimeException
      */
     private function loadEventStore(string $name, array $options, ContainerBuilder $container)
     {
-        $eventStoreId = 'prooph_event_store.' . $name;
+        $eventStoreId = 'prooph_event_store.'.$name;
         $eventStoreDefinition = $container
             ->setDefinition(
                 $eventStoreId,

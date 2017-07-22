@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore;
 
+use PDO;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\InMemoryEventStore;
@@ -20,10 +21,6 @@ use Prooph\EventStore\Pdo\Projection\MySqlProjectionManager;
 use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
 use Prooph\EventStore\Projection\InMemoryProjectionManager;
 use Prooph\EventStore\Projection\ProjectionManager;
-use Prooph\EventStore\Projection\ReadModel;
-use Prooph\EventStore\Projection\ReadModelProjector;
-use Prooph\SnapshotStore\SnapshotStore;
-use PDO;
 
 class ProjectionManagerFactory
 {
@@ -33,9 +30,8 @@ class ProjectionManagerFactory
         string $eventStreamsTable = 'event_streams',
         string $projectionsTable = 'projections'
     ): ProjectionManager {
-
         $checkConnection = function () use ($connection) {
-            if (!$connection instanceof PDO) {
+            if (! $connection instanceof PDO) {
                 throw new RuntimeException('PDO connection missing');
             }
         };

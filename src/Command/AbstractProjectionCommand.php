@@ -64,18 +64,18 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
 
         $container = $this->getContainer();
 
-        if (!$container->has(sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
+        if (! $container->has(sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
             throw new RuntimeException(sprintf('ProjectionManager for "%s" not found', $this->projectionName));
         }
         $this->projectionManager = $container->get(sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
 
-        if (!$container->has(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
+        if (! $container->has(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
             throw new RuntimeException(sprintf('Projection "%s" not found', $this->projectionName));
         }
         $this->projection = $container->get(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
 
         if ($this->projection instanceof ReadModelProjection) {
-            if (!$container->has(sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
+            if (! $container->has(sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
                 throw new RuntimeException(sprintf('ReadModel for "%s" not found', $this->projectionName));
             }
             $this->readModel = $container->get(sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
