@@ -63,6 +63,7 @@
     "prooph/snapshot-store": "^1.0",
     "prooph/pdo-event-store": "^1.0",
     "phpunit/phpunit": "^6",
+    "symfony/yaml" : "~2.8 || ~3.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
     "prooph/php-cs-fixer-config": "^0.1.1",

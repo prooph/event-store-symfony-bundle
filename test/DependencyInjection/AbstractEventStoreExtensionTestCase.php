@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
