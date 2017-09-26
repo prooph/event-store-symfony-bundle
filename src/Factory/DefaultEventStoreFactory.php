@@ -7,7 +7,7 @@ namespace Prooph\Bundle\EventStore\Factory;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\Plugin\Plugin;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DefaultEventStoreFactory implements EventStoreFactory
 {
@@ -20,7 +20,6 @@ class DefaultEventStoreFactory implements EventStoreFactory
         ContainerInterface $container,
         array $plugins = []
     ): EventStore {
-
         if ($wrapActionEventEmitter === false) {
             return $eventStore;
         }
@@ -30,7 +29,7 @@ class DefaultEventStoreFactory implements EventStoreFactory
         foreach ($plugins as $pluginAlias) {
             $plugin = $container->get($pluginAlias);
 
-            if (!$plugin instanceof Plugin) {
+            if (! $plugin instanceof Plugin) {
                 throw new RuntimeException(sprintf(
                     'Plugin %s does not implement the Plugin interface',
                     $pluginAlias
@@ -39,7 +38,6 @@ class DefaultEventStoreFactory implements EventStoreFactory
 
             $plugin->attachToEventStore($actionEventEmittingEventStore);
         }
-
 
         if ($this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
             $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($actionEventEmittingEventStore);
@@ -84,5 +82,4 @@ class DefaultEventStoreFactory implements EventStoreFactory
     {
         return sprintf('prooph_event_store.metadata_enricher_plugin.%s', $eventStoreName);
     }
-
 }

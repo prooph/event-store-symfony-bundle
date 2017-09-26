@@ -6,7 +6,7 @@
                xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
                         http://getprooph.org/schemas/symfony-dic/prooph http://getprooph.org/schemas/symfony-dic/prooph/event_store-5.1.xsd">
     <config>
-        <store name="main_store" type="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
+        <store name="main_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
             <repository name="main_store.todo_list">
                 <repository_class>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository</repository_class>
                 <aggregate_type>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate</aggregate_type>
@@ -17,7 +17,7 @@
             </repository>
         </store>
         <!-- uses default values -->
-        <store name="second_store" type="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
+        <store name="second_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
             <repository name="second_store.todo_list">
                 <repository_class>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository</repository_class>
                 <aggregate_type>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate</aggregate_type>

@@ -105,13 +105,13 @@ final class Configuration implements ConfigurationInterface
                         ->defaultValue('%prooph_event_store.action_event_emitter.class%')
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return !class_exists($v);
+                                return ! class_exists($v);
                             })
                             ->thenInvalid('Class %s does not exist')
                         ->end()
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return !in_array(ActionEventEmitter::class, class_implements($v));
+                                return ! in_array(ActionEventEmitter::class, class_implements($v));
                             })
                             ->then(function ($v) {
                                 throw new \InvalidArgumentException(sprintf('%s must implement %s', $v, ActionEventEmitter::class));
