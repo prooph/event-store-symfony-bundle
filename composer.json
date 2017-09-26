@@ -66,8 +66,8 @@
     "symfony/yaml" : "~2.8 || ~3.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
-    "prooph/php-cs-fixer-config": "^0.1.1",
-    "symfony/yaml": "^3.3"
+    "friendsofphp/php-cs-fixer": " ~2.0",
+    "prooph/php-cs-fixer-config": "^0.1.1"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
