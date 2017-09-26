@@ -22,7 +22,8 @@
         <service id="prooph_event_store.plugin_definition" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_plugin_definition" class="%prooph_event_store.metadata_enricher_plugin.class%" public="true" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="%prooph_event_store.metadata_enricher_aggregate.class%" public="true" abstract="true" />
-        <service id="prooph_event_store.repository_factory" class="%prooph_event_store.repository_factory.class%"/>
+        <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\ProjectionManagerFactory"/>
+        <service id="prooph_event_store.repository_factory" class="%prooph_event_store.repository_factory.class%" />
         <service id="prooph_event_store.repository_definition" class="%prooph_event_store.repository.class%" abstract="true" />
         <service id="prooph_event_store.action_event_emitter" class="%prooph_event_store.action_event_emitter.class%" />
         <service id="prooph_event_store.message_converter" class="%prooph_event_store.message_converter.class%" />
