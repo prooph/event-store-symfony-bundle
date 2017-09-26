@@ -1,7 +1,7 @@
 prooph_event_store:
   stores:
     main_store:
-      type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+      event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
       repositories:
          todo_list:
             repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'

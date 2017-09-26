@@ -1,54 +1,55 @@
 <?php
-/**
- * prooph (http://getprooph.org/)
- *
- * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 prooph software GmbH (http://prooph-software.com/)
- * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
- */
 
 declare(strict_types=1);
 
-namespace Prooph\Bundle\EventStore;
+namespace Prooph\Bundle\EventStore\Factory;
 
-use Prooph\Common\Event\ActionEventEmitter;
-use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\Plugin\Plugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class EventStoreFactory
+class DefaultEventStoreFactory implements EventStoreFactory
 {
-    public function create(
+    public function createEventStore(
         string $eventStoreName,
-        EventStore $type,
-        ActionEventEmitter $actionEventEmitter,
+        EventStore $eventStore,
+        ActionEventEmitterFactory $actionEventEmitterFactory,
+        string $actionEventEmitter,
+        bool $wrapActionEventEmitter,
         ContainerInterface $container,
-        array $pluginServiceIds
+        array $plugins = []
     ): EventStore {
-        $eventStore = $type;
-
-        // Wrap in ActionEventEmitter for BC plugin support (?)
-        if (count($pluginServiceIds) > 0 || $this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
-            $eventStore = new ActionEventEmitterEventStore($type, $actionEventEmitter);
+        if ($wrapActionEventEmitter === false) {
+            return $eventStore;
         }
 
-        foreach ($pluginServiceIds as $pluginServiceId) {
-            /** @var Plugin $plugin */
-            $plugin = $container->get($pluginServiceId);
-            $plugin->attachToEventStore($eventStore);
+        $actionEventEmittingEventStore = $actionEventEmitterFactory::create($eventStore, $actionEventEmitter);
+
+        foreach ($plugins as $pluginAlias) {
+            $plugin = $container->get($pluginAlias);
+
+            if (! $plugin instanceof Plugin) {
+                throw new RuntimeException(sprintf(
+                    'Plugin %s does not implement the Plugin interface',
+                    $pluginAlias
+                ));
+            }
+
+            $plugin->attachToEventStore($actionEventEmittingEventStore);
         }
 
         if ($this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
-            $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($eventStore);
+            $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($actionEventEmittingEventStore);
         }
 
-        return $eventStore;
+        return $actionEventEmittingEventStore;
     }
 
     /**
-     * @param string $eventStoreName
+     * @param string             $eventStoreName
      * @param ContainerInterface $container
+     *
      * @return Plugin
      */
     private function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
@@ -62,8 +63,9 @@ class EventStoreFactory
     }
 
     /**
-     * @param string $eventStoreName The container id of the concrete event store
+     * @param string             $eventStoreName The container id of the concrete event store
      * @param ContainerInterface $container
+     *
      * @return bool
      */
     private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): bool
@@ -73,6 +75,7 @@ class EventStoreFactory
 
     /**
      * @param string $eventStoreName Short name from configuration
+     *
      * @return string
      */
     private function buildMetadataEnricherIdForStore(string $eventStoreName): string
