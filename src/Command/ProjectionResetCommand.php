@@ -20,6 +20,9 @@ class ProjectionResetCommand extends AbstractProjectionCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(sprintf('<action>Resetting projection <highlight>%s</highlight></action>', $this->projectionName));
+        if ($this->readModel) {
+            $this->readModel->reset();
+        }
         $this->projectionManager->resetProjection($this->projectionName);
     }
 }
