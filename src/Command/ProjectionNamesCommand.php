@@ -17,7 +17,7 @@ class ProjectionNamesCommand extends AbstractProjectionCommand
     private const OPTION_OFFSET = 'offset';
 
     protected function configure()
-    {        
+    {
         $this
             ->setName('event-store:projection:names')
             ->setDescription('Shows a list of all projection names. Can be filtered.')
