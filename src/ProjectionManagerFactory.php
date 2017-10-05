@@ -15,8 +15,10 @@ use PDO;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\InMemoryEventStore;
+use Prooph\EventStore\Pdo\MariaDbEventStore;
 use Prooph\EventStore\Pdo\MySqlEventStore;
 use Prooph\EventStore\Pdo\PostgresEventStore;
+use Prooph\EventStore\Pdo\Projection\MariaDbProjectionManager;
 use Prooph\EventStore\Pdo\Projection\MySqlProjectionManager;
 use Prooph\EventStore\Pdo\Projection\PostgresProjectionManager;
 use Prooph\EventStore\Projection\InMemoryProjectionManager;
@@ -50,6 +52,12 @@ class ProjectionManagerFactory
             $checkConnection();
 
             return new MySqlProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+        }
+
+        if ($eventStore instanceof MariaDbEventStore) {
+            $checkConnection();
+
+            return new MariaDbProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
         }
 
         throw new RuntimeException(sprintf('ProjectionManager for %s not implemented.', $eventStore));
