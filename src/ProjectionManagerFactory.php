@@ -60,6 +60,6 @@ class ProjectionManagerFactory
             return new MariaDbProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
         }
 
-        throw new RuntimeException(sprintf('ProjectionManager for %s not implemented.', $eventStore));
+        throw new RuntimeException(sprintf('ProjectionManager for %s not implemented.', get_class($eventStore)));
     }
 }
