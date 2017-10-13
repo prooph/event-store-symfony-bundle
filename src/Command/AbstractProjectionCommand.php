@@ -12,13 +12,14 @@ use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\Projection\Projector;
 use Prooph\EventStore\Projection\ReadModelProjector;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractProjectionCommand extends ContainerAwareCommand
 {
+    use FormatsOutput;
+
     protected const ARGUMENT_PROJECTION_NAME = 'projection-name';
 
     /**
@@ -55,10 +56,7 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
     {
         $input->validate();
 
-        $outputFormatter = $output->getFormatter();
-        $outputFormatter->setStyle('header', new OutputFormatterStyle('green', null));
-        $outputFormatter->setStyle('highlight', new OutputFormatterStyle('green', null, ['bold']));
-        $outputFormatter->setStyle('action', new OutputFormatterStyle('blue', null));
+        $this->formatOutput($output);
 
         $this->projectionName = $input->getArgument(static::ARGUMENT_PROJECTION_NAME);
 

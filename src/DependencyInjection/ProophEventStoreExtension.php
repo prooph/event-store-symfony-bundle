@@ -60,6 +60,8 @@ final class ProophEventStoreExtension extends Extension
 
     public function loadProjectionManagers(array $config, ContainerBuilder $container)
     {
+        $projectionManagers = [];
+
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
             $projectionManagerDefintion = new Definition();
             $projectionManagerDefintion
@@ -78,7 +80,11 @@ final class ProophEventStoreExtension extends Extension
             );
 
             $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);
+
+            $projectionManagers[$projectionManagerName] = 'prooph_event_store.'.$projectionManagerName;
         }
+
+        $container->setParameter('prooph_event_store.projection_managers', $projectionManagers);
     }
 
     public function loadProjections(array $config, string $projectionManager, ContainerBuilder $container)
