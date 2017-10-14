@@ -23,7 +23,7 @@ Then browse to [http://localhost:8080/](http://localhost:8080/)
 
 ## Support
 
-- Ask questions on [prooph-users](https://groups.google.com/forum/?hl=de#!forum/prooph) mailing list.
+- Ask questions on Stack Overflow tagged with [#prooph](https://stackoverflow.com/questions/tagged/prooph).
 - File issues at [https://github.com/prooph/event-store-symfony-bundle/issues](https://github.com/prooph/event-store-symfony-bundle/issues).
 - Say hello in the [prooph gitter](https://gitter.im/prooph/improoph) chat.
 
