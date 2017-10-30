@@ -45,3 +45,5 @@ return [
     Prooph\Bundle\EventStore\ProophEventStoreBundle::class => ['all' => true],
 ];
 ```
+
+Now that you have installed the bundle you might want start with configuring an [Event Store](./event_store.html).
