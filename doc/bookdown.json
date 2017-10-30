@@ -5,6 +5,7 @@
     {"getting_started": "getting_started.md"},
     {"event_store": "event_store.md"},
     {"projection_manager": "projection_manager.md"},
+    {"event_store_bus_bridge": "event_store_bus_bridge.md"},
     {"configuration_reference": "configuration_reference.md"}
   ],
   "target": "./html",
