@@ -15,6 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
+use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Metadata\MetadataEnricherAggregate;
+use Prooph\EventStore\Metadata\MetadataEnricherPlugin;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\GlobalBlackHole;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\TestServices;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class BundleTest extends TestCase
