@@ -10,3 +10,6 @@ prooph_event_store:
             snapshot_store: prooph_test.bundle.snapshot_store.in_memory
             stream_name: 'test'
             one_stream_per_aggregate: true
+         ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository:
+            aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
+            aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'

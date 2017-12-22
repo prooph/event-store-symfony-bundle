@@ -64,6 +64,17 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     /**
      * @test
      */
+    public function it_registers_repository_with_short_syntax()
+    {
+        $container = $this->loadContainer('event_store');
+
+        $repository = $container->get(BlackHoleRepository::class);
+        self::assertInstanceOf(BlackHoleRepository::class, $repository);
+    }
+
+    /**
+     * @test
+     */
     public function it_creates_multiple_event_stores()
     {
         $container = $this->loadContainer('event_store_multiple');
