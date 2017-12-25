@@ -143,7 +143,7 @@ services:
 ## Plugins
 
 A prooph Event Store can be expanded using plugins.
-If you want to know more about Event Store Plugins, please have a look at the [official documentation](http://bgfa854:8080/event_store.html#3-1).
+If you want to know more about Event Store Plugins, please have a look at the [official documentation](http://docs.getprooph.org/event-store/event_store_plugins.html).
 
 Adding plugins to an Event Store is really simple.
 Let's assume that we already have a class implementing `Prooph\EventStore\Plugin\Plugin`
