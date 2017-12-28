@@ -1,4 +1,7 @@
 prooph_event_store:
+    stores:
+        main_store:
+            event_store: Prooph\EventStore\InMemoryEventStore
     projection_managers:
         main_projection_manager:
             event_store: Prooph\EventStore\InMemoryEventStore
