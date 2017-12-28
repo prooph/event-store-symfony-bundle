@@ -15,6 +15,7 @@ use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -65,7 +66,10 @@ final class ProophEventStoreExtension extends Extension
                 ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
                 ->setArguments([
                     new Reference($projectionManagerConfig['event_store']),
-                    new Reference($projectionManagerConfig['connection']),
+                    new Reference(
+                        $projectionManagerConfig['connection'],
+                        ContainerInterface::NULL_ON_INVALID_REFERENCE
+                    ),
                     $projectionManagerConfig['event_streams_table'],
                     $projectionManagerConfig['projections_table'],
                 ]);
