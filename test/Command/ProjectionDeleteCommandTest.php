@@ -21,7 +21,7 @@ class ProjectionDeleteCommandTest extends KernelTestCase
     }
 
     /** @test */
-    public function it_deletes_a_projection()
+    public function it_deletes_a_projection(): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
