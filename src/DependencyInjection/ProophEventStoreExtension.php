@@ -50,10 +50,6 @@ final class ProophEventStoreExtension extends Extension
             $this->loadProjectionManagers($config, $container);
         }
 
-        if (! empty($config['projections'])) {
-            $this->loadProjections($config, $container);
-        }
-
         if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
