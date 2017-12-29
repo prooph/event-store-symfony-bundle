@@ -6,8 +6,8 @@ namespace ProophTest\Bundle\EventStore\Command;
 
 use Prooph\EventStore\Exception\RuntimeException;
 use ProophTest\Bundle\EventStore\Command\Fixture\TestKernel;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -35,6 +35,7 @@ class ProjectionDeleteCommandTest extends KernelTestCase
             $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
             $this->assertContains('Deleting a projection is not supported', $notSupported->getMessage());
+
             return;
         }
         $this->fail('The projection was not deleted');

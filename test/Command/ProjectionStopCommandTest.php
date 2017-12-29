@@ -35,6 +35,7 @@ class ProjectionStopCommandTest extends KernelTestCase
             $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
             $this->assertContains('Stopping a projection is not supported', $notSupported->getMessage());
+
             return;
         }
         $this->fail('The projection was not stopped');

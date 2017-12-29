@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\Command\Fixture;
@@ -12,7 +13,7 @@ class TestKernel extends Kernel
     public function registerBundles(): array
     {
         return [
-            new ProophEventStoreBundle()
+            new ProophEventStoreBundle(),
         ];
     }
 
