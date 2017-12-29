@@ -25,8 +25,11 @@ class ProjectionRunCommandTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    /** @test */
-    public function it_runs_a_projection(): void
+    /**
+     * @test
+     * @dataProvider provideProjectionNames
+     */
+    public function it_runs_a_projection(string $projectionName): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
@@ -40,11 +43,19 @@ class ProjectionRunCommandTest extends KernelTestCase
 
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:run'));
-        $commandTester->execute(['projection-name' => 'black_hole_projection', '--run-once' => true]);
+        $commandTester->execute(['projection-name' => $projectionName, '--run-once' => true]);
 
         $this->assertSame(
             ['main_stream' => 1],
-            $manager->fetchProjectionStreamPositions('black_hole_projection')
+            $manager->fetchProjectionStreamPositions($projectionName)
         );
+    }
+
+    public static function provideProjectionNames(): array
+    {
+        return [
+            'projection' => ['black_hole_projection'],
+            'read_model_projection' => ['black_hole_read_model_projection'],
+        ];
     }
 }

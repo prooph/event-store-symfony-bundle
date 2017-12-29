@@ -19,19 +19,28 @@ class ProjectionStateCommandTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    /** @test */
-    public function it_echoes_the_state_of_a_projection(): void
+    /**
+     * @test
+     * @dataProvider provideProjectionNames
+     */
+    public function it_echoes_the_state_of_a_projection(string $projectionName): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
 
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:state'));
-        $commandTester->execute([
-            'projection-name' => 'black_hole_projection'
-        ]);
-        $this->assertContains('black_hole_projection', $commandTester->getDisplay());
+        $commandTester->execute(['projection-name' => $projectionName]);
+        $this->assertContains($projectionName, $commandTester->getDisplay());
         $this->assertContains('Current status', $commandTester->getDisplay());
         $this->assertContains('Current state', $commandTester->getDisplay());
+    }
+
+    public static function provideProjectionNames(): array
+    {
+        return [
+            'projection' => ['black_hole_projection'],
+            'read_model_projection' => ['black_hole_read_model_projection'],
+        ];
     }
 }

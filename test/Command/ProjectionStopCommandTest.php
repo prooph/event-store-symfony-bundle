@@ -20,8 +20,11 @@ class ProjectionStopCommandTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    /** @test */
-    public function it_stops_a_projection(): void
+    /**
+     * @test
+     * @dataProvider provideProjectionNames
+     */
+    public function it_stops_a_projection(string $projectionName): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
@@ -29,11 +32,19 @@ class ProjectionStopCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:stop'));
         try {
-            $commandTester->execute(['projection-name' => 'black_hole_projection']);
+            $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
             $this->assertContains('Stopping a projection is not supported', $notSupported->getMessage());
             return;
         }
         $this->fail('The projection was not stopped');
+    }
+
+    public static function provideProjectionNames(): array
+    {
+        return [
+            'projection' => ['black_hole_projection'],
+            'read_model_projection' => ['black_hole_read_model_projection'],
+        ];
     }
 }

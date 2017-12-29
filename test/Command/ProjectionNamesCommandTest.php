@@ -20,20 +20,31 @@ class ProjectionNamesCommandTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    /** @test */
-    public function it_lists_all_projections(): void
+    /**
+     * @test
+     * @dataProvider provideProjectionNames
+     */
+    public function it_lists_all_projections(string $projectionName): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
 
         /** @var InMemoryProjectionManager $manager */
         $manager = $kernel->getContainer()->get('prooph_event_store.projection_manager.main_projection_manager');
-        $manager->createProjection('black_hole_projection');
+        $manager->createProjection($projectionName);
 
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:names'));
         $commandTester->execute([]);
         $this->assertContains('main_projection_manager', $commandTester->getDisplay());
-        $this->assertContains('black_hole_projection', $commandTester->getDisplay());
+        $this->assertContains($projectionName, $commandTester->getDisplay());
+    }
+
+    public static function provideProjectionNames(): array
+    {
+        return [
+            'projection' => ['black_hole_projection'],
+            'read_model_projection' => ['black_hole_read_model_projection'],
+        ];
     }
 }

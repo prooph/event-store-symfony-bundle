@@ -6,12 +6,13 @@ namespace ProophTest\Bundle\EventStore\Command\Fixture\Projection;
 use Prooph\Bundle\EventStore\Projection\Projection;
 use Prooph\EventStore\Projection\Projector;
 
-class BlackHoleProjection implements Projection
+final class BlackHoleProjection implements Projection
 {
     public function project(Projector $projector): Projector
     {
         return $projector
             ->fromAll()
-            ->whenAny(function () {});
+            ->whenAny(function () {
+            });
     }
 }
