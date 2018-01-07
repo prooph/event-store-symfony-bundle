@@ -176,7 +176,7 @@ final class ProophEventStoreExtension extends Extension
                 $repositoryClass = $repositoryConfig['repository_class'] ?? $repositoryName;
 
                 if (! class_exists($repositoryClass)) {
-                    throw new RuntimeException(\sprintf(
+                    throw new RuntimeException(sprintf(
                         "Configure repository class using either passing FQCN as a key or 'repository_class' configuration key. Given: %s",
                         $repositoryClass
                     ));
