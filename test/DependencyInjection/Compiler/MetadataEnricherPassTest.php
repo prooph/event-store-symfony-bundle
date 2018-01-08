@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
@@ -35,7 +36,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
             0,
             [
                 new Reference(GlobalBlackHole::class),
-                new Reference(BlackHole::class)
+                new Reference(BlackHole::class),
             ]
         );
 
@@ -43,7 +44,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
             sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', 'bar'),
             0,
             [
-                new Reference(GlobalBlackHole::class)
+                new Reference(GlobalBlackHole::class),
             ]
         );
     }

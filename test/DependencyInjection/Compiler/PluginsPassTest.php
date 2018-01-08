@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
@@ -34,7 +35,7 @@ class PluginsPassTest extends CompilerPassTestCase
             0,
             [
                 GlobalBlackHole::class,
-                BlackHole::class
+                BlackHole::class,
             ]
         );
 
@@ -42,7 +43,7 @@ class PluginsPassTest extends CompilerPassTestCase
             'prooph_event_store.bar',
             0,
             [
-                GlobalBlackHole::class
+                GlobalBlackHole::class,
             ]
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
@@ -28,7 +29,7 @@ class ProjectorPassTest extends CompilerPassTestCase
         $attributes = [
             'projection_name' => 'foo',
             'projection_manager' => 'foo',
-            'read_model' => 'foo.read_model'
+            'read_model' => 'foo.read_model',
         ];
 
         $this->registerProjectionManager('foo');
