@@ -15,6 +15,11 @@
                 <stream_name>test</stream_name>
                 <one_stream_per_aggregate>true</one_stream_per_aggregate>
             </repository>
+
+            <repository name="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository">
+                <aggregate_type>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate</aggregate_type>
+                <aggregate_translator>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator</aggregate_translator>
+            </repository>
         </store>
     </config>
 </srv:container>

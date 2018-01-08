@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
+use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -172,6 +173,15 @@ final class ProophEventStoreExtension extends Extension
 
         if (! empty($options['repositories'])) {
             foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {
+                $repositoryClass = $repositoryConfig['repository_class'] ?? $repositoryName;
+
+                if (! class_exists($repositoryClass)) {
+                    throw new RuntimeException(sprintf(
+                        "Configure repository class using either passing FQCN as a key or 'repository_class' configuration key. Given: %s",
+                        $repositoryClass
+                    ));
+                }
+
                 $repositoryDefinition = $container
                     ->setDefinition(
                         $repositoryName,
@@ -180,7 +190,7 @@ final class ProophEventStoreExtension extends Extension
                     ->setFactory([new Reference('prooph_event_store.repository_factory'), 'create'])
                     ->setArguments(
                         [
-                            $repositoryConfig['repository_class'],
+                            $repositoryClass,
                             new Reference($eventStoreId),
                             $repositoryConfig['aggregate_type'],
                             new Reference($repositoryConfig['aggregate_translator']),
