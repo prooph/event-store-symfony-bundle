@@ -20,7 +20,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
     /**
      * @test
      */
-    public function it_registers_plugins()
+    public function it_registers_enrichers()
     {
         $this->registerEventStore('foo');
         $this->registerEventStore('bar');
