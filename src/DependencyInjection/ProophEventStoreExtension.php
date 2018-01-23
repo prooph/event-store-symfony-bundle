@@ -13,6 +13,7 @@ namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Projection\ProjectionManager;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -67,6 +68,7 @@ final class ProophEventStoreExtension extends Extension
             $projectionManagerDefintion = new Definition();
             $projectionManagerDefintion
                 ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
+                ->setClass(ProjectionManager::class)
                 ->setArguments([
                     new Reference($projectionManagerConfig['event_store']),
                     new Reference($projectionManagerConfig['connection']),
