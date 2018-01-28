@@ -22,7 +22,6 @@ use Prooph\EventStore\StreamName;
 use Prooph\SnapshotStore\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole as BlackHolePlugin;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\TestServices;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
@@ -112,7 +111,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $container = $this->loadContainer('metadata_enricher_global');
         /* @var EventStore $store */
-        $store = $container->get('prooph_event_store.main_store');
+        $store = $container->get('test.prooph_event_store.main_store');
 
         $store->appendTo(new StreamName('any'), new ArrayIterator([$message]));
     }

@@ -13,9 +13,6 @@ namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Metadata\MetadataEnricherAggregate;
-use Prooph\EventStore\Metadata\MetadataEnricherPlugin;
-use Prooph\EventStore\Projection\ProjectionManager;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -63,7 +60,7 @@ final class ProophEventStoreExtension extends Extension
         $projectionManagers = [];
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
-            $projectionManagerDefintion = new Definition();
+            $projectionManagerDefintion = new ChildDefinition('prooph_event_store.projection_definition');
             $projectionManagerDefintion
                 ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
                 ->setArguments([
@@ -71,8 +68,7 @@ final class ProophEventStoreExtension extends Extension
                     isset($projectionManagerConfig['connection']) ? new Reference($projectionManagerConfig['connection']) : null,
                     $projectionManagerConfig['event_streams_table'],
                     $projectionManagerConfig['projections_table'],
-                ])
-                ->setClass(ProjectionManager::class);
+                ]);
 
             $projectorManagerId = sprintf('prooph_event_store.projection_manager.%s', $projectionManagerName);
             $container->setDefinition(
