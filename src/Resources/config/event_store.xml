@@ -9,14 +9,18 @@
     </parameters>
 
     <services>
-        <service id="prooph_event_store.store_definition" class="Prooph\EventStore\EventStore" abstract="true" />
+        <service id="prooph_event_store.store_definition" class="Prooph\EventStore\EventStore" abstract="true">
+            <factory service="prooph_event_store.store_factory" method="createEventStore" />
+        </service>
         <service id="prooph_event_store.store_factory" class="Prooph\Bundle\EventStore\Factory\DefaultEventStoreFactory" />
         <service id="prooph_event_store.plugin_definition" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_plugin_definition" class="Prooph\EventStore\Metadata\MetadataEnricherPlugin" public="true" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="Prooph\EventStore\Metadata\MetadataEnricherAggregate" public="true" abstract="true" />
         <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\ProjectionManagerFactory"/>
         <service id="prooph_event_store.repository_factory" class="Prooph\Bundle\EventStore\RepositoryFactory" />
-        <service id="prooph_event_store.repository_definition" class="Prooph\EventSourcing\Aggregate\AggregateRepository" abstract="true" />
+        <service id="prooph_event_store.repository_definition" class="Prooph\EventSourcing\Aggregate\AggregateRepository" abstract="true">
+            <factory service="prooph_event_store.repository_factory" method="create" />
+        </service>
         <service id="prooph_event_store.action_event_emitter_factory" class="Prooph\Bundle\EventStore\Factory\DefaultActionEventEmitterFactory" />
         <service id="prooph_event_store.action_event_emitter" class="Prooph\Common\Event\ProophActionEventEmitter" />
         <service id="prooph_event_store.message_converter" class="Prooph\Common\Messaging\NoOpMessageConverter" />

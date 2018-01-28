@@ -32,7 +32,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', 'foo'),
+            'prooph_event_store.metadata_enricher_aggregate.foo',
             0,
             [
                 new Reference(GlobalBlackHole::class),
@@ -41,7 +41,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
         );
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', 'bar'),
+            'prooph_event_store.metadata_enricher_aggregate.bar',
             0,
             [
                 new Reference(GlobalBlackHole::class),
@@ -52,9 +52,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
     private function registerMetadataEnricher(?string $storeName, string $className, ?string $serviceId = null): Definition
     {
         $definition = new Definition($className);
-        $definition->addTag(
-            sprintf('prooph_event_store.%smetadata_enricher', $storeName ? $storeName . '.' : '')
-        );
+        $definition->addTag('prooph_event_store.' . ($storeName ? $storeName . '.' : '') . 'metadata_enricher');
         $this->setDefinition($serviceId ?? $className, $definition);
 
         return $definition;

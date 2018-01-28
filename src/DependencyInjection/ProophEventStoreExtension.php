@@ -159,7 +159,6 @@ final class ProophEventStoreExtension extends Extension
                 $eventStoreId,
                 new ChildDefinition('prooph_event_store.store_definition')
             )
-            ->setFactory([new Reference('prooph_event_store.store_factory'), 'createEventStore'])
             // TODO: Remove me
             ->setPublic(true)
             ->setArguments(
@@ -191,7 +190,6 @@ final class ProophEventStoreExtension extends Extension
                     )
                     // TODO: Remove me
                     ->setPublic(true)
-                    ->setFactory([new Reference('prooph_event_store.repository_factory'), 'create'])
                     ->setArguments(
                         [
                             $repositoryClass,
@@ -215,8 +213,7 @@ final class ProophEventStoreExtension extends Extension
                 new ChildDefinition('prooph_event_store.metadata_enricher_aggregate_definition')
             )
             // TODO: Remove me
-            ->setPublic(true)
-            ->setClass(MetadataEnricherAggregate::class);
+            ->setPublic(true);
 
         $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
 
@@ -226,7 +223,6 @@ final class ProophEventStoreExtension extends Extension
                 new ChildDefinition('prooph_event_store.metadata_enricher_plugin_definition')
             )
             // TODO: Remove me
-            ->setPublic(true)
-            ->setClass(MetadataEnricherPlugin::class);
+            ->setPublic(true);
     }
 }
