@@ -7,7 +7,7 @@ namespace Prooph\Bundle\EventStore\Factory;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\Plugin\Plugin;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class DefaultEventStoreFactory implements EventStoreFactory
 {

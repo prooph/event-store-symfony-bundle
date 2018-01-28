@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore\Factory;
 
 use Prooph\EventStore\EventStore;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 interface EventStoreFactory
 {

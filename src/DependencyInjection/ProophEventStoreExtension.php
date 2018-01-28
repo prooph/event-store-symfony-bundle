@@ -155,8 +155,6 @@ final class ProophEventStoreExtension extends Extension
                 $eventStoreId,
                 new ChildDefinition('prooph_event_store.store_definition')
             )
-            // TODO: Remove me
-            ->setPublic(true)
             ->setArguments(
                 [
                     $name,
@@ -164,7 +162,7 @@ final class ProophEventStoreExtension extends Extension
                     new Reference('prooph_event_store.action_event_emitter_factory'),
                     $options['event_emitter'],
                     $options['wrap_action_event_emitter'],
-                    new Reference('service_container'),
+                    new Reference('prooph_event_store.plugins_locator'),
                 ]
             );
 
@@ -184,8 +182,6 @@ final class ProophEventStoreExtension extends Extension
                         $repositoryName,
                         new ChildDefinition('prooph_event_store.repository_definition')
                     )
-                    // TODO: Remove me
-                    ->setPublic(true)
                     ->setArguments(
                         [
                             $repositoryClass,
@@ -207,9 +203,7 @@ final class ProophEventStoreExtension extends Extension
             ->setDefinition(
                 $metadataEnricherAggregateId,
                 new ChildDefinition('prooph_event_store.metadata_enricher_aggregate_definition')
-            )
-            // TODO: Remove me
-            ->setPublic(true);
+            );
 
         $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
 
@@ -217,8 +211,6 @@ final class ProophEventStoreExtension extends Extension
             ->setDefinition(
                 $metadataEnricherId,
                 new ChildDefinition('prooph_event_store.metadata_enricher_plugin_definition')
-            )
-            // TODO: Remove me
-            ->setPublic(true);
+            );
     }
 }

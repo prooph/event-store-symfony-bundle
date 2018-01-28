@@ -14,6 +14,7 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class XmlEventStoreExtensionTest extends AbstractEventStoreExtensionTestCase
 {
@@ -21,5 +22,8 @@ class XmlEventStoreExtensionTest extends AbstractEventStoreExtensionTestCase
     {
         $loadXml = new XmlFileLoader($container, new FileLocator(__DIR__.'/Fixture/config/xml'));
         $loadXml->load($file.'.xml');
+
+        $aliasesLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $aliasesLoader->load('test_aliases.yml');
     }
 }

@@ -9,7 +9,7 @@
         <store name="main_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole" />
     </config>
     <srv:services>
-        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher">
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher" public="true">
             <srv:argument type="string">global</srv:argument>
             <srv:argument type="constant">true</srv:argument>
             <srv:tag name="prooph_event_store.metadata_enricher" />

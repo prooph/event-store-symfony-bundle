@@ -9,3 +9,4 @@ services:
     ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher:
         arguments: ['specific', true]
         tags: [{name: 'prooph_event_store.with_enricher_store.metadata_enricher'}]
+        public: true
