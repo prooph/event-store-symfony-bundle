@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection;
 
 use Prooph\EventStore\Projection\AbstractReadModel;
 
 final class TodoReadModel extends AbstractReadModel
 {
-
     public function init(): void
     {
     }
