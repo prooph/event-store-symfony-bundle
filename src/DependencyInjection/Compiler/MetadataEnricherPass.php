@@ -26,8 +26,9 @@ class MetadataEnricherPass implements CompilerPassInterface
 
         $stores = $container->getParameter('prooph_event_store.stores');
 
+        $globalPlugins = $container->findTaggedServiceIds('prooph_event_store.metadata_enricher');
+
         foreach ($stores as $name => $store) {
-            $globalPlugins = $container->findTaggedServiceIds('prooph_event_store.metadata_enricher');
             $storeEnricherPlugins = $container->findTaggedServiceIds(sprintf('prooph_event_store.%s.metadata_enricher', $name));
             $plugins = array_merge($globalPlugins, $storeEnricherPlugins);
             $enrichers = [];
@@ -43,6 +44,7 @@ class MetadataEnricherPass implements CompilerPassInterface
             $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
             $metadataEnricherDefinition = $container->getDefinition($metadataEnricherId);
             $metadataEnricherDefinition->setClass(MetadataEnricherPlugin::class);
+            $metadataEnricherDefinition->addTag(sprintf('prooph_event_store.%s.plugin', $name));
             $metadataEnricherDefinition->setArguments([new Reference($metadataEnricherAggregateId)]);
         }
     }

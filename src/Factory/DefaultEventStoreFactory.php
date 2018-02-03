@@ -39,47 +39,6 @@ class DefaultEventStoreFactory implements EventStoreFactory
             $plugin->attachToEventStore($actionEventEmittingEventStore);
         }
 
-        if ($this->hasMetadataEnricherPlugin($eventStoreName, $container)) {
-            $this->getMetadataEnricherPlugin($eventStoreName, $container)->attachToEventStore($actionEventEmittingEventStore);
-        }
-
         return $actionEventEmittingEventStore;
-    }
-
-    /**
-     * @param string             $eventStoreName
-     * @param ContainerInterface $container
-     *
-     * @return Plugin
-     */
-    private function getMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): Plugin
-    {
-        $metadataEnricherId = $this->buildMetadataEnricherIdForStore($eventStoreName);
-
-        /** @var Plugin $metadataEnricherPlugin */
-        $metadataEnricherPlugin = $container->get($metadataEnricherId);
-
-        return $metadataEnricherPlugin;
-    }
-
-    /**
-     * @param string             $eventStoreName The container id of the concrete event store
-     * @param ContainerInterface $container
-     *
-     * @return bool
-     */
-    private function hasMetadataEnricherPlugin(string $eventStoreName, ContainerInterface $container): bool
-    {
-        return $container->has($this->buildMetadataEnricherIdForStore($eventStoreName));
-    }
-
-    /**
-     * @param string $eventStoreName Short name from configuration
-     *
-     * @return string
-     */
-    private function buildMetadataEnricherIdForStore(string $eventStoreName): string
-    {
-        return sprintf('prooph_event_store.metadata_enricher_plugin.%s', $eventStoreName);
     }
 }
