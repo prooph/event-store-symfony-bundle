@@ -19,3 +19,20 @@ prooph_event_store:
                     repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
                     aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
                     aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
+
+services:
+    test.prooph_event_store.main_store:
+        alias: prooph_event_store.main_store
+        public: true
+
+    test.main_store.todo_list:
+        alias: main_store.todo_list
+        public: true
+
+    test.prooph_event_store.second_store:
+        alias: prooph_event_store.second_store
+        public: true
+
+    test.second_store.todo_list:
+        alias: second_store.todo_list
+        public: true
