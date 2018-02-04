@@ -21,8 +21,5 @@ class YamlEventStoreExtensionTest extends AbstractEventStoreExtensionTestCase
     {
         $loadYaml = new YamlFileLoader($container, new FileLocator(__DIR__.'/Fixture/config/yml'));
         $loadYaml->load($file.'.yml');
-
-        $aliasesLoader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $aliasesLoader->load('test_aliases.yml');
     }
 }

@@ -1,6 +1,3 @@
-imports:
-  - { resource: test_aliases.yml }
-
 services:
     'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole':
         class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole

@@ -17,15 +17,13 @@ class PluginsPassTest extends CompilerPassTestCase
         $container->addCompilerPass(new PluginsPass());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_registers_plugins()
     {
         $this->registerEventStore('foo');
         $this->registerEventStore('bar');
 
-        $this->registerPlugin(null, GlobalBlackHole::class, null);
+        $this->registerPlugin(null, BlackHole::class, 'global_plugin');
         $this->registerPlugin('foo', BlackHole::class, null);
 
         $this->compile();
@@ -34,7 +32,7 @@ class PluginsPassTest extends CompilerPassTestCase
             'prooph_event_store.foo',
             0,
             [
-                GlobalBlackHole::class,
+                'global_plugin',
                 BlackHole::class,
             ]
         );
@@ -43,7 +41,7 @@ class PluginsPassTest extends CompilerPassTestCase
             'prooph_event_store.bar',
             0,
             [
-                GlobalBlackHole::class,
+                'global_plugin',
             ]
         );
     }

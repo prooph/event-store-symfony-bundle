@@ -30,7 +30,7 @@ class ProjectionNamesCommandTest extends KernelTestCase
         $kernel->boot();
 
         /** @var InMemoryProjectionManager $manager */
-        $manager = $kernel->getContainer()->get('prooph_event_store.projection_manager.main_projection_manager');
+        $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
         $manager->createProjection($projectionName);
 
         $app = new Application($kernel);

@@ -52,13 +52,13 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         self::assertEquals(EventStore::class, $config->getClass());
 
         /* @var $eventStore EventStore */
-        $eventStore = $container->get('test.prooph_event_store.main_store');
+        $eventStore = $container->get('prooph_event_store.main_store');
         self::assertInstanceOf(EventStore::class, $eventStore);
 
-        $repository = $container->get('test.todo_list');
+        $repository = $container->get('todo_list');
         self::assertInstanceOf(BlackHoleRepository::class, $repository);
 
-        $snapshotStore = $container->get('test.prooph_test.bundle.snapshot_store.in_memory');
+        $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
         self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
 
         $projectionManager = $container->get('prooph_event_store.projection_manager.main_projection_manager');
@@ -70,7 +70,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     {
         $container = $this->loadContainer('event_store');
 
-        $repository = $container->get('test.' . BlackHoleRepository::class);
+        $repository = $container->get(BlackHoleRepository::class);
         self::assertInstanceOf(BlackHoleRepository::class, $repository);
     }
 
@@ -85,10 +85,10 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
             self::assertEquals(EventStore::class, $config->getClass());
 
             //* @var $eventStore EventStore */
-            $eventStore = $container->get('test.prooph_event_store.' . $name);
+            $eventStore = $container->get('prooph_event_store.' . $name);
             self::assertInstanceOf(EventStore::class, $eventStore);
 
-            $repository = $container->get('test.' . $name . '.todo_list');
+            $repository = $container->get($name . '.todo_list');
             self::assertInstanceOf(BlackHoleRepository::class, $repository);
         }
     }
@@ -111,7 +111,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $container = $this->loadContainer('metadata_enricher_global');
         /* @var EventStore $store */
-        $store = $container->get('test.prooph_event_store.main_store');
+        $store = $container->get('prooph_event_store.main_store');
 
         $store->appendTo(new StreamName('any'), new ArrayIterator([$message]));
     }

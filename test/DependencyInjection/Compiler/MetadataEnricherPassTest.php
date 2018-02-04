@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
 
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\BlackHole;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\GlobalBlackHole;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -18,16 +18,14 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
         $container->addCompilerPass(new MetadataEnricherPass());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_registers_enrichers()
     {
         $this->registerEventStore('foo');
         $this->registerEventStore('bar');
 
-        $this->registerMetadataEnricher(null, GlobalBlackHole::class);
-        $this->registerMetadataEnricher('foo', BlackHole::class);
+        $this->registerMetadataEnricher(null, StaticMetadataEnricher::class, 'global_enricher');
+        $this->registerMetadataEnricher('foo', StaticMetadataEnricher::class);
 
         $this->compile();
 
@@ -35,8 +33,8 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
             'prooph_event_store.metadata_enricher_aggregate.foo',
             0,
             [
-                new Reference(GlobalBlackHole::class),
-                new Reference(BlackHole::class),
+                new Reference('global_enricher'),
+                new Reference(StaticMetadataEnricher::class),
             ]
         );
 
@@ -44,7 +42,7 @@ class MetadataEnricherPassTest extends CompilerPassTestCase
             'prooph_event_store.metadata_enricher_aggregate.bar',
             0,
             [
-                new Reference(GlobalBlackHole::class),
+                new Reference('global_enricher'),
             ]
         );
     }

@@ -6,3 +6,4 @@ prooph_event_store:
 services:
     ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole:
         tags: [{name: 'prooph_event_store.plugin'}]
+        public: true

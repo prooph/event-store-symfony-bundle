@@ -19,9 +19,7 @@ class ProjectorPassTest extends CompilerPassTestCase
         $container->addCompilerPass(new ProjectorPass());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function it_validates_and_aliases_projectors()
     {
         $projectionServiceId = 'foo.read_model_projection';

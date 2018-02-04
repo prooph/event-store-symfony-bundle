@@ -39,7 +39,7 @@ class ProjectionRunCommandTest extends KernelTestCase
         $store->create(new Stream(new StreamName('main_stream'), new ArrayIterator([new SomethingWasDone([])])));
 
         /** @var InMemoryProjectionManager $manager */
-        $manager = $kernel->getContainer()->get('prooph_event_store.projection_manager.main_projection_manager');
+        $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
 
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:run'));

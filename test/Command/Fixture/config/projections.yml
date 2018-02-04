@@ -13,7 +13,20 @@ prooph_event_store:
                     read_model: ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleReadModel
 
 services:
-    Prooph\EventStore\InMemoryEventStore: ~
-    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleProjection: ~
-    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleReadModelProjection: ~
-    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleReadModel: ~
+    Prooph\EventStore\InMemoryEventStore:
+        public: true
+    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleProjection:
+        public: true
+    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleReadModelProjection:
+        public: true
+    ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleReadModel:
+        public: true
+    test.prooph_event_store.projection_manager.main_projection_manager:
+        alias: prooph_event_store.projection_manager.main_projection_manager
+        public: true
+    test.prooph_event_store.projection.black_hole_projection:
+        alias: prooph_event_store.projection.black_hole_projection
+        public: true
+    test.prooph_event_store.projection.black_hole_read_model_projection:
+        alias: prooph_event_store.projection.black_hole_read_model_projection
+        public: true

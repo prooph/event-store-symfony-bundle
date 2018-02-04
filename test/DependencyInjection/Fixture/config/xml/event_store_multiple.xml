@@ -27,7 +27,6 @@
     </config>
 
     <srv:services>
-        <srv:service id="test.prooph_event_store.main_store" alias="prooph_event_store.main_store" public="true" />
         <srv:service id="test.main_store.todo_list" alias="main_store.todo_list" public="true" />
         <srv:service id="test.prooph_event_store.second_store" alias="prooph_event_store.second_store" public="true" />
         <srv:service id="test.second_store.todo_list" alias="second_store.todo_list" public="true" />
