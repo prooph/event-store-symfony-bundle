@@ -6,7 +6,6 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
 
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;

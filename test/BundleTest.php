@@ -15,8 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\GlobalBlackHole;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\TestServices;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class BundleTest extends TestCase

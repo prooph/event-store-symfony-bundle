@@ -6,7 +6,6 @@ namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
 
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\GlobalBlackHole;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
