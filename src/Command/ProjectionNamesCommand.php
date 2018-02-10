@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ProjectionNamesCommand extends ContainerAwareCommand
+class ProjectionNamesCommand extends Command
 {
     use FormatsOutput;
 
@@ -20,6 +21,24 @@ class ProjectionNamesCommand extends ContainerAwareCommand
     private const OPTION_LIMIT = 'limit';
     private const OPTION_OFFSET = 'offset';
     private const OPTION_MANAGER = 'manager';
+
+    /**
+     * @var ContainerInterface
+     */
+    private $projectionManagersLocator;
+
+    /**
+     * @var array
+     */
+    private $projectionManagerNames;
+
+    public function __construct(ContainerInterface $projectionManagersLocator, array $projectionManagerNames)
+    {
+        $this->projectionManagersLocator = $projectionManagersLocator;
+        $this->projectionManagerNames = $projectionManagerNames;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -37,7 +56,7 @@ class ProjectionNamesCommand extends ContainerAwareCommand
     {
         $this->formatOutput($output);
 
-        $managerNames = array_keys($this->getContainer()->getParameter('prooph_event_store.projection_managers'));
+        $managerNames = array_keys($this->projectionManagerNames);
 
         if ($requestedManager = $input->getOption(self::OPTION_MANAGER)) {
             $managerNames = array_filter($managerNames, function (string $managerName) use ($requestedManager) {
@@ -66,7 +85,7 @@ class ProjectionNamesCommand extends ContainerAwareCommand
         $maxNeeded = $offset + $limit;
 
         foreach ($managerNames as $managerName) {
-            $projectionManager = $this->getContainer()->get('prooph_event_store.projection_manager.' . $managerName);
+            $projectionManager = $this->projectionManagersLocator->get($managerName);
 
             if (count($names) > $offset) {
                 $projectionNames = $projectionManager->$method($filter, $limit - (count($names) - $offset));

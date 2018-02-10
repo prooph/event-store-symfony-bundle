@@ -44,7 +44,7 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         /** @var InMemoryProjectionManager $manager */
         $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
 
-        $projection->project($manager->createProjection('test.black_hole_projection'))->run(false);
+        $projection->project($manager->createProjection('black_hole_projection'))->run(false);
 
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:positions'));
@@ -71,7 +71,7 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
 
         $projection
-            ->project($manager->createReadModelProjection('test.black_hole_read_model_projection', $readModel))
+            ->project($manager->createReadModelProjection('black_hole_read_model_projection', $readModel))
             ->run(false);
 
         $app = new Application($kernel);

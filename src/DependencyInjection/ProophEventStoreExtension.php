@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -58,6 +59,9 @@ final class ProophEventStoreExtension extends Extension
     public function loadProjectionManagers(array $config, ContainerBuilder $container)
     {
         $projectionManagers = [];
+        $projectionManagersLocator = [];
+        $projectionManagerForProjectionsLocator = [];
+        $projectionsLocator = [];
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
             $projectionManagerDefintion = new ChildDefinition('prooph_event_store.projection_definition');
@@ -71,6 +75,7 @@ final class ProophEventStoreExtension extends Extension
                 ]);
 
             $projectorManagerId = sprintf('prooph_event_store.projection_manager.%s', $projectionManagerName);
+
             $container->setDefinition(
                 $projectorManagerId,
                 $projectionManagerDefintion
@@ -79,9 +84,40 @@ final class ProophEventStoreExtension extends Extension
             $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);
 
             $projectionManagers[$projectionManagerName] = 'prooph_event_store.'.$projectionManagerName;
+
+            // Gather maps for locators
+            foreach ($projectionManagerConfig['projections'] as $projectionName => $projectionConfig) {
+                $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectorManagerId);
+                $projectionsLocator[$projectionName] = new Reference(
+                    sprintf('%s.%s', static::TAG_PROJECTION, $projectionName)
+                );
+            }
+
+            $projectionManagersLocator[$projectionManagerName] = new Reference($projectorManagerId);
         }
 
         $container->setParameter('prooph_event_store.projection_managers', $projectionManagers);
+
+        $container
+            ->setDefinition(
+                'prooph_event_store.projection_managers_locator',
+                new Definition(ServiceLocator::class, [$projectionManagersLocator])
+            )
+            ->addTag('container.service_locator');
+
+        $container
+            ->setDefinition(
+                'prooph_event_store.projection_manager_for_projections_locator',
+                new Definition(ServiceLocator::class, [$projectionManagerForProjectionsLocator])
+            )
+            ->addTag('container.service_locator');
+
+        $container
+            ->setDefinition(
+                'prooph_event_store.projections_locator',
+                new Definition(ServiceLocator::class, [$projectionsLocator])
+            )
+            ->addTag('container.service_locator');
     }
 
     public function loadProjections(array $config, string $projectionManager, ContainerBuilder $container)

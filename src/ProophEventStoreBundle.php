@@ -24,8 +24,8 @@ final class ProophEventStoreBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new PluginsPass());
         $container->addCompilerPass(new MetadataEnricherPass());
+        $container->addCompilerPass(new PluginsPass());
         $container->addCompilerPass(new ProjectorPass());
         $container->addCompilerPass(new PluginLocatorPass());
     }
