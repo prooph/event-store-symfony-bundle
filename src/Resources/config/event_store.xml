@@ -71,4 +71,8 @@
             <tag name="console.command" command="event-store:projection:positions" />
         </service>
     </services>
+
+    <parameters>
+        <parameter key="prooph_event_store.projection_managers" type="collection"></parameter>
+    </parameters>
 </container>
