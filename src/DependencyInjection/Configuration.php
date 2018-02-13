@@ -120,7 +120,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->booleanNode('wrap_action_event_emitter')->defaultValue(true)->end()
-                    ->scalarNode('event_store')->end()
+                    ->scalarNode('event_store')->isRequired()->end()
                     ->append($repositoriesNode)
                 ->end()
             ->end();
