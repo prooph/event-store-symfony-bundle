@@ -16,7 +16,7 @@
         <service id="prooph_event_store.plugin_definition" class="Prooph\EventStore\Plugin\Plugin" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_plugin_definition" class="Prooph\EventStore\Metadata\MetadataEnricherPlugin" abstract="true" />
         <service id="prooph_event_store.metadata_enricher_aggregate_definition" class="Prooph\EventStore\Metadata\MetadataEnricherAggregate" abstract="true" />
-        <service id="prooph_event_store.projection_definition" class="Prooph\EventStore\Projection\ProjectionManager" abstract="true">
+        <service id="prooph_event_store.projection_definition" class="Prooph\EventStore\Projection\ProjectionManager" abstract="true" public="true">
             <factory service="prooph_event_store.projection_factory" method="createProjectionManager" />
         </service>
         <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\ProjectionManagerFactory"/>
