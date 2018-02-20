@@ -68,6 +68,7 @@ final class ProophEventStoreExtension extends Extension
             $projectionManagerDefintion = new Definition();
             $projectionManagerDefintion
                 ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
+                ->setClass(ProjectionManager::class)
                 ->setArguments([
                     new Reference($projectionManagerConfig['event_store']),
                     isset($projectionManagerConfig['connection']) ? new Reference($projectionManagerConfig['connection']) : null,
