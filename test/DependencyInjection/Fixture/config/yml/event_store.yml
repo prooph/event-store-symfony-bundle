@@ -13,3 +13,14 @@ prooph_event_store:
          ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository:
             aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
             aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
+  projection_managers:
+      main_projection_manager:
+        event_store: 'Prooph\EventStore\InMemoryEventStore'
+        projections:
+          todo_projection:
+            read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel'
+            projection: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection'
+
+services:
+  Prooph\EventStore\InMemoryEventStore:
+    class: Prooph\EventStore\InMemoryEventStore

@@ -21,5 +21,19 @@
                 <aggregate_translator>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator</aggregate_translator>
             </repository>
         </store>
+        <projection_managers>
+            <projection_manager name="main_projection_manager">
+                <event_store>Prooph\EventStore\InMemoryEventStore</event_store>
+                    <projections>
+                        <projection name="todo_projection">
+                            <read_model>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel</read_model>
+                            <projection>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection</projection>
+                        </projection>
+                    </projections>
+            </projection_manager>
+        </projection_managers>
     </config>
+    <srv:services>
+        <srv:service id="Prooph\EventStore\InMemoryEventStore" class="Prooph\EventStore\InMemoryEventStore" />
+    </srv:services>
 </srv:container>
