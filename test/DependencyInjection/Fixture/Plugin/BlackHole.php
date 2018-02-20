@@ -16,15 +16,20 @@ use Prooph\EventStore\Plugin\Plugin;
 
 class BlackHole implements Plugin
 {
+    public $stores = [];
     public $valid = false;
 
     public function attachToEventStore(ActionEventEmitterEventStore $eventStore): void
     {
+        $this->stores[] = $eventStore;
         $this->valid = true;
     }
 
     public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
     {
+        $this->stores = array_filter($this->stores, function ($store) use ($eventStore) {
+            return $store !== $eventStore;
+        });
         $this->valid = false;
     }
 }

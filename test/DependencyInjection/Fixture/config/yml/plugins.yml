@@ -1,0 +1,10 @@
+prooph_event_store:
+    stores:
+        with_plugin_store:
+            event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+        without_plugin_store:
+            event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+
+services:
+    ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole:
+        tags: [{name: 'prooph_event_store.with_plugin_store.plugin'}]

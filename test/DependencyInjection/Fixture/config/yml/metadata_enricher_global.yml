@@ -1,0 +1,9 @@
+prooph_event_store:
+    stores:
+        main_store:
+            event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+
+services:
+    ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher:
+        arguments: ['global', true]
+        tags: [{name: 'prooph_event_store.metadata_enricher'}]
