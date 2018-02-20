@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\SnapshotStore\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use Symfony\Component\Config\FileLocator;
@@ -59,6 +60,9 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
         self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
+
+        $projectionManager = $container->get('prooph_event_store.projection_manager.main_projection_manager');
+        self::assertInstanceOf(ProjectionManager::class, $projectionManager);
     }
 
     /**
