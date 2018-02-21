@@ -10,7 +10,7 @@
         <store name="without_plugin_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole" />
     </config>
     <srv:services>
-        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole">
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole" public="true">
             <srv:tag name="prooph_event_store.with_plugin_store.plugin" />
         </srv:service>
     </srv:services>

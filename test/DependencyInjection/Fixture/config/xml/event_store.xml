@@ -33,7 +33,11 @@
             </projection_manager>
         </projection_managers>
     </config>
+
     <srv:services>
         <srv:service id="Prooph\EventStore\InMemoryEventStore" class="Prooph\EventStore\InMemoryEventStore" />
+        <srv:service id="test.prooph_event_store.main_store" alias="prooph_event_store.main_store" public="true" />
+        <srv:service id="test.todo_list" alias="todo_list" public="true" />
+        <srv:service id="test.ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository" alias="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository" public="true" />
     </srv:services>
 </srv:container>

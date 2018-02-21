@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\Common\Event\ActionEventEmitter;
+use Prooph\Common\Event\ProophActionEventEmitter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -102,7 +103,7 @@ final class Configuration implements ConfigurationInterface
                 ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')
-                        ->defaultValue('%prooph_event_store.action_event_emitter.class%')
+                        ->defaultValue(ProophActionEventEmitter::class)
                         ->validate()
                             ->ifTrue(function ($v) {
                                 return ! class_exists($v);
@@ -119,7 +120,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->booleanNode('wrap_action_event_emitter')->defaultValue(true)->end()
-                    ->scalarNode('event_store')->end()
+                    ->scalarNode('event_store')->isRequired()->end()
                     ->append($repositoriesNode)
                 ->end()
             ->end();

@@ -18,12 +18,16 @@ use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class ProjectorPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
         $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
+        $readModelsLocator = [];
 
         foreach ($projectors as $id => $projector) {
             $projectorDefinition = $container->getDefinition($id);
@@ -54,6 +58,8 @@ final class ProjectorPass implements CompilerPassInterface
                         sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
                         $tag['read_model']
                     );
+
+                    $readModelsLocator[$tag['projection_name']] = new Reference($tag['read_model']);
                 }
 
                 //alias definition for using the correct ProjectionManager
@@ -67,5 +73,12 @@ final class ProjectorPass implements CompilerPassInterface
                 }
             }
         }
+
+        $container
+            ->setDefinition(
+                'prooph_event_store.projection_read_models_locator',
+                new Definition(ServiceLocator::class, [$readModelsLocator])
+            )
+            ->addTag('container.service_locator');
     }
 }

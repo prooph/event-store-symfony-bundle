@@ -39,10 +39,10 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         $store->create(new Stream(new StreamName('main_stream'), new ArrayIterator([new SomethingWasDone([])])));
 
         /** @var Projection $projection */
-        $projection = $kernel->getContainer()->get('prooph_event_store.projection.black_hole_projection');
+        $projection = $kernel->getContainer()->get('test.prooph_event_store.projection.black_hole_projection');
 
         /** @var InMemoryProjectionManager $manager */
-        $manager = $kernel->getContainer()->get('prooph_event_store.projection_manager.main_projection_manager');
+        $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
 
         $projection->project($manager->createProjection('black_hole_projection'))->run(false);
 
@@ -64,11 +64,11 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         $store->create(new Stream(new StreamName('main_stream'), new ArrayIterator([new SomethingWasDone([])])));
 
         /** @var ReadModelProjection $projection */
-        $projection = $kernel->getContainer()->get('prooph_event_store.projection.black_hole_read_model_projection');
+        $projection = $kernel->getContainer()->get('test.prooph_event_store.projection.black_hole_read_model_projection');
         $readModel = $kernel->getContainer()->get(BlackHoleReadModel::class);
 
         /** @var InMemoryProjectionManager $manager */
-        $manager = $kernel->getContainer()->get('prooph_event_store.projection_manager.main_projection_manager');
+        $manager = $kernel->getContainer()->get('test.prooph_event_store.projection_manager.main_projection_manager');
 
         $projection
             ->project($manager->createReadModelProjection('black_hole_read_model_projection', $readModel))

@@ -53,10 +53,10 @@
   },
   "require": {
     "php": "^7.1",
-    "symfony/config": "~2.8 || ~3.0",
-    "symfony/dependency-injection": "~2.8 || ~3.0",
-    "symfony/http-kernel": "~2.8 || ~3.0",
-    "symfony/framework-bundle": "~2.8 || ~3.0",
+    "symfony/config": "^3.3 || ^4.0",
+    "symfony/dependency-injection": "^3.3 || ^4.0",
+    "symfony/http-kernel": "^3.3 || ^4.0",
+    "symfony/framework-bundle": "^3.3 || ^4.0",
     "prooph/event-store": "^7.0"
   },
   "require-dev": {
@@ -64,11 +64,12 @@
     "prooph/snapshot-store": "^1.0",
     "prooph/pdo-event-store": "^1.0",
     "phpunit/phpunit": "^6",
-    "symfony/yaml" : "~2.8 || ~3.0",
+    "symfony/yaml" : "^3.3 || ^4.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
-    "friendsofphp/php-cs-fixer": " ^2.8.1",
-    "prooph/php-cs-fixer-config": "^0.2.1"
+    "friendsofphp/php-cs-fixer": "^2.8.1",
+    "prooph/php-cs-fixer-config": "^0.2.1",
+    "matthiasnoback/symfony-dependency-injection-test": "^2.3"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
