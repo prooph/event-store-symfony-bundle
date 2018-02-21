@@ -2,20 +2,9 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## TBA
+## [0.4.0] - 2018-02-21
 
-### Added
 
-* Nothing
+### Changed
 
-### Deprecated
-
-* Nothing
-
-### Removed
-
-* Nothing
-
-### Fixed
-
-* Nothing
+ - Support Symfony 4, drop Symfony <= 3.3 (#33, #38, thanks to @kejwmen, @mkurzeja) 
