@@ -40,13 +40,30 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $projectionsNode = $treeBuilder->root('projections');
 
+        $beginsWithAt = function ($v) {
+            return strpos($v, '@') === 0;
+        };
+        $removeFirstCharacter = function ($v) {
+            return substr($v, 1);
+        };
         $projectionsNode
             ->requiresAtLeastOneElement()
             ->useAttributeAsKey('name')
             ->prototype('array')
             ->children()
-                ->scalarNode('read_model')->end()
-                ->scalarNode('projection')->isRequired()->end()
+                ->scalarNode('read_model')
+                    ->beforeNormalization()
+                        ->ifTrue($beginsWithAt)
+                        ->then($removeFirstCharacter)
+                    ->end()
+                ->end()
+                ->scalarNode('projection')
+                    ->isRequired()
+                    ->beforeNormalization()
+                        ->ifTrue($beginsWithAt)
+                        ->then($removeFirstCharacter)
+                    ->end()
+                ->end()
             ->end();
 
         $node
@@ -56,8 +73,19 @@ final class Configuration implements ConfigurationInterface
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                 ->children()
-                    ->scalarNode('event_store')->isRequired()->end()
-                    ->scalarNode('connection')->end()
+                    ->scalarNode('event_store')
+                        ->isRequired()
+                        ->beforeNormalization()
+                            ->ifTrue($beginsWithAt)
+                            ->then($removeFirstCharacter)
+                        ->end()
+                    ->end()
+                    ->scalarNode('connection')
+                        ->beforeNormalization()
+                            ->ifTrue($beginsWithAt)
+                            ->then($removeFirstCharacter)
+                        ->end()
+                    ->end()
                     ->scalarNode('event_streams_table')->defaultValue('event_streams')->end()
                     ->scalarNode('projections_table')->defaultValue('projections')->end()
                     ->append($projectionsNode)
@@ -77,6 +105,13 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $repositoriesNode = $treeBuilder->root('repositories');
 
+        $beginsWithAt = function ($v) {
+            return strpos($v, '@') === 0;
+        };
+        $removeFirstCharacter = function ($v) {
+            return substr($v, 1);
+        };
+
         /** @var $repositoriesNode ArrayNodeDefinition */
         $repositoryNode = $repositoriesNode
             ->requiresAtLeastOneElement()
@@ -87,8 +122,19 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('repository_class')->end()
                 ->scalarNode('aggregate_type')->end()
-                ->scalarNode('aggregate_translator')->end()
-                ->scalarNode('snapshot_store')->defaultValue(null)->end()
+                ->scalarNode('aggregate_translator')
+                    ->beforeNormalization()
+                        ->ifTrue($beginsWithAt)
+                        ->then($removeFirstCharacter)
+                    ->end()
+                ->end()
+                ->scalarNode('snapshot_store')
+                    ->defaultValue(null)
+                    ->beforeNormalization()
+                        ->ifTrue($beginsWithAt)
+                        ->then($removeFirstCharacter)
+                    ->end()
+                ->end()
                 ->scalarNode('stream_name')->defaultValue(null)->end()
                 ->booleanNode('one_stream_per_aggregate')->defaultValue(false)->end()
             ->end();
@@ -120,7 +166,13 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->booleanNode('wrap_action_event_emitter')->defaultValue(true)->end()
-                    ->scalarNode('event_store')->isRequired()->end()
+                    ->scalarNode('event_store')
+                        ->isRequired()
+                        ->beforeNormalization()
+                            ->ifTrue($beginsWithAt)
+                            ->then($removeFirstCharacter)
+                        ->end()
+                    ->end()
                     ->append($repositoriesNode)
                 ->end()
             ->end();
