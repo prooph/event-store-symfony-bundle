@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<srv:container xmlns="http://getprooph.org/schemas/symfony-dic/prooph"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:srv="http://symfony.com/schema/dic/services"
+               xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://getprooph.org/schemas/symfony-dic/prooph http://getprooph.org/schemas/symfony-dic/prooph/event_store-5.1.xsd">
+    <config>
+        <projection_managers>
+            <projection_manager name="main_projection_manager">
+                <event_store>Prooph\EventStore\InMemoryEventStore</event_store>
+                    <projections>
+                        <projection name="todo_projection">
+                            <read_model>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel</read_model>
+                            <projection>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection</projection>
+                        </projection>
+                    </projections>
+            </projection_manager>
+        </projection_managers>
+    </config>
+
+    <srv:services>
+        <srv:service id="Prooph\EventStore\InMemoryEventStore" class="Prooph\EventStore\InMemoryEventStore" />
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\BlackHoleReadModelProjection">
+            <srv:tag name="prooph_event_store.projection" projection_name="black_hole_projection" projection_manager="secondary_projection_manager" read_model="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection" />
+        </srv:service>
+
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel" />
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection" />
+
+        <srv:service id="test.prooph_event_store.projection_manager_for_projections_locator" alias="prooph_event_store.projection_manager_for_projections_locator" public="true" />
+        <srv:service id="test.prooph_event_store.projections_locator" alias="prooph_event_store.projections_locator" public="true" />
+        <srv:service id="test.prooph_event_store.projection_read_models_locator" alias="prooph_event_store.projection_read_models_locator" public="true" />
+    </srv:services>
+</srv:container>

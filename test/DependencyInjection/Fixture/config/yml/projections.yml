@@ -1,0 +1,31 @@
+prooph_event_store:
+  projection_managers:
+    main_projection_manager:
+      event_store: 'Prooph\EventStore\InMemoryEventStore'
+      projections:
+        todo_projection:
+          read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel'
+          projection: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection'
+
+services:
+  Prooph\EventStore\InMemoryEventStore:
+    class: Prooph\EventStore\InMemoryEventStore
+
+  ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\BlackHoleReadModelProjection:
+    tags:
+     - {name: 'prooph_event_store.projection', projection_name: black_hole_projection, projection_manager: secondary_projection_manager, read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection'}
+
+  ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel: ~
+  ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection: ~
+
+  test.prooph_event_store.projection_manager_for_projections_locator:
+    alias: prooph_event_store.projection_manager_for_projections_locator
+    public: true
+
+  test.prooph_event_store.projections_locator:
+    alias: prooph_event_store.projections_locator
+    public: true
+
+  test.prooph_event_store.projection_read_models_locator:
+    alias: prooph_event_store.projection_read_models_locator
+    public: true
