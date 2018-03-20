@@ -187,6 +187,26 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $this->loadContainer('missing_projection_key');
     }
 
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "aggregate_type" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
+     */
+    public function it_expects_repository_nodes_to_have_an_aggregate_type_key()
+    {
+        $this->loadContainer('missing_aggregate_type_key');
+    }
+
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "aggregate_translator" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
+     */
+    public function it_expects_repository_nodes_to_have_an_aggregate_translator_key()
+    {
+        $this->loadContainer('missing_aggregate_translator_key');
+    }
+
     private function loadContainer($fixture, CompilerPassInterface $compilerPass = null)
     {
         $container = $this->getContainer();

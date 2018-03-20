@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<srv:container xmlns="http://getprooph.org/schemas/symfony-dic/prooph"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:srv="http://symfony.com/schema/dic/services"
+               xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://getprooph.org/schemas/symfony-dic/prooph http://getprooph.org/schemas/symfony-dic/prooph/event_store-5.1.xsd">
+    <config>
+        <store name="main_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole">
+            <repository name="todo_list">
+                <repository_class>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository</repository_class>
+                <aggregate_translator>ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator</aggregate_translator>
+                <snapshot_store>prooph_test.bundle.snapshot_store.in_memory</snapshot_store>
+                <stream_name>test</stream_name>
+                <one_stream_per_aggregate>true</one_stream_per_aggregate>
+            </repository>
+        </store>
+    </config>
+</srv:container>
