@@ -177,6 +177,16 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $this->dump('metadata_enricher');
     }
 
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "projection" at path "prooph_event_store.projection_managers.main_projection_manager.projections.todo_projection" must be configured.
+     */
+    public function it_expects_projection_nodes_to_have_a_projection_key(): void
+    {
+        $this->loadContainer('missing_projection_key');
+    }
+
     private function loadContainer($fixture, CompilerPassInterface $compilerPass = null)
     {
         $container = $this->getContainer();

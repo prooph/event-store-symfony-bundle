@@ -1,0 +1,7 @@
+prooph_event_store:
+  projection_managers:
+    main_projection_manager:
+      event_store: 'Prooph\EventStore\InMemoryEventStore'
+      projections:
+        todo_projection:
+          read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel'
