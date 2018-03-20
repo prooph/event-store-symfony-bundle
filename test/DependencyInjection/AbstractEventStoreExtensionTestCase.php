@@ -189,6 +189,15 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
     /**
      * @test
+     * @expectedException Prooph\Bundle\EventStore\Exception\RuntimeException
+     */
+    public function it_expects_repository_nodes_to_have_a_repository_class()
+    {
+        $this->loadContainer('missing_repository_class');
+    }
+
+    /**
+     * @test
      * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessage The child node "aggregate_type" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
      */
