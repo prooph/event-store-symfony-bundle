@@ -28,6 +28,7 @@
         <service id="prooph_event_store.action_event_emitter" class="Prooph\Common\Event\ProophActionEventEmitter" />
         <service id="prooph_event_store.message_converter" class="Prooph\Common\Messaging\NoOpMessageConverter" />
         <service id="prooph_event_store.message_factory" class="Prooph\Common\Messaging\FQCNMessageFactory" />
+        <service id="Prooph\Common\Messaging\MessageFactory" alias="prooph_event_store.message_factory" />
 
         <service id="Prooph\Bundle\EventStore\Command\AbstractProjectionCommand" abstract="true">
             <argument type="service" id="prooph_event_store.projection_manager_for_projections_locator" />
