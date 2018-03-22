@@ -121,8 +121,8 @@ final class Configuration implements ConfigurationInterface
         $repositoryNode
             ->children()
                 ->scalarNode('repository_class')->end()
-                ->scalarNode('aggregate_type')->end()
-                ->scalarNode('aggregate_translator')
+                ->scalarNode('aggregate_type')->isRequired()->end()
+                ->scalarNode('aggregate_translator')->isRequired()
                     ->beforeNormalization()
                         ->ifTrue($beginsWithAt)
                         ->then($removeFirstCharacter)
