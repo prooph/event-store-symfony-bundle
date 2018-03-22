@@ -13,7 +13,7 @@ services:
 
   ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\BlackHoleReadModelProjection:
     tags:
-     - {name: 'prooph_event_store.projection', projection_name: black_hole_projection, projection_manager: secondary_projection_manager, read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection'}
+     - {name: 'prooph_event_store.projection', projection_name: black_hole_projection, projection_manager: main_projection_manager, read_model: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection'}
 
   ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel: ~
   ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection: ~

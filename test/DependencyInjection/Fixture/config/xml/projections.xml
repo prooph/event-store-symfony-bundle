@@ -22,7 +22,7 @@
     <srv:services>
         <srv:service id="Prooph\EventStore\InMemoryEventStore" class="Prooph\EventStore\InMemoryEventStore" />
         <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\BlackHoleReadModelProjection">
-            <srv:tag name="prooph_event_store.projection" projection_name="black_hole_projection" projection_manager="secondary_projection_manager" read_model="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection" />
+            <srv:tag name="prooph_event_store.projection" projection_name="black_hole_projection" projection_manager="main_projection_manager" read_model="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection" />
         </srv:service>
 
         <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel" />

@@ -191,14 +191,9 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     public function it_can_register_projections_using_tags(): void
     {
         $container = $this->loadContainer('projections');
-        $managerLocator = $container->get('test.prooph_event_store.projection_manager_for_projections_locator');
         $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
         $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
 
-        self::assertTrue(
-            $managerLocator->has('black_hole_projection'),
-            'The manager for the black_hole_projection is not available through the dedicated service locator'
-        );
         self::assertTrue(
             $projectionsLocator->has('black_hole_projection'),
             'The projection black_hole_projection is not available through the dedicated service locator'

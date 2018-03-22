@@ -62,8 +62,8 @@ final class ProophEventStoreExtension extends Extension
         $projectionsLocator = [];
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
-            $projectionManagerDefintion = new ChildDefinition('prooph_event_store.projection_definition');
-            $projectionManagerDefintion
+            $projectionManagerDefinition = new ChildDefinition('prooph_event_store.projection_definition');
+            $projectionManagerDefinition
                 ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
                 ->setArguments([
                     new Reference($projectionManagerConfig['event_store']),
@@ -76,7 +76,7 @@ final class ProophEventStoreExtension extends Extension
 
             $container->setDefinition(
                 $projectorManagerId,
-                $projectionManagerDefintion
+                $projectionManagerDefinition
             );
 
             $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);

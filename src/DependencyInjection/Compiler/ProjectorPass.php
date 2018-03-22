@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class ProjectorPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
         $readModelsLocator = [];
@@ -34,7 +34,7 @@ final class ProjectorPass implements CompilerPassInterface
 
             $reflClass = new ReflectionClass($projectorDefinition->getClass());
             if (! $reflClass->implementsInterface(ReadModelProjection::class) && ! $reflClass->implementsInterface(Projection::class)) {
-                throw new RuntimeException(sprintf('Tagged service "%" must implement "%s" or "%s" ', $id, ReadModelProjection::class, Projection::class));
+                throw new RuntimeException(sprintf('Tagged service "%s" must implement "%s" or "%s" ', $id, ReadModelProjection::class, Projection::class));
             }
 
             $tags = $projectorDefinition->getTag(ProophEventStoreExtension::TAG_PROJECTION);
@@ -48,6 +48,7 @@ final class ProjectorPass implements CompilerPassInterface
                     throw new RuntimeException(sprintf('"projection_manager" argument is missing from on "prooph_event_store.projection" tagged service "%s"',
                         $id));
                 }
+                self::assertProjectionManagerExists($tag['projection_manager'], $id, $container);
 
                 if (in_array(ReadModelProjection::class, class_implements($projectorDefinition->getClass()))) {
                     if (! isset($tag['read_model'])) {
@@ -80,5 +81,25 @@ final class ProjectorPass implements CompilerPassInterface
                 new Definition(ServiceLocator::class, [$readModelsLocator])
             )
             ->addTag('container.service_locator');
+    }
+
+    /**
+     * @param string $name The name of the projection manager
+     * @param string $taggedServiceId The projection service which has been tagged
+     * @param ContainerBuilder $container
+     * @throws RuntimeException if the projection manager does not exist
+     */
+    private static function assertProjectionManagerExists(
+        string $name,
+        string $taggedServiceId,
+        ContainerBuilder $container
+    ): void {
+        if (! $container->has("prooph_event_store.projection_manager.$name")) {
+            throw new RuntimeException(
+                "Projection $taggedServiceId has been tagged as projection for the manager $name, "
+                . "but this projection manager does not exist. Please configure a projection manager $name "
+                . 'in the prooph_event_store configuration'
+            );
+        }
     }
 }
