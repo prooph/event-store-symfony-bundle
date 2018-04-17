@@ -40,7 +40,8 @@ services:
 
 > **Hint**: You can also use other stream strategies.
 > Have a look at the documentation of the [prooph/pdo-event-store package](https://github.com/prooph/pdo-event-store/blob/master/docs/variants.md)
-> to learn about the different strategies.  
+> to learn about the different strategies.
+> See below for further information within this bundle.
 
 Do not be confused about the fact that the we defined a service with a class called event store – we are not done yet.
 But we are ready to configure the event store:
@@ -139,6 +140,51 @@ services:
         class: PDO
         factory: ['@doctrine.dbal.default_connection', getWrappedConnection]
 ```
+
+## Using different Stream Strategies
+
+To make yourself familiar with different stream strategies,
+please have a look at the documentation of the [prooph/pdo-event-store package](https://github.com/prooph/pdo-event-store/blob/master/docs/variants.md).
+
+If you want to use one of the Single Stream Strategies, you just need to set up the Strategy as a service and pass it to the event store:
+
+
+```yaml
+# app/config/services.yml or (flex) config/packages/prooph_event_store.yaml
+services:
+    prooph_event_store.pdo_mysql_event_store:
+        class: Prooph\EventStore\Pdo\MySqlEventStore
+        arguments:
+            - '@prooph_event_store.message_factory'
+            - '@pdo.connection'
+            - '@prooph_event_store.mysql.single_stream_strategy'
+            
+    prooph_event_store.mysql.single_stream_strategy:
+        class: Prooph\EventStore\Pdo\PersistenceStrategy\MySqlSingleStreamStrategy
+        
+    pdo.connection:
+        class: PDO
+        arguments: ['%dsn%']
+```
+
+If you want to use one of the Aggregate Stream Strategies,
+you also need to configure your Stream Strategie as a service like above.
+But you also need to your repositories to follow this strategy using the `one_stream_per_aggregate` option:
+
+```yaml
+# app/config/config.yml or (flex) config/packages/prooph_event_store.yaml
+prooph_event_store:
+    stores:
+        acme_store:
+            event_store: 'prooph_event_store.pdo_mysql_event_store'
+            repositories:
+                Acme\Prooph\Repository\EventStoreUserRepository:
+                    aggregate_type: Acme\Model\User
+                    aggregate_translator: 'prooph_event_sourcing.aggregate_translator'
+                    one_stream_per_aggregate: true
+```
+
+Because this option defaults to `false`, this is only necessary for Aggregate Stream Strategies. 
 
 ## Plugins
 
