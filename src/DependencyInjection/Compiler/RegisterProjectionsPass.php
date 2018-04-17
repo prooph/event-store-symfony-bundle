@@ -20,12 +20,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class ProjectorPass implements CompilerPassInterface
+final class RegisterProjectionsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $projectorsIds = array_keys($container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION));
-
         if (! $container->hasDefinition('prooph_event_store.projection_read_models_locator')
             || ! $container->hasDefinition('prooph_event_store.projection_manager_for_projections_locator')
             || ! $container->hasDefinition('prooph_event_store.projections_locator')
@@ -33,17 +31,19 @@ final class ProjectorPass implements CompilerPassInterface
             return;
         }
 
+        $projectionIds = array_keys($container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION));
+
         $readModelsLocator = [];
         $projectionManagerForProjectionsLocator = [];
         $projectionsLocator = [];
 
-        foreach ($projectorsIds as $id) {
+        foreach ($projectionIds as $id) {
             $projectorDefinition = $container->getDefinition($id);
-            $projectorClass = new ReflectionClass($projectorDefinition->getClass());
+            $projectionClass = new ReflectionClass($projectorDefinition->getClass());
 
-            self::assertProjectionHasAValidClass($id, $projectorClass);
+            self::assertProjectionHasAValidClass($id, $projectionClass);
 
-            $isReadModelProjector = $projectorClass->implementsInterface(ReadModelProjection::class);
+            $isReadModelProjector = $projectionClass->implementsInterface(ReadModelProjection::class);
 
             $tags = $projectorDefinition->getTag(ProophEventStoreExtension::TAG_PROJECTION);
             foreach ($tags as $tag) {
@@ -110,7 +110,7 @@ final class ProjectorPass implements CompilerPassInterface
     {
         if (! isset($tag[$attributeName])) {
             throw new RuntimeException(sprintf(
-                '"%s" attribute is missing from on "%s" tagged service "%s"',
+                '"%s" attribute is missing from tag "%s" on service "%s"',
                 $attributeName,
                 ProophEventStoreExtension::TAG_PROJECTION,
                 $serviceId

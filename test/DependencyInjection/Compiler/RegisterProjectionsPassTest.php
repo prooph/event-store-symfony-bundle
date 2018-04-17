@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Compiler;
 
-use Prooph\Bundle\EventStore\DependencyInjection\Compiler\ProjectorPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\RegisterProjectionsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\Bundle\EventStore\Projection\Projection;
@@ -19,11 +19,11 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-class ProjectorPassTest extends CompilerPassTestCase
+class RegisterProjectionsPassTest extends CompilerPassTestCase
 {
     protected function registerCompilerPass(ContainerBuilder $container): void
     {
-        $container->addCompilerPass(new ProjectorPass());
+        $container->addCompilerPass(new RegisterProjectionsPass());
     }
 
     protected function setUp(): void
@@ -66,7 +66,7 @@ class ProjectorPassTest extends CompilerPassTestCase
         );
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('"read_model" attribute is missing from on "prooph_event_store.projection" tagged service "foo.projection"');
+        $this->expectExceptionMessage('"read_model" attribute is missing from tag "prooph_event_store.projection" on service "foo.projection"');
 
         $this->compile();
     }
@@ -83,7 +83,7 @@ class ProjectorPassTest extends CompilerPassTestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            '"projection_name" attribute is missing from on "prooph_event_store.projection" tagged service "foo.projection"'
+            '"projection_name" attribute is missing from tag "prooph_event_store.projection" on service "foo.projection"'
         );
 
         $this->compile();
@@ -101,7 +101,7 @@ class ProjectorPassTest extends CompilerPassTestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            '"projection_manager" attribute is missing from on "prooph_event_store.projection" tagged service "foo.projection"'
+            '"projection_manager" attribute is missing from tag "prooph_event_store.projection" on service "foo.projection"'
         );
 
         $this->compile();
@@ -191,8 +191,7 @@ class ProjectorPassTest extends CompilerPassTestCase
     private function registerProjectionManager(string $name): void
     {
         $definition = new Definition(InMemoryProjectionManager::class);
-        $id = sprintf('prooph_event_store.projection_manager.%s', $name);
-        $this->setDefinition($id, $definition);
+        $this->setDefinition("prooph_event_store.projection_manager.$name", $definition);
     }
 
     private function registerProjection(
