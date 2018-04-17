@@ -33,14 +33,9 @@ final class ProjectorPass implements CompilerPassInterface
             return;
         }
 
-        $readModelsLocatorDefinition = $container->getDefinition('prooph_event_store.projection_read_models_locator');
-        $readModelsLocator = $readModelsLocatorDefinition->getArgument(0);
-
-        $projectionManagerForProjectionsLocatorDefinition = $container->getDefinition('prooph_event_store.projection_manager_for_projections_locator');
-        $projectionManagerForProjectionsLocator = $projectionManagerForProjectionsLocatorDefinition->getArgument(0);
-
-        $projectionsLocatorDefinition = $container->getDefinition('prooph_event_store.projections_locator');
-        $projectionsLocator = $projectionsLocatorDefinition->getArgument(0);
+        $readModelsLocator = [];
+        $projectionManagerForProjectionsLocator = [];
+        $projectionsLocator = [];
 
         foreach ($projectorsIds as $id) {
             $projectorDefinition = $container->getDefinition($id);
@@ -55,34 +50,35 @@ final class ProjectorPass implements CompilerPassInterface
                 self::assertProjectionTagHasAttribute($id, $tag, 'projection_name');
                 self::assertProjectionTagHasAttribute($id, $tag, 'projection_manager');
                 self::assertProjectionManagerExists($tag['projection_manager'], $id, $container);
+
                 if ($isReadModelProjector) {
                     self::assertProjectionTagHasAttribute($id, $tag, 'read_model');
-                    $container->setAlias(
-                        sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
-                        $tag['read_model']
-                    );
-
                     $readModelsLocator[$tag['projection_name']] = new Reference($tag['read_model']);
                 }
 
-                $projectionManagerForProjectionsLocator[$tag['projection_name']] = new Reference(sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager']));
-                $projectionsLocator[$tag['projection_name']] = new Reference($id);
-
-                //alias definition for using the correct ProjectionManager
-                $container->setAlias(
-                    sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
+                $projectionManagerForProjectionsLocator[$tag['projection_name']] = new Reference(
                     sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager'])
                 );
-
-                if ($id !== sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name'])) {
-                    $container->setAlias(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']), $id);
-                }
+                $projectionsLocator[$tag['projection_name']] = new Reference($id);
             }
         }
 
-        $projectionManagerForProjectionsLocatorDefinition->replaceArgument(0, $projectionManagerForProjectionsLocator);
-        $readModelsLocatorDefinition->replaceArgument(0, $readModelsLocator);
-        $projectionsLocatorDefinition->replaceArgument(0, $projectionsLocator);
+        self::addServicesToLocator($container, 'prooph_event_store.projections_locator', $projectionsLocator);
+        self::addServicesToLocator($container, 'prooph_event_store.projection_read_models_locator', $readModelsLocator);
+        self::addServicesToLocator(
+            $container,
+            'prooph_event_store.projection_manager_for_projections_locator',
+            $projectionManagerForProjectionsLocator
+        );
+    }
+
+    private static function addServicesToLocator(
+        ContainerBuilder $container,
+        string $locatorId,
+        array $serviceMap
+    ): void {
+        $definition = $container->getDefinition($locatorId);
+        $definition->replaceArgument(0, array_merge($serviceMap, $definition->getArgument(0)));
     }
 
     /**
@@ -96,7 +92,7 @@ final class ProjectorPass implements CompilerPassInterface
             && ! $projectionClass->implementsInterface(Projection::class)
         ) {
             throw new RuntimeException(sprintf(
-                'Tagged service "%s" must implement either "%s" or "%s" ',
+                'Tagged service "%s" must implement either "%s" or "%s"',
                 $serviceId,
                 ReadModelProjection::class,
                 Projection::class
@@ -114,7 +110,7 @@ final class ProjectorPass implements CompilerPassInterface
     {
         if (! isset($tag[$attributeName])) {
             throw new RuntimeException(sprintf(
-                '"%s" argument is missing from on "%s" tagged service "%s"',
+                '"%s" attribute is missing from on "%s" tagged service "%s"',
                 $attributeName,
                 ProophEventStoreExtension::TAG_PROJECTION,
                 $serviceId
@@ -135,8 +131,8 @@ final class ProjectorPass implements CompilerPassInterface
     ): void {
         if (! $container->has("prooph_event_store.projection_manager.$name")) {
             throw new RuntimeException(
-                "Projection $taggedServiceId has been tagged as projection for the manager $name, "
-                . "but this projection manager does not exist. Please configure a projection manager $name "
+                "Projection \"$taggedServiceId\" has been tagged as projection for the manager \"$name\", "
+                . "but this projection manager does not exist. Please configure a projection manager \"$name\", "
                 . 'in the prooph_event_store configuration'
             );
         }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection;
 
 use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
