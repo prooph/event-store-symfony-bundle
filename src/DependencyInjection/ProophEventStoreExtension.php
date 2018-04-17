@@ -46,14 +46,14 @@ final class ProophEventStoreExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('event_store.xml');
 
-        $this->loadProjectionManagers($config, $container);
+        self::loadProjectionManagers($config, $container);
 
         if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
     }
 
-    public function loadProjectionManagers(array $config, ContainerBuilder $container): void
+    private static function loadProjectionManagers(array $config, ContainerBuilder $container): void
     {
         $projectionManagers = [];
         $projectionManagersLocator = [];
