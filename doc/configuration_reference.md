@@ -34,52 +34,84 @@ prooph_event_store:
 This section contains the configuration of your event stores.
 Please have a look at [the event store section](./event_store.md) of this documentation for further details.
 The name of the event store will be part of its service id: `prooph_event_store.<name>`.
-So for the `acme_store` in our example above it will be `prooph_event_store.acme_store`. 
+For the `acme_store` in our example above it will be `prooph_event_store.acme_store`. 
 
 ### event_emitter
 
 *Optional*
+
+The event emitter that is used by the ActionEventEmitterEventStore.
+It must be a class that implements `Prooph\Common\Event\ActionEventEmitter`.
+The default value should be fine for most use cases.
 
 
 ### wrap_action_event_emitter
 
 *Optional*
 
+Should the given event store be decorated by an ActionEventEmitterEventStore?
+In most cases you should keep this with the default value `true`.
+
 
 ### event_store
 
 *Required*
 
+The id of a service whose class implements `Prooph\EventStore\EventStore`.
+Please have a look at [the event store section](./event_store.md) of this documentation for further details.
 
 
 ### repositories
 
 *Optional*
 
+Defines the repository that you can use to load and store your aggregates.
+For further details please have a look at [the event store section](./event_store.md) of this documentation.
+
 
 #### repository_class
 
-*Optional*
+*Required*
+
+The FQCN of the repository.
+In most cases it will be a subclass of `Prooph\EventSourcing\Aggregate\AggregateRepository` but it most not be,
+it must just accept the same arguments in the constructor. 
 
 
 #### aggregate_type
 
-*Optional*
+*Required*
 
+The FQCN of the aggregate that is loaded and stored by the repository.
+
+
+## aggregate_translator
+
+*Required*
+
+The service id of the aggregate translator that is used by the repository.
+Its class must implement `Prooph\EventSourcing\Aggregate\AggregateTranslator`.
 
 #### snapshot_store
 
 *Optional*
 
+The service id of a snap shot store.
+Its class must implement `Prooph\SnapshotStore\SnapshotStore`.
 
 #### stream_name
 
 *Optional*
 
+You can pass a string as custom stream name if you want.
+
 
 #### one_stream_per_aggregate
 
 *Optional*
+
+Should the repository create an own single stream for each aggregate?  
+See section *Using different Stream Strategies* for of [the event store section](./event_store.md) of this documentation for further details.
 
 
 ## projection_managers
