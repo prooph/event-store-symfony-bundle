@@ -21,6 +21,7 @@ final class DeprecateFqcnProjectionsPass implements CompilerPassInterface
             if ($argument instanceof ServiceClosureArgument) {
                 $argument = $argument->getValues()[0];
             }
+
             return (string) $argument;
         }, $container->getDefinition('prooph_event_store.projections_locator')->getArgument(0));
         foreach ($projections as $eachProjectionId) {
