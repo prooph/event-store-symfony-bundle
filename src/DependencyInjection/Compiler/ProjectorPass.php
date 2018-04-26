@@ -28,6 +28,7 @@ final class ProjectorPass implements CompilerPassInterface
     {
         $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
         $readModelsLocator = [];
+        $projectionManagerForProjectionsLocator = [];
 
         foreach ($projectors as $id => $projector) {
             $projectorDefinition = $container->getDefinition($id);
@@ -62,15 +63,20 @@ final class ProjectorPass implements CompilerPassInterface
                     $readModelsLocator[$tag['projection_name']] = new Reference($tag['read_model']);
                 }
 
+                $projectorManagerId = sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager']);
+
                 //alias definition for using the correct ProjectionManager
                 $container->setAlias(
                     sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']),
-                    sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager'])
+                    $projectorManagerId
                 );
 
                 if ($id !== sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name'])) {
                     $container->setAlias(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $tag['projection_name']), $id);
                 }
+
+                $projectionManagerForProjectionsLocator[$tag['projection_name']] = new Reference($projectorManagerId);
+                $projectionsLocator[$tag['projection_name']] = new Reference($id);
             }
         }
 
@@ -80,5 +86,13 @@ final class ProjectorPass implements CompilerPassInterface
                 new Definition(ServiceLocator::class, [$readModelsLocator])
             )
             ->addTag('container.service_locator');
+
+        $projectionManagerForProjectionsLocatorDefinition = $container->getDefinition('prooph_event_store.projection_manager_for_projections_locator');
+        $projectionManagerForProjectionsLocatorDefinition
+            ->setArgument(0, array_merge($projectionManagerForProjectionsLocatorDefinition->getArgument(0), $projectionManagerForProjectionsLocator));
+
+        $projectionLocatorDefinition = $container->getDefinition('prooph_event_store.projections_locator');
+        $projectionLocatorDefinition
+            ->setArgument(0, array_merge($projectionLocatorDefinition->getArgument(0), $projectionsLocator));
     }
 }
