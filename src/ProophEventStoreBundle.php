@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore;
 
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\DeprecateFqcnProjectionsPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginLocatorPass;
 use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
@@ -28,5 +29,6 @@ final class ProophEventStoreBundle extends Bundle
         $container->addCompilerPass(new PluginsPass());
         $container->addCompilerPass(new RegisterProjectionsPass());
         $container->addCompilerPass(new PluginLocatorPass());
+        $container->addCompilerPass(new DeprecateFqcnProjectionsPass());
     }
 }
