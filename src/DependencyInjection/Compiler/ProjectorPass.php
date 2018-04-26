@@ -29,6 +29,7 @@ final class ProjectorPass implements CompilerPassInterface
         $projectors = $container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION);
         $readModelsLocator = [];
         $projectionManagerForProjectionsLocator = [];
+        $projectionsLocator = [];
 
         foreach ($projectors as $id => $projector) {
             $projectorDefinition = $container->getDefinition($id);
