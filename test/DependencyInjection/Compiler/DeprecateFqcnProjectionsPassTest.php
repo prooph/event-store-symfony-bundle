@@ -55,6 +55,7 @@ class DeprecateFqcnProjectionsPassTest extends CompilerPassTestCase
         $serviceIds = array_map(function (string $serviceId) {
             return new ServiceClosureArgument(new Reference($serviceId));
         }, $serviceIds);
+
         $this->container->setDefinition(
             'prooph_event_store.projections_locator',
             new Definition(ServiceLocator::class, [$serviceIds])

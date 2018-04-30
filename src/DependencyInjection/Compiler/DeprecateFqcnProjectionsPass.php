@@ -24,6 +24,7 @@ final class DeprecateFqcnProjectionsPass implements CompilerPassInterface
 
             return (string) $argument;
         }, $container->getDefinition('prooph_event_store.projections_locator')->getArgument(0));
+
         foreach ($projections as $eachProjectionId) {
             if (! $container->has($eachProjectionId) && class_exists($eachProjectionId)) {
                 $container->setDefinition($eachProjectionId, new Definition($eachProjectionId));

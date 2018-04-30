@@ -65,7 +65,7 @@ final class ProophEventStoreExtension extends Extension
             $projectionManagerId = "prooph_event_store.projection_manager.$projectionManagerName";
             self::defineProjectionManager($container, $projectionManagerId, $projectionManagerConfig);
 
-            self::collectProjectionsForLocators(
+            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator] = self::collectProjectionsForLocators(
                 $projectionManagerConfig['projections'],
                 $projectionManagerId,
                 $projectionManagerForProjectionsLocator,
@@ -110,10 +110,10 @@ final class ProophEventStoreExtension extends Extension
     private static function collectProjectionsForLocators(
         array $projections,
         string $projectionManagerId,
-        array &$projectionManagerForProjectionsLocator,
-        array &$projectionsLocator,
-        array &$readModelsLocator
-    ) {
+        array $projectionManagerForProjectionsLocator,
+        array $projectionsLocator,
+        array $readModelsLocator
+    ): array {
         foreach ($projections as $projectionName => $projectionConfig) {
             if (isset($projectionConfig['read_model'])) {
                 $readModelsLocator[$projectionName] = new Reference($projectionConfig['read_model']);
@@ -122,6 +122,8 @@ final class ProophEventStoreExtension extends Extension
             $projectionsLocator[$projectionName] = new Reference($projectionConfig['projection']);
             $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectionManagerId);
         }
+
+        return [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator];
     }
 
     /**
