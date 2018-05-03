@@ -21,11 +21,11 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Removed
 
  - **[BC-BREAK]** Remove automatically created aliases for projections and projection-managers (#43)
-   
 
 ### Fixed
 
  - Fix projection configuration via tags (#42, #43)
+
 
 ## [0.4.0] - 2018-02-21
 
