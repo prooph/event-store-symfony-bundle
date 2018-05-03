@@ -29,7 +29,7 @@ final class ProophEventStoreExtension extends Extension
 {
     public const TAG_PROJECTION = 'prooph_event_store.projection';
 
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return 'http://getprooph.org/schemas/symfony-dic/prooph';
     }
@@ -39,105 +39,91 @@ final class ProophEventStoreExtension extends Extension
         return new Configuration();
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('event_store.xml');
 
-        $this->loadProjectionManagers($config, $container);
+        self::loadProjectionManagers($config, $container);
 
         if (! empty($config['stores'])) {
             $this->loadEventStores(EventStore::class, $config, $container);
         }
     }
 
-    public function loadProjectionManagers(array $config, ContainerBuilder $container)
+    private static function loadProjectionManagers(array $config, ContainerBuilder $container): void
     {
         $projectionManagers = [];
         $projectionManagersLocator = [];
         $projectionManagerForProjectionsLocator = [];
         $projectionsLocator = [];
+        $readModelsLocator = [];
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
-            $projectionManagerDefintion = new ChildDefinition('prooph_event_store.projection_definition');
-            $projectionManagerDefintion
-                ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
-                ->setArguments([
-                    new Reference($projectionManagerConfig['event_store']),
-                    isset($projectionManagerConfig['connection']) ? new Reference($projectionManagerConfig['connection']) : null,
-                    $projectionManagerConfig['event_streams_table'],
-                    $projectionManagerConfig['projections_table'],
-                ]);
+            $projectionManagerId = "prooph_event_store.projection_manager.$projectionManagerName";
+            self::defineProjectionManager($container, $projectionManagerId, $projectionManagerConfig);
 
-            $projectorManagerId = sprintf('prooph_event_store.projection_manager.%s', $projectionManagerName);
-
-            $container->setDefinition(
-                $projectorManagerId,
-                $projectionManagerDefintion
+            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator] = self::collectProjectionsForLocators(
+                $projectionManagerConfig['projections'],
+                $projectionManagerId,
+                $projectionManagerForProjectionsLocator,
+                $projectionsLocator,
+                $readModelsLocator
             );
 
-            $this->loadProjections($projectionManagerConfig, $projectionManagerName, $container);
-
-            $projectionManagers[$projectionManagerName] = 'prooph_event_store.'.$projectionManagerName;
-
-            // Gather maps for locators
-            foreach ($projectionManagerConfig['projections'] as $projectionName => $projectionConfig) {
-                $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectorManagerId);
-                $projectionsLocator[$projectionName] = new Reference(
-                    sprintf('%s.%s', static::TAG_PROJECTION, $projectionName)
-                );
-            }
-
-            $projectionManagersLocator[$projectionManagerName] = new Reference($projectorManagerId);
+            $projectionManagers[$projectionManagerName] = "prooph_event_store.$projectionManagerName";
+            $projectionManagersLocator[$projectionManagerName] = new Reference($projectionManagerId);
         }
 
         $container->setParameter('prooph_event_store.projection_managers', $projectionManagers);
 
-        $container
-            ->setDefinition(
-                'prooph_event_store.projection_managers_locator',
-                new Definition(ServiceLocator::class, [$projectionManagersLocator])
-            )
-            ->addTag('container.service_locator');
-
-        $container
-            ->setDefinition(
-                'prooph_event_store.projection_manager_for_projections_locator',
-                new Definition(ServiceLocator::class, [$projectionManagerForProjectionsLocator])
-            )
-            ->addTag('container.service_locator');
-
-        $container
-            ->setDefinition(
-                'prooph_event_store.projections_locator',
-                new Definition(ServiceLocator::class, [$projectionsLocator])
-            )
-            ->addTag('container.service_locator');
+        self::defineServiceLocator($container, 'prooph_event_store.projection_managers_locator', $projectionManagersLocator);
+        self::defineServiceLocator($container, 'prooph_event_store.projection_manager_for_projections_locator', $projectionManagerForProjectionsLocator);
+        self::defineServiceLocator($container, 'prooph_event_store.projection_read_models_locator', $readModelsLocator);
+        self::defineServiceLocator($container, 'prooph_event_store.projections_locator', $projectionsLocator);
     }
 
-    public function loadProjections(array $config, string $projectionManager, ContainerBuilder $container)
+    private static function defineProjectionManager(ContainerBuilder $container, string $serviceId, array $config): void
     {
-        foreach ($config['projections'] as $projectionName => $projectionConfig) {
-            $tag = [
-                'projection_name' => $projectionName,
-                'projection_manager' => $projectionManager,
-            ];
+        $projectionManagerDefinition = new ChildDefinition('prooph_event_store.projection_definition');
+        $projectionManagerDefinition
+            ->setFactory([new Reference('prooph_event_store.projection_factory'), 'createProjectionManager'])
+            ->setArguments([
+                new Reference($config['event_store']),
+                isset($config['connection']) ? new Reference($config['connection']) : null,
+                $config['event_streams_table'],
+                $config['projections_table'],
+            ]);
 
+        $container->setDefinition($serviceId, $projectionManagerDefinition);
+    }
+
+    private static function defineServiceLocator(ContainerBuilder $container, string $id, array $serviceMap): void
+    {
+        $definition = new Definition(ServiceLocator::class, [$serviceMap]);
+        $definition->addTag('container.service_locator');
+        $container->setDefinition($id, $definition);
+    }
+
+    private static function collectProjectionsForLocators(
+        array $projections,
+        string $projectionManagerId,
+        array $projectionManagerForProjectionsLocator,
+        array $projectionsLocator,
+        array $readModelsLocator
+    ): array {
+        foreach ($projections as $projectionName => $projectionConfig) {
             if (isset($projectionConfig['read_model'])) {
-                $tag['read_model'] = $projectionConfig['read_model'];
+                $readModelsLocator[$projectionName] = new Reference($projectionConfig['read_model']);
             }
 
-            $container
-                ->setDefinition(
-                    sprintf('%s.%s', static::TAG_PROJECTION, $projectionName),
-                    (new Definition())
-                        ->setClass($projectionConfig['projection'])
-                        ->addTag(static::TAG_PROJECTION, $tag)
-                );
+            $projectionsLocator[$projectionName] = new Reference($projectionConfig['projection']);
+            $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectionManagerId);
         }
+
+        return [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator];
     }
 
     /**
@@ -147,13 +133,9 @@ final class ProophEventStoreExtension extends Extension
      * @param string           $class
      * @param array            $config
      * @param ContainerBuilder $container
-     * @param XmlFileLoader    $loader
      */
-    private function loadEventStores(
-        string $class,
-        array $config,
-        ContainerBuilder $container
-    ) {
+    private function loadEventStores(string $class, array $config, ContainerBuilder $container)
+    {
         $eventStores = [];
 
         foreach (array_keys($config['stores']) as $name) {

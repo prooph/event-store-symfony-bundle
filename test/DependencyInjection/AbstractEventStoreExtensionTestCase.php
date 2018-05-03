@@ -166,6 +166,45 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     }
 
     /** @test */
+    public function it_can_register_projections_centrally(): void
+    {
+        $container = $this->loadContainer('projections');
+        $managerLocator = $container->get('test.prooph_event_store.projection_manager_for_projections_locator');
+        $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
+        $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
+
+        self::assertTrue(
+            $managerLocator->has('todo_projection'),
+            'The manager for the todo_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $projectionsLocator->has('todo_projection'),
+            'The projection todo_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $readModelLocator->has('todo_projection'),
+            'The read model for the todo_projection is not available through the dedicated service locator'
+        );
+    }
+
+    /** @test */
+    public function it_can_register_projections_using_tags(): void
+    {
+        $container = $this->loadContainer('projections');
+        $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
+        $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
+
+        self::assertTrue(
+            $projectionsLocator->has('black_hole_projection'),
+            'The projection black_hole_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $readModelLocator->has('black_hole_projection'),
+            'The read model for the black_hole_projection is not available through the dedicated service locator'
+        );
+    }
+
+    /** @test */
     public function it_dumps_an_event_stores_with_plugins()
     {
         $this->dump('plugins');
