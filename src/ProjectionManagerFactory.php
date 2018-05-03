@@ -32,10 +32,12 @@ class ProjectionManagerFactory
         string $eventStreamsTable = 'event_streams',
         string $projectionsTable = 'projections'
     ): ProjectionManager {
-        $checkConnection = function () use ($connection) {
+        $checkConnection = function () use ($connection): PDO {
             if (! $connection instanceof PDO) {
                 throw new RuntimeException('PDO connection missing');
             }
+
+            return $connection;
         };
 
         if ($eventStore instanceof InMemoryEventStore) {
@@ -43,21 +45,15 @@ class ProjectionManagerFactory
         }
 
         if ($eventStore instanceof PostgresEventStore) {
-            $checkConnection();
-
-            return new PostgresProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+            return new PostgresProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
         if ($eventStore instanceof MySqlEventStore) {
-            $checkConnection();
-
-            return new MySqlProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+            return new MySqlProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
         if ($eventStore instanceof MariaDbEventStore) {
-            $checkConnection();
-
-            return new MariaDbProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+            return new MariaDbProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
         throw new RuntimeException(sprintf('ProjectionManager for %s not implemented.', get_class($eventStore)));

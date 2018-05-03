@@ -1,0 +1,14 @@
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Only available in ArrayNodeDefinition which is given
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::fixXmlConfig\(\)\.#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::scalarNode\(\)\.#'
+        - '#Calling method scalarNode\(\) on possibly null value of type Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.#'
+        # Projection and projector compatibility is ensured in the AbstractProjectionCommand
+        - '#Parameter \#1 \$projector of method Prooph\\Bundle\\EventStore\\Projection\\Projection::project\(\) expects Prooph\\EventStore\\Projection\\Projector, Prooph\\EventStore\\Projection\\Projector\|Prooph\\EventStore\\Projection\\ReadModelProjector given\.#'
+        # MariaDbEventStore is available since pdo-event-store v1.3
+        - '#Class Prooph\\EventStore\\Pdo\\MariaDbEventStore not found\.#'
+        - '#Method Prooph\\Bundle\\EventStore\\ProjectionManagerFactory::createProjectionManager\(\) should return Prooph\\EventStore\\Projection\\ProjectionManager but returns Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager\.#'
+        - '#Instantiated class Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager not found\.#'

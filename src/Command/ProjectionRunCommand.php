@@ -10,9 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionRunCommand extends AbstractProjectionCommand
 {
-    const OPTION_RUN_ONCE = 'run-once';
+    private const OPTION_RUN_ONCE = 'run-once';
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
@@ -32,7 +32,7 @@ class ProjectionRunCommand extends AbstractProjectionCommand
         );
 
         $projector = $this->projection->project($this->projector);
-        $projector->run((bool) $keepRunning);
+        $projector->run($keepRunning);
         $output->writeln(sprintf('<action>Projection <highlight>%s</highlight> completed.</action>', $this->projectionName));
     }
 }

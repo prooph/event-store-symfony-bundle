@@ -39,7 +39,7 @@ abstract class AbstractProjectionCommand extends Command
     protected $readModel;
 
     /**
-     * @var ReadModelProjector|Projector
+     * @var Projector|ReadModelProjector
      */
     protected $projector;
 
