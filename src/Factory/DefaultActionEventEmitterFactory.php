@@ -16,7 +16,7 @@ class DefaultActionEventEmitterFactory implements ActionEventEmitterFactory
     public static function create(EventStore $eventStore, string $actionEventEmitterFQCN): ActionEventEmitterEventStore
     {
         if (! in_array(ActionEventEmitter::class, class_implements($actionEventEmitterFQCN))) {
-            throw new RuntimeException(sprintf('ActionEventEmitter "%s" must implement "%s"', get_class($actionEventEmitterFQCN), ActionEventEmitter::class));
+            throw new RuntimeException(sprintf('ActionEventEmitter "%s" must implement "%s"', $actionEventEmitterFQCN, ActionEventEmitter::class));
         }
         if ($eventStore instanceof TransactionalEventStore) {
             return static::createTransactionalEventEmitter($eventStore, $actionEventEmitterFQCN);
