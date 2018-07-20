@@ -263,7 +263,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $container->registerExtension(new ProophEventStoreExtension());
 
-        $loadYml = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
+        $loadYml = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__) . '/Resources/config'));
         $loadYml->load('services.yml');
 
         $this->loadFromFile($container, $fixture);
@@ -287,14 +287,14 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
             $map[$bundle] = 'Fixture\\Bundles\\' . $bundle . '\\' . $bundle;
         }
 
-        $map['ProophEventStoreBundle'] = realpath(__DIR__ . '/../../src');
+        $map['ProophEventStoreBundle'] = \realpath(__DIR__ . '/../../src');
 
         return new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,
             'kernel.bundles' => $map,
-            'kernel.cache_dir' => sys_get_temp_dir(),
+            'kernel.cache_dir' => \sys_get_temp_dir(),
             'kernel.environment' => 'test',
-            'kernel.root_dir' => realpath(__DIR__ . '/../../src'),
+            'kernel.root_dir' => \realpath(__DIR__ . '/../../src'),
         ]));
     }
 
@@ -303,7 +303,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $bundle = new ProophEventStoreBundle();
         $bundle->build($container);
         $container->getCompilerPassConfig()->setOptimizationPasses([
-            class_exists(ResolveChildDefinitionsPass::class)
+            \class_exists(ResolveChildDefinitionsPass::class)
                 ? new ResolveChildDefinitionsPass()
                 : new ResolveDefinitionTemplatesPass(),
         ]);
@@ -322,7 +322,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         } elseif ($this instanceof YamlEventStoreExtensionTest) {
             $dumper = new YamlDumper($container);
         }
-        self::assertInstanceOf(Dumper::class, $dumper, sprintf('Test type "%s" not supported', get_class($this)));
+        self::assertInstanceOf(Dumper::class, $dumper, \sprintf('Test type "%s" not supported', \get_class($this)));
         self::assertNotEmpty($dumper->dump());
     }
 }

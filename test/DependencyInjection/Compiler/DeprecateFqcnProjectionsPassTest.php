@@ -52,7 +52,7 @@ class DeprecateFqcnProjectionsPassTest extends CompilerPassTestCase
 
     private function registerProjectionsServiceLocator(array $serviceIds): void
     {
-        $serviceIds = array_map(function (string $serviceId) {
+        $serviceIds = \array_map(function (string $serviceId) {
             return new ServiceClosureArgument(new Reference($serviceId));
         }, $serviceIds);
 

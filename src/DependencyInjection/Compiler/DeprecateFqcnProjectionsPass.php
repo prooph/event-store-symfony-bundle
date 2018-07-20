@@ -17,7 +17,7 @@ final class DeprecateFqcnProjectionsPass implements CompilerPassInterface
             return;
         }
 
-        $projections = array_map(function ($argument) {
+        $projections = \array_map(function ($argument) {
             if ($argument instanceof ServiceClosureArgument) {
                 $argument = $argument->getValues()[0];
             }
@@ -26,9 +26,9 @@ final class DeprecateFqcnProjectionsPass implements CompilerPassInterface
         }, $container->getDefinition('prooph_event_store.projections_locator')->getArgument(0));
 
         foreach ($projections as $eachProjectionId) {
-            if (! $container->has($eachProjectionId) && class_exists($eachProjectionId)) {
+            if (! $container->has($eachProjectionId) && \class_exists($eachProjectionId)) {
                 $container->setDefinition($eachProjectionId, new Definition($eachProjectionId));
-                @trigger_error(
+                @\trigger_error(
                     "The service for the projection \"$eachProjectionId\" is not available. "
                     . 'Passing FQCN of projections to the configuration is deprecated since v0.5 '
                     . 'and the support for this will be removed with v1.0',

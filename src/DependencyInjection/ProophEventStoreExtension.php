@@ -138,7 +138,7 @@ final class ProophEventStoreExtension extends Extension
     {
         $eventStores = [];
 
-        foreach (array_keys($config['stores']) as $name) {
+        foreach (\array_keys($config['stores']) as $name) {
             $eventStores[$name] = 'prooph_event_store.'.$name;
         }
         $container->setParameter('prooph_event_store.stores', $eventStores);
@@ -186,8 +186,8 @@ final class ProophEventStoreExtension extends Extension
             foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {
                 $repositoryClass = $repositoryConfig['repository_class'] ?? $repositoryName;
 
-                if (! class_exists($repositoryClass)) {
-                    throw new RuntimeException(sprintf(
+                if (! \class_exists($repositoryClass)) {
+                    throw new RuntimeException(\sprintf(
                         'You must configure the class of repository "%s" either by configuring the \'repository_class\' key or by directly using the FQCN as the repository key.',
                         $repositoryClass
                     ));
@@ -213,7 +213,7 @@ final class ProophEventStoreExtension extends Extension
         }
 
         // define metadata enrichers
-        $metadataEnricherAggregateId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $name);
+        $metadataEnricherAggregateId = \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $name);
 
         $metadataEnricherAggregateDefinition = $container
             ->setDefinition(
@@ -221,7 +221,7 @@ final class ProophEventStoreExtension extends Extension
                 new ChildDefinition('prooph_event_store.metadata_enricher_aggregate_definition')
             );
 
-        $metadataEnricherId = sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
+        $metadataEnricherId = \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
 
         $metadataEnricherDefinition = $container
             ->setDefinition(

@@ -27,7 +27,7 @@ class BlackHole implements Plugin
 
     public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
     {
-        $this->stores = array_filter($this->stores, function ($store) use ($eventStore) {
+        $this->stores = \array_filter($this->stores, function ($store) use ($eventStore) {
             return $store !== $eventStore;
         });
         $this->valid = false;

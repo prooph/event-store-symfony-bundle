@@ -46,7 +46,7 @@ class RegisterProjectionsPassTest extends CompilerPassTestCase
         );
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(sprintf(
+        $this->expectExceptionMessage(\sprintf(
             'Tagged service "foo.projection" must implement either "%s" or "%s"',
             ReadModelProjection::class,
             Projection::class

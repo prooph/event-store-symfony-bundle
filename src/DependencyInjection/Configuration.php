@@ -43,10 +43,10 @@ final class Configuration implements ConfigurationInterface
         $projectionsNode = $treeBuilder->root('projections');
 
         $beginsWithAt = function ($v) {
-            return strpos($v, '@') === 0;
+            return \strpos($v, '@') === 0;
         };
         $removeFirstCharacter = function ($v) {
-            return substr($v, 1);
+            return \substr($v, 1);
         };
         $projectionsNode
             ->requiresAtLeastOneElement()
@@ -109,10 +109,10 @@ final class Configuration implements ConfigurationInterface
         $repositoriesNode = $treeBuilder->root('repositories');
 
         $beginsWithAt = function ($v) {
-            return strpos($v, '@') === 0;
+            return \strpos($v, '@') === 0;
         };
         $removeFirstCharacter = function ($v) {
-            return substr($v, 1);
+            return \substr($v, 1);
         };
 
         /** @var ArrayNodeDefinition $repositoryNode */
@@ -155,16 +155,16 @@ final class Configuration implements ConfigurationInterface
                         ->defaultValue(ProophActionEventEmitter::class)
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return ! class_exists($v);
+                                return ! \class_exists($v);
                             })
                             ->thenInvalid('Class %s does not exist')
                         ->end()
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return ! in_array(ActionEventEmitter::class, class_implements($v));
+                                return ! \in_array(ActionEventEmitter::class, \class_implements($v));
                             })
                             ->then(function ($v) {
-                                throw new \InvalidArgumentException(sprintf('%s must implement %s', $v, ActionEventEmitter::class));
+                                throw new \InvalidArgumentException(\sprintf('%s must implement %s', $v, ActionEventEmitter::class));
                             })
                         ->end()
                     ->end()

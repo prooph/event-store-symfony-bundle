@@ -89,18 +89,18 @@ abstract class AbstractProjectionCommand extends Command
         $this->projectionName = $input->getArgument(static::ARGUMENT_PROJECTION_NAME);
 
         if (! $this->projectionManagerForProjectionsLocator->has($this->projectionName)) {
-            throw new RuntimeException(sprintf('ProjectionManager for "%s" not found', $this->projectionName));
+            throw new RuntimeException(\sprintf('ProjectionManager for "%s" not found', $this->projectionName));
         }
         $this->projectionManager = $this->projectionManagerForProjectionsLocator->get($this->projectionName);
 
         if (! $this->projectionsLocator->has($this->projectionName)) {
-            throw new RuntimeException(sprintf('Projection "%s" not found', $this->projectionName));
+            throw new RuntimeException(\sprintf('Projection "%s" not found', $this->projectionName));
         }
         $this->projection = $this->projectionsLocator->get($this->projectionName);
 
         if ($this->projection instanceof ReadModelProjection) {
             if (! $this->projectionReadModelLocator->has($this->projectionName)) {
-                throw new RuntimeException(sprintf('ReadModel for "%s" not found', $this->projectionName));
+                throw new RuntimeException(\sprintf('ReadModel for "%s" not found', $this->projectionName));
             }
             $this->readModel = $this->projectionReadModelLocator->get($this->projectionName);
 
@@ -114,13 +114,13 @@ abstract class AbstractProjectionCommand extends Command
         if (null === $this->projector) {
             throw new RuntimeException('Projection was not created');
         }
-        $output->writeln(sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
+        $output->writeln(\sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
         try {
             $state = $this->projectionManager->fetchProjectionStatus($this->projectionName)->getValue();
         } catch (\Prooph\EventStore\Exception\RuntimeException $e) {
             $state = 'unknown';
         }
-        $output->writeln(sprintf('<action>Current status: <highlight>%s</highlight></action>', $state));
+        $output->writeln(\sprintf('<action>Current status: <highlight>%s</highlight></action>', $state));
         $output->writeln('====================');
     }
 }
