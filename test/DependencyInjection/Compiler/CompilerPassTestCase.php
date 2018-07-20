@@ -28,12 +28,12 @@ abstract class CompilerPassTestCase extends AbstractCompilerPassTestCase
         $this->setDefinition($storeServiceId, $eventStoreDefinition);
 
         $this->setDefinition(
-            sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $storeName),
+            \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $storeName),
             new Definition()
         );
 
         $this->setDefinition(
-            sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $storeName),
+            \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $storeName),
             new Definition()
         );
 

@@ -31,7 +31,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
             return;
         }
 
-        $projectionIds = array_keys($container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION));
+        $projectionIds = \array_keys($container->findTaggedServiceIds(ProophEventStoreExtension::TAG_PROJECTION));
 
         $readModelsLocator = [];
         $projectionManagerForProjectionsLocator = [];
@@ -57,7 +57,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
                 }
 
                 $projectionManagerForProjectionsLocator[$tag['projection_name']] = new Reference(
-                    sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager'])
+                    \sprintf('prooph_event_store.projection_manager.%s', $tag['projection_manager'])
                 );
                 $projectionsLocator[$tag['projection_name']] = new Reference($id);
             }
@@ -78,7 +78,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
         array $serviceMap
     ): void {
         $definition = $container->getDefinition($locatorId);
-        $definition->replaceArgument(0, array_merge($serviceMap, $definition->getArgument(0)));
+        $definition->replaceArgument(0, \array_merge($serviceMap, $definition->getArgument(0)));
     }
 
     /**
@@ -91,7 +91,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
         if (! $projectionClass->implementsInterface(ReadModelProjection::class)
             && ! $projectionClass->implementsInterface(Projection::class)
         ) {
-            throw new RuntimeException(sprintf(
+            throw new RuntimeException(\sprintf(
                 'Tagged service "%s" must implement either "%s" or "%s"',
                 $serviceId,
                 ReadModelProjection::class,
@@ -109,7 +109,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
     private static function assertProjectionTagHasAttribute(string $serviceId, array $tag, string $attributeName): void
     {
         if (! isset($tag[$attributeName])) {
-            throw new RuntimeException(sprintf(
+            throw new RuntimeException(\sprintf(
                 '"%s" attribute is missing from tag "%s" on service "%s"',
                 $attributeName,
                 ProophEventStoreExtension::TAG_PROJECTION,

@@ -25,9 +25,9 @@ class ProjectionDeleteCommand extends AbstractProjectionCommand
     {
         $withEvents = $input->getOption(self::OPTION_WITH_EVENTS);
         if ($withEvents) {
-            $output->writeln(sprintf('<action>Deleting projection <highlight>%s</highlight> with emitted events</action>', $this->projectionName));
+            $output->writeln(\sprintf('<action>Deleting projection <highlight>%s</highlight> with emitted events</action>', $this->projectionName));
         } else {
-            $output->writeln(sprintf('<action>Deleting projection </action><highlight>%s</highlight>', $this->projectionName));
+            $output->writeln(\sprintf('<action>Deleting projection </action><highlight>%s</highlight>', $this->projectionName));
         }
         $this->projectionManager->deleteProjection($this->projectionName, $withEvents);
     }

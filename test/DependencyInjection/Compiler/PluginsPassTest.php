@@ -49,7 +49,7 @@ class PluginsPassTest extends CompilerPassTestCase
     {
         $pluginDefinition = new Definition($className);
         $pluginDefinition->addTag(
-            sprintf('prooph_event_store.%splugin', $storeName ? $storeName . '.' : '')
+            \sprintf('prooph_event_store.%splugin', $storeName ? $storeName . '.' : '')
         );
         $this->setDefinition($serviceId ?? $className, $pluginDefinition);
 

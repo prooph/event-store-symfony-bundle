@@ -56,10 +56,10 @@ class ProjectionNamesCommand extends Command
     {
         $this->formatOutput($output);
 
-        $managerNames = array_keys($this->projectionManagerNames);
+        $managerNames = \array_keys($this->projectionManagerNames);
 
         if ($requestedManager = $input->getOption(self::OPTION_MANAGER)) {
-            $managerNames = array_filter($managerNames, function (string $managerName) use ($requestedManager) {
+            $managerNames = \array_filter($managerNames, function (string $managerName) use ($requestedManager) {
                 return $managerName === $requestedManager;
             });
         }
@@ -67,9 +67,9 @@ class ProjectionNamesCommand extends Command
         $filter = $input->getArgument(self::ARGUMENT_FILTER);
         $regex = $input->getOption(static::OPTION_REGEX);
 
-        $output->write(sprintf('<action>Projection names'));
+        $output->write(\sprintf('<action>Projection names'));
         if ($filter) {
-            $output->write(sprintf(' filter <highlight>%s</highlight>', $filter));
+            $output->write(\sprintf(' filter <highlight>%s</highlight>', $filter));
         }
         if ($regex) {
             $output->write(' <comment>regex enabled</comment>');
@@ -87,8 +87,8 @@ class ProjectionNamesCommand extends Command
         foreach ($managerNames as $managerName) {
             $projectionManager = $this->projectionManagersLocator->get($managerName);
 
-            if (count($names) > $offset) {
-                $projectionNames = $projectionManager->$method($filter, $limit - (count($names) - $offset));
+            if (\count($names) > $offset) {
+                $projectionNames = $projectionManager->$method($filter, $limit - (\count($names) - $offset));
             } else {
                 $projectionNames = $projectionManager->$method($filter);
             }
@@ -97,12 +97,12 @@ class ProjectionNamesCommand extends Command
                 $names[] = [$managerName, $projectionName];
             }
 
-            if (count($names) >= $maxNeeded) {
+            if (\count($names) >= $maxNeeded) {
                 break;
             }
         }
 
-        $names = array_slice($names, $offset, $limit);
+        $names = \array_slice($names, $offset, $limit);
 
         $table = new Table($output);
         $table

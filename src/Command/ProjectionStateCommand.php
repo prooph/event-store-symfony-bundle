@@ -20,6 +20,6 @@ class ProjectionStateCommand extends AbstractProjectionCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<action>Current state:</action>');
-        $output->writeln(json_encode($this->projectionManager->fetchProjectionState($this->projectionName)));
+        $output->writeln(\json_encode($this->projectionManager->fetchProjectionState($this->projectionName)));
     }
 }

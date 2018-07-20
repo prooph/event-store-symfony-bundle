@@ -30,7 +30,7 @@ class DefaultEventStoreFactory implements EventStoreFactory
             $plugin = $container->get($pluginAlias);
 
             if (! $plugin instanceof Plugin) {
-                throw new RuntimeException(sprintf(
+                throw new RuntimeException(\sprintf(
                     'Plugin %s does not implement the Plugin interface',
                     $pluginAlias
                 ));
