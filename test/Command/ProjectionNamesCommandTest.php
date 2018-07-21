@@ -74,11 +74,11 @@ class ProjectionNamesCommandTest extends KernelTestCase
         }
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['--limit' => $limit,]);
+        $commandTester->execute(['--limit' => $limit]);
         $this->assertContains('main_projection_manager', $commandTester->getDisplay());
 
-        $expectedProjectionNames = array_slice($projectionNames, 0, $limit);
-        $unexpectedProjectionNames = array_slice($projectionNames, $limit);
+        $expectedProjectionNames = \array_slice($projectionNames, 0, $limit);
+        $unexpectedProjectionNames = \array_slice($projectionNames, $limit);
         foreach ($expectedProjectionNames as $projectionName) {
             $this->assertContains($projectionName, $commandTester->getDisplay());
         }
@@ -113,11 +113,11 @@ class ProjectionNamesCommandTest extends KernelTestCase
         int $amountToGenerate,
         string $prefix = 'black_hole_read_model_projection_'
     ): array {
-        return array_map(
+        return \array_map(
             function ($value) use ($amountToGenerate, $prefix) {
-                return $prefix . str_pad((string) $value, strlen((string) $amountToGenerate), '0', \STR_PAD_LEFT);
+                return $prefix . \str_pad((string) $value, \strlen((string) $amountToGenerate), '0', \STR_PAD_LEFT);
             },
-            range(1, $amountToGenerate)
+            \range(1, $amountToGenerate)
         );
     }
 
@@ -126,15 +126,15 @@ class ProjectionNamesCommandTest extends KernelTestCase
         return [
             [
                 25,
-                null
+                null,
             ],
             [
                 25,
-                5
+                5,
             ],
             [
                 25,
-                25
+                25,
             ],
         ];
     }
