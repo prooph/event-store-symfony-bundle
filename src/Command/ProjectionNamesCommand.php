@@ -90,7 +90,7 @@ class ProjectionNamesCommand extends Command
             if (\count($names) > $offset) {
                 $projectionNames = $projectionManager->$method($filter, $limit - (\count($names) - $offset));
             } else {
-                $projectionNames = $projectionManager->$method($filter);
+                $projectionNames = $projectionManager->$method($filter, $limit);
             }
 
             foreach ($projectionNames as $projectionName) {
