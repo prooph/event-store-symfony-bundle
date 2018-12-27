@@ -26,9 +26,9 @@ final class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('prooph_event_store');
         /** @var ArrayNodeDefinition $rootNode */
-        $rootNode = $treeBuilder->root('prooph_event_store');
+        $rootNode = $treeBuilder->getRootNode();
 
         $this->addEventStoreSection($rootNode);
         $this->addProjectionManagerSection($rootNode);
@@ -38,9 +38,9 @@ final class Configuration implements ConfigurationInterface
 
     public function addProjectionManagerSection(ArrayNodeDefinition $node): void
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('projections');
         /** @var ArrayNodeDefinition $projectionsNode */
-        $projectionsNode = $treeBuilder->root('projections');
+        $projectionsNode = $treeBuilder->getRootNode();
 
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;
@@ -104,9 +104,9 @@ final class Configuration implements ConfigurationInterface
      */
     private function addEventStoreSection(ArrayNodeDefinition $node): void
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('repositories');
         /** @var ArrayNodeDefinition $repositoriesNode */
-        $repositoriesNode = $treeBuilder->root('repositories');
+        $repositoriesNode = $treeBuilder->getRootNode();
 
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;
