@@ -14,6 +14,7 @@ namespace Prooph\Bundle\EventStore;
 use PDO;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\EventStoreDecorator;
 use Prooph\EventStore\InMemoryEventStore;
 use Prooph\EventStore\Pdo\MariaDbEventStore;
 use Prooph\EventStore\Pdo\MySqlEventStore;
@@ -40,22 +41,43 @@ class ProjectionManagerFactory
             return $connection;
         };
 
-        if ($eventStore instanceof InMemoryEventStore) {
+        $realEventStore = $this->getTheRealEventStore($eventStore);
+
+        if ($realEventStore instanceof InMemoryEventStore) {
             return new InMemoryProjectionManager($eventStore);
         }
 
-        if ($eventStore instanceof PostgresEventStore) {
+        if ($realEventStore instanceof PostgresEventStore) {
             return new PostgresProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        if ($eventStore instanceof MySqlEventStore) {
+        if ($realEventStore instanceof MySqlEventStore) {
             return new MySqlProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        if ($eventStore instanceof MariaDbEventStore) {
+        if ($realEventStore instanceof MariaDbEventStore) {
             return new MariaDbProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        throw new RuntimeException(\sprintf('ProjectionManager for %s not implemented.', \get_class($eventStore)));
+        throw new RuntimeException(\sprintf('ProjectionManager for %s not implemented.', \get_class($realEventStore)));
+    }
+
+    /**
+     * Gets the "real" event store in case we were provided with an EventStoreDecorator.
+     * That's the one that will really perfom the actions.
+     *
+     * @param EventStore $eventStore
+     *
+     * @return EventStore
+     */
+    private function getTheRealEventStore(EventStore $eventStore): EventStore
+    {
+        $realEventStore = $eventStore;
+
+        while ($realEventStore instanceof EventStoreDecorator) {
+            $realEventStore = $realEventStore->getInnerEventStore();
+        }
+
+        return $realEventStore;
     }
 }
