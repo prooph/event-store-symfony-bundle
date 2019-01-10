@@ -19,6 +19,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
+    const PROOPH_EVENT_STORE_NODE = 'prooph_event_store';
+    const PROJECTIONS_NODE = 'projections';
+    const REPOSITORIES_NODE = 'repositories';
+
     /**
      * Normalizes XML config and defines config tree
      *
@@ -26,9 +30,8 @@ final class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('prooph_event_store');
-        /** @var ArrayNodeDefinition $rootNode */
-        $rootNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder(self::PROOPH_EVENT_STORE_NODE);
+        $rootNode = $this->getRootNode($treeBuilder, self::PROOPH_EVENT_STORE_NODE);
 
         $this->addEventStoreSection($rootNode);
         $this->addProjectionManagerSection($rootNode);
@@ -38,9 +41,8 @@ final class Configuration implements ConfigurationInterface
 
     public function addProjectionManagerSection(ArrayNodeDefinition $node): void
     {
-        $treeBuilder = new TreeBuilder('projections');
-        /** @var ArrayNodeDefinition $projectionsNode */
-        $projectionsNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder(self::PROJECTIONS_NODE);
+        $projectionsNode = $this->getRootNode($treeBuilder, self::PROJECTIONS_NODE);
 
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;
@@ -89,7 +91,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->scalarNode('event_streams_table')->defaultValue('event_streams')->end()
-                    ->scalarNode('projections_table')->defaultValue('projections')->end()
+                    ->scalarNode('projections_table')->defaultValue(self::PROJECTIONS_NODE)->end()
                     ->append($projectionsNode)
                 ->end()
             ->end();
@@ -104,9 +106,8 @@ final class Configuration implements ConfigurationInterface
      */
     private function addEventStoreSection(ArrayNodeDefinition $node): void
     {
-        $treeBuilder = new TreeBuilder('repositories');
-        /** @var ArrayNodeDefinition $repositoriesNode */
-        $repositoriesNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder(self::REPOSITORIES_NODE);
+        $repositoriesNode = $this->getRootNode($treeBuilder, self::REPOSITORIES_NODE);
 
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;
@@ -149,7 +150,7 @@ final class Configuration implements ConfigurationInterface
                 ->requiresAtLeastOneElement()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
-                ->fixXmlConfig('repository', 'repositories')
+                ->fixXmlConfig('repository', self::REPOSITORIES_NODE)
                 ->children()
                     ->scalarNode('event_emitter')
                         ->defaultValue(ProophActionEventEmitter::class)
@@ -179,5 +180,20 @@ final class Configuration implements ConfigurationInterface
                     ->append($repositoriesNode)
                 ->end()
             ->end();
+    }
+
+    /**
+     * Gets the root node of a TreeBuilder with the appropriate way.
+     *
+     * @param TreeBuilder $treeBuilder
+     * @param string $rootName
+     *
+     * @return ArrayNodeDefinition
+     */
+    private function getRootNode(TreeBuilder $treeBuilder, string $rootName): ArrayNodeDefinition
+    {
+        return \method_exists($treeBuilder, 'getRootNode')
+            ? $treeBuilder->getRootNode()
+            : $treeBuilder->root($rootName);
     }
 }
