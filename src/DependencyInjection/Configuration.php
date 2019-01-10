@@ -91,7 +91,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->scalarNode('event_streams_table')->defaultValue('event_streams')->end()
-                    ->scalarNode('projections_table')->defaultValue(self::PROJECTIONS_NODE)->end()
+                    ->scalarNode('projections_table')->defaultValue('projections')->end()
                     ->append($projectionsNode)
                 ->end()
             ->end();
@@ -150,7 +150,7 @@ final class Configuration implements ConfigurationInterface
                 ->requiresAtLeastOneElement()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
-                ->fixXmlConfig('repository', self::REPOSITORIES_NODE)
+                ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')
                         ->defaultValue(ProophActionEventEmitter::class)
