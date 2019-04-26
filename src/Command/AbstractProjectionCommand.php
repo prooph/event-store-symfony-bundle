@@ -29,7 +29,6 @@ abstract class AbstractProjectionCommand extends Command
         Projector::OPTION_SLEEP,
         Projector::OPTION_PERSIST_BLOCK_SIZE,
         Projector::OPTION_LOCK_TIMEOUT_MS,
-        Projector::OPTION_PCNTL_DISPATCH,
         Projector::OPTION_UPDATE_LOCK_THRESHOLD,
     ];
 
@@ -124,7 +123,7 @@ abstract class AbstractProjectionCommand extends Command
             $options = [];
             foreach (self::PROJECTOR_OPTIONS as $option) {
                 if ($input->getOption($option)) {
-                    $options[$option] = $input->getOption($option);
+                    $options[$option] = (int) $input->getOption($option);
                 }
             }
             $this->projector = $this->projectionManager->createProjection($this->projectionName, $options);
