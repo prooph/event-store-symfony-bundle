@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractProjectionCommand extends Command
@@ -22,6 +23,15 @@ abstract class AbstractProjectionCommand extends Command
     use FormatsOutput;
 
     protected const ARGUMENT_PROJECTION_NAME = 'projection-name';
+
+    protected const PROJECTOR_OPTIONS = [
+        Projector::OPTION_CACHE_SIZE,
+        Projector::OPTION_SLEEP,
+        Projector::OPTION_PERSIST_BLOCK_SIZE,
+        Projector::OPTION_LOCK_TIMEOUT_MS,
+        Projector::OPTION_PCNTL_DISPATCH,
+        Projector::OPTION_UPDATE_LOCK_THRESHOLD,
+    ];
 
     /**
      * @var ProjectionManager
@@ -78,6 +88,9 @@ abstract class AbstractProjectionCommand extends Command
     protected function configure()
     {
         $this->addArgument(static::ARGUMENT_PROJECTION_NAME, InputArgument::REQUIRED, 'The name of the Projection');
+        foreach (self::PROJECTOR_OPTIONS as $option) {
+            $this->addOption($option, null, InputOption::VALUE_OPTIONAL);
+        }
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -108,7 +121,13 @@ abstract class AbstractProjectionCommand extends Command
         }
 
         if ($this->projection instanceof Projection) {
-            $this->projector = $this->projectionManager->createProjection($this->projectionName);
+            $options = [];
+            foreach (self::PROJECTOR_OPTIONS as $option) {
+                if ($input->getOption($option)) {
+                    $options[$option] = $input->getOption($option);
+                }
+            }
+            $this->projector = $this->projectionManager->createProjection($this->projectionName, $options);
         }
 
         if (null === $this->projector) {
