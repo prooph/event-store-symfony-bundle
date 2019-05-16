@@ -7,8 +7,12 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::scalarNode\(\)\.#'
         - '#Calling method scalarNode\(\) on possibly null value of type Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.#'
         # TreeBuilder in Symfony 4.2 and up has a constructor and a getRootNode() method
-        - '#Class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not have a constructor#'
+        - '#Class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not have a constructor and must be instantiated without any parameters\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder::getRootNode\(\)#'
+        # More Symfony 4.2 compatibility errors
+        - '#Parameter \#2 \$deleteEmittedEvents of method Prooph\\EventStore\\Projection\\ProjectionManager::deleteProjection\(\) expects bool, array<string>\|bool\|string\|null given\.#'
+        - '#Property Prooph\\Bundle\\EventStore\\Command\\AbstractProjectionCommand::\$projectionName \(string\) does not accept array<string>\|string\|null\.#'
+        - '#Parameter \#1 \$id of method Psr\\Container\\ContainerInterface::(has|get)\(\) expects string, array<string>\|string\|null given\.#'
         # Projection and projector compatibility is ensured in the AbstractProjectionCommand
         - '#Parameter \#1 \$projector of method Prooph\\Bundle\\EventStore\\Projection\\Projection::project\(\) expects Prooph\\EventStore\\Projection\\Projector, Prooph\\EventStore\\Projection\\Projector\|Prooph\\EventStore\\Projection\\ReadModelProjector given\.#'
         # MariaDbEventStore is available since pdo-event-store v1.3
