@@ -207,6 +207,7 @@ final class ProophEventStoreExtension extends Extension
                             $repositoryConfig['snapshot_store'] ? new Reference($repositoryConfig['snapshot_store']) : null,
                             $repositoryConfig['stream_name'],
                             $repositoryConfig['one_stream_per_aggregate'],
+                            $repositoryConfig['disable_identity_map'] ?? false,
                         ]
                     );
             }

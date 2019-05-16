@@ -140,6 +140,7 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('stream_name')->defaultValue(null)->end()
                 ->booleanNode('one_stream_per_aggregate')->defaultValue(false)->end()
+                ->booleanNode('disable_identity_map')->defaultFalse()->end()
             ->end();
 
         $node
