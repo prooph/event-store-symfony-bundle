@@ -45,7 +45,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             'aggregate_translator' => BlackHoleAggregateTranslator::class,
                             'stream_name' => 'test',
                             'one_stream_per_aggregate' => true,
-                            'disable_identity_map' => false,
+                            'disable_identity_map' => true,
                             'snapshot_store' => 'prooph_test.bundle.snapshot_store.in_memory',
                         ],
                     ],
