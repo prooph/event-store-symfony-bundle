@@ -10,6 +10,7 @@ prooph_event_store:
             snapshot_store: '@prooph_test.bundle.snapshot_store.in_memory'
             stream_name: 'test'
             one_stream_per_aggregate: true
+            disable_identity_map: true
   projection_managers:
     main_projection_manager:
       event_store: '@Prooph\EventStore\InMemoryEventStore'

@@ -26,7 +26,8 @@ class RepositoryFactory
         AggregateTranslator $aggregateTranslator,
         SnapshotStore $snapshotStore = null,
         string $streamName = null,
-        bool $oneStreamPerAggregate = false
+        bool $oneStreamPerAggregate = false,
+        bool $disableIdentityMap = false
     ) {
         return new $repositoryClass(
             $eventStore,
@@ -34,7 +35,8 @@ class RepositoryFactory
             $aggregateTranslator,
             $snapshotStore,
             $streamName ? new StreamName($streamName) : null,
-            $oneStreamPerAggregate
+            $oneStreamPerAggregate,
+            $disableIdentityMap
         );
     }
 }

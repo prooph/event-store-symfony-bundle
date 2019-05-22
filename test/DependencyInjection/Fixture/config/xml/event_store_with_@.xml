@@ -14,6 +14,7 @@
                 <snapshot_store>@prooph_test.bundle.snapshot_store.in_memory</snapshot_store>
                 <stream_name>test</stream_name>
                 <one_stream_per_aggregate>true</one_stream_per_aggregate>
+                <disable_identity_map>true</disable_identity_map>
             </repository>
         </store>
         <projection_managers>
