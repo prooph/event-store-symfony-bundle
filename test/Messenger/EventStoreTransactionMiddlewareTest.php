@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\Messenger;
 
+use LogicException;
 use Prooph\Bundle\EventStore\Messenger\EventStoreTransactionMiddleware;
 use Prooph\EventStore\TransactionalEventStore;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Messenger\Test\Middleware\MiddlewareTestCase;
+use Throwable;
 
 class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
 {
@@ -45,5 +49,30 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
             ->method('rollback');
 
         $this->middleware->handle(new Envelope(new stdClass()), $this->getThrowingStackMock());
+    }
+
+    public function testItResetsHandledStampsOnHandlerFailedException(): void
+    {
+        $this->eventStore->expects($this->once())
+            ->method('beginTransaction');
+        $this->eventStore->expects($this->once())
+            ->method('rollback');
+
+        $envelop = new Envelope(new stdClass(), [
+            new HandledStamp('dummy', 'dummy'),
+        ]);
+
+        $exception = null;
+        try {
+            $this->middleware->handle($envelop, $this->getThrowingStackMock(new HandlerFailedException($envelop, [
+                new LogicException('dummy exception'),
+            ])));
+        } catch (Throwable $e) {
+            $exception = $e;
+        }
+
+        $this->assertInstanceOf(HandlerFailedException::class, $exception);
+        /** @var HandlerFailedException $exception */
+        $this->assertSame([], $exception->getEnvelope()->all(HandledStamp::class));
     }
 }
