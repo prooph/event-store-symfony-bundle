@@ -92,7 +92,7 @@ class ProjectionManagerFactoryTest extends TestCase
             ],
         ];
 
-        if (class_exists(MariaDbEventStore::class)) {
+        if (\class_exists(MariaDbEventStore::class)) {
             $eventStores['MariaDbEventStore'] = [
                 MariaDbProjectionManager::class,
                 $this->createAnEventStore(MariaDbEventStore::class),
