@@ -69,7 +69,7 @@ class ProjectionManagerFactoryTest extends TestCase
         $singleLevelEventStoreDecorator = $this->createAnEventStoreDecorator($postgresEventStore);
         $multiLevelEventStoreDecorator = $this->createAnEventStoreDecorator($singleLevelEventStoreDecorator);
 
-        return [
+        $eventStores = [
             'InMemoryEventStore' => [
                 InMemoryProjectionManager::class,
                 $this->createAnEventStore(InMemoryEventStore::class),
@@ -82,10 +82,6 @@ class ProjectionManagerFactoryTest extends TestCase
                 MySqlProjectionManager::class,
                 $this->createAnEventStore(MySqlEventStore::class),
             ],
-            'MariaDbEventStore' => [
-                MariaDbProjectionManager::class,
-                $this->createAnEventStore(MariaDbEventStore::class),
-            ],
             'Single level EventStoreDecorator' => [
                 PostgresProjectionManager::class,
                 $singleLevelEventStoreDecorator,
@@ -95,6 +91,15 @@ class ProjectionManagerFactoryTest extends TestCase
                 $multiLevelEventStoreDecorator,
             ],
         ];
+
+        if (class_exists(MariaDbEventStore::class)) {
+            $eventStores['MariaDbEventStore'] = [
+                MariaDbProjectionManager::class,
+                $this->createAnEventStore(MariaDbEventStore::class),
+            ];
+        }
+
+        return $eventStores;
     }
 
     private function createAnEventStore(string $type): EventStore
