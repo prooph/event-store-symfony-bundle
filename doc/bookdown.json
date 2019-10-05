@@ -1,12 +1,15 @@
 {
   "title": "prooph event-store Symfony bundle",
   "content": [
-    {"getting-started": "book/getting-started/bookdown.json"},
-    {"reference": "book/reference/bookdown.json"},
-    {"contribute": "book/contribute/bookdown.json"}
+    {"intro": "../README.md"},
+    {"getting_started": "getting_started.md"},
+    {"event_store": "event_store.md"},
+    {"projection_manager": "projection_manager.md"},
+    {"event_store_bus_bridge": "event_store_bus_bridge.md"},
+    {"configuration_reference": "configuration_reference.md"}
   ],
   "target": "./html",
   "tocDepth": 2,
-  "template": "../vendor/tobiju/bookdown-bootswatch-templates/templates/main.php",
+  "template": "../vendor/prooph/bookdown-template/templates/main.php",
   "copyright": "Copyright (c) 2016 - 2019 <a href=\"http://getprooph.org/\" title=\"prooph maintainers\">prooph maintainers</a> <br/> Powered by <a href=\"https://github.com/tobiju/bookdown-bootswatch-templates\" title=\"Visit project to generate your own docs\">Bookdown Bootswatch Templates</a>"
 }
