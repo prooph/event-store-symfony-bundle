@@ -1,7 +1,7 @@
 New BSD License
 ===============
 
-Copyright (c) 2016, prooph software GmbH and Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+Copyright (c) 2016 - 2019, Alexander Miertsch <kontakt@codeliner.ws> and Sascha-Oliver Prolic <saschaprolic@googlemail.com>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
