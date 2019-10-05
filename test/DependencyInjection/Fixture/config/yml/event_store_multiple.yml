@@ -1,21 +1,29 @@
 prooph_event_store:
-  stores:
-    main_store:
-      event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
-      repositories:
-         main_store.todo_list:
-            repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
-            aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
-            aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
-            snapshot_store: prooph_test.bundle.snapshot_store.in_memory
-            stream_name: 'test'
-            one_stream_per_aggregate: true
+    stores:
+        main_store:
+            event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+            repositories:
+                main_store.todo_list:
+                    repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
+                    aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
+                    aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
+                    snapshot_store: prooph_test.bundle.snapshot_store.in_memory
+                    stream_name: 'test'
+                    one_stream_per_aggregate: true
 
-    # uses defaults
-    second_store:
-      event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
-      repositories:
-         second_store.todo_list:
-            repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
-            aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
-            aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
+        # uses defaults
+        second_store:
+            event_store: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole'
+            repositories:
+                second_store.todo_list:
+                    repository_class: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository'
+                    aggregate_type: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate'
+                    aggregate_translator: 'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator'
+
+services:
+#    test.main_store.todo_list:
+#        alias: main_store.todo_list
+#        public: true
+#    test.second_store.todo_list:
+#        alias: second_store.todo_list
+#        public: true

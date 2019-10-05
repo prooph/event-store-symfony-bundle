@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<srv:container xmlns="http://getprooph.org/schemas/symfony-dic/prooph"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:srv="http://symfony.com/schema/dic/services"
+               xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://getprooph.org/schemas/symfony-dic/prooph http://getprooph.org/schemas/symfony-dic/prooph/event_store-5.1.xsd">
+    <config>
+        <store name="with_enricher_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole" />
+        <store name="without_enricher_store" event_store="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole" />
+    </config>
+    <srv:services>
+        <srv:service id="ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Metadata\StaticMetadataEnricher" public="true">
+            <srv:argument type="string">specific</srv:argument>
+            <srv:argument type="constant">true</srv:argument>
+            <srv:tag name="prooph_event_store.with_enricher_store.metadata_enricher" />
+        </srv:service>
+    </srv:services>
+</srv:container>

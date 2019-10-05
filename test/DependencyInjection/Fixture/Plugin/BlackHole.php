@@ -3,7 +3,7 @@
  * prooph (http://getprooph.org/)
  *
  * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 prooph software GmbH (http://prooph-software.com/)
+ * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
@@ -16,15 +16,20 @@ use Prooph\EventStore\Plugin\Plugin;
 
 class BlackHole implements Plugin
 {
+    public $stores = [];
     public $valid = false;
 
     public function attachToEventStore(ActionEventEmitterEventStore $eventStore): void
     {
+        $this->stores[] = $eventStore;
         $this->valid = true;
     }
 
     public function detachFromEventStore(ActionEventEmitterEventStore $eventStore): void
     {
+        $this->stores = \array_filter($this->stores, function ($store) use ($eventStore) {
+            return $store !== $eventStore;
+        });
         $this->valid = false;
     }
 }

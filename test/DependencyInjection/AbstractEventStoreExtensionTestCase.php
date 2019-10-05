@@ -3,7 +3,7 @@
  * prooph (http://getprooph.org/)
  *
  * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 prooph software GmbH (http://prooph-software.com/)
+ * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
@@ -11,14 +11,20 @@ declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\DependencyInjection;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
+use Prooph\Common\Messaging\Message;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\Projection\ProjectionManager;
+use Prooph\EventStore\StreamName;
 use Prooph\SnapshotStore\SnapshotStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
+use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole as BlackHolePlugin;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\Dumper;
@@ -31,18 +37,14 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 {
     abstract protected function loadFromFile(ContainerBuilder $container, $file);
 
-    /**
-     * @test
-     */
-    public function it_does_not_process_compiler_passes_without_configured_store()
+    /** @test */
+    public function it_does_not_process_compiler_passes_without_configured_store(): void
     {
         self::assertInstanceOf(ContainerBuilder::class, $this->loadContainer('unconfigured'));
     }
 
-    /**
-     * @test
-     */
-    public function it_creates_an_event_store()
+    /** @test */
+    public function it_creates_an_event_store(): void
     {
         $container = $this->loadContainer('event_store');
 
@@ -59,12 +61,22 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
         self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
+
+        $projectionManager = $container->get('prooph_event_store.projection_manager.main_projection_manager');
+        self::assertInstanceOf(ProjectionManager::class, $projectionManager);
     }
 
-    /**
-     * @test
-     */
-    public function it_creates_multiple_event_stores()
+    /** @test */
+    public function it_registers_repository_with_short_syntax(): void
+    {
+        $container = $this->loadContainer('event_store');
+
+        $repository = $container->get(BlackHoleRepository::class);
+        self::assertInstanceOf(BlackHoleRepository::class, $repository);
+    }
+
+    /** @test */
+    public function it_creates_multiple_event_stores(): void
     {
         $container = $this->loadContainer('event_store_multiple');
 
@@ -82,12 +94,167 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function it_dumps_multiple_event_stores()
+    /** @test */
+    public function it_dumps_multiple_event_stores(): void
     {
         $this->dump('event_store_multiple');
+    }
+
+    /** @test */
+    public function it_can_attach_metadata_enrichers_to_every_event_store(): void
+    {
+        $message = $this->createMock(Message::class);
+        $message
+            ->expects($this->once())
+            ->method('withAddedMetadata')
+            ->with('global', true)
+            ->willReturnSelf();
+
+        $container = $this->loadContainer('metadata_enricher_global');
+        /* @var EventStore $store */
+        $store = $container->get('prooph_event_store.main_store');
+
+        $store->appendTo(new StreamName('any'), new ArrayIterator([$message]));
+    }
+
+    /** @test */
+    public function it_can_attach_metadata_enrichers_to_a_specific_event_store(): void
+    {
+        $enrichedMessage = $this->createMock(Message::class);
+        $enrichedMessage
+            ->expects($this->atLeastOnce())
+            ->method('withAddedMetadata')
+            ->with('specific', true)
+            ->willReturnSelf();
+
+        $notEnrichedMessage = $this->createMock(Message::class);
+        $notEnrichedMessage->expects($this->never())->method('withAddedMetadata');
+
+        $container = $this->loadContainer('metadata_enricher');
+        /* @var EventStore $withEnricherStore */
+        $withEnricherStore = $container->get('prooph_event_store.with_enricher_store');
+        /* @var EventStore $withoutEnricherStore */
+        $withoutEnricherStore = $container->get('prooph_event_store.without_enricher_store');
+
+        $withEnricherStore->appendTo(new StreamName('any'), new ArrayIterator([$enrichedMessage]));
+        $withoutEnricherStore->appendTo(new StreamName('any'), new ArrayIterator([$notEnrichedMessage]));
+    }
+
+    /** @test */
+    public function it_can_attach_plugins_to_every_event_store(): void
+    {
+        $container = $this->loadContainer('plugins_global');
+
+        /** @var BlackHolePlugin $plugin */
+        $plugin = $container->get(BlackHolePlugin::class);
+        $eventStore = $container->get('prooph_event_store.main_store');
+
+        $this->assertContains($eventStore, $plugin->stores);
+    }
+
+    /** @test */
+    public function it_can_attach_plugins_to_a_specific_event_store(): void
+    {
+        $container = $this->loadContainer('plugins');
+
+        /** @var BlackHolePlugin $plugin */
+        $plugin = $container->get(BlackHolePlugin::class);
+        $withPluginStore = $container->get('prooph_event_store.with_plugin_store');
+        $withoutPluginStore = $container->get('prooph_event_store.without_plugin_store');
+
+        $this->assertContains($withPluginStore, $plugin->stores);
+        $this->assertNotContains($withoutPluginStore, $plugin->stores);
+    }
+
+    /** @test */
+    public function it_can_register_projections_centrally(): void
+    {
+        $container = $this->loadContainer('projections');
+        $managerLocator = $container->get('test.prooph_event_store.projection_manager_for_projections_locator');
+        $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
+        $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
+
+        self::assertTrue(
+            $managerLocator->has('todo_projection'),
+            'The manager for the todo_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $projectionsLocator->has('todo_projection'),
+            'The projection todo_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $readModelLocator->has('todo_projection'),
+            'The read model for the todo_projection is not available through the dedicated service locator'
+        );
+    }
+
+    /** @test */
+    public function it_can_register_projections_using_tags(): void
+    {
+        $container = $this->loadContainer('projections');
+        $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
+        $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
+
+        self::assertTrue(
+            $projectionsLocator->has('black_hole_projection'),
+            'The projection black_hole_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $readModelLocator->has('black_hole_projection'),
+            'The read model for the black_hole_projection is not available through the dedicated service locator'
+        );
+    }
+
+    /** @test */
+    public function it_dumps_an_event_stores_with_plugins()
+    {
+        $this->dump('plugins');
+    }
+
+    /** @test */
+    public function it_dumps_an_event_stores_with_metadata_enrichers()
+    {
+        $this->dump('metadata_enricher');
+    }
+
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "projection" at path "prooph_event_store.projection_managers.main_projection_manager.projections.todo_projection" must be configured.
+     */
+    public function it_expects_projection_nodes_to_have_a_projection_key(): void
+    {
+        $this->loadContainer('missing_projection_key');
+    }
+
+    /**
+     * @test
+     * @expectedException Prooph\Bundle\EventStore\Exception\RuntimeException
+     * @expectedExceptionMessage You must configure the class of repository "todo_list" either by configuring the 'repository_class' key or by directly using the FQCN as the repository key.
+     */
+    public function it_expects_repository_nodes_to_have_a_repository_class()
+    {
+        $this->loadContainer('missing_repository_class');
+    }
+
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "aggregate_type" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
+     */
+    public function it_expects_repository_nodes_to_have_an_aggregate_type_key()
+    {
+        $this->loadContainer('missing_aggregate_type_key');
+    }
+
+    /**
+     * @test
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage The child node "aggregate_translator" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
+     */
+    public function it_expects_repository_nodes_to_have_an_aggregate_translator_key()
+    {
+        $this->loadContainer('missing_aggregate_translator_key');
     }
 
     private function loadContainer($fixture, CompilerPassInterface $compilerPass = null)
@@ -96,7 +263,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         $container->registerExtension(new ProophEventStoreExtension());
 
-        $loadYml = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
+        $loadYml = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__) . '/Resources/config'));
         $loadYml->load('services.yml');
 
         $this->loadFromFile($container, $fixture);
@@ -120,14 +287,14 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
             $map[$bundle] = 'Fixture\\Bundles\\' . $bundle . '\\' . $bundle;
         }
 
-        $map['ProophEventStoreBundle'] = realpath(__DIR__ . '/../../src');
+        $map['ProophEventStoreBundle'] = \realpath(__DIR__ . '/../../src');
 
         return new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,
             'kernel.bundles' => $map,
-            'kernel.cache_dir' => sys_get_temp_dir(),
+            'kernel.cache_dir' => \sys_get_temp_dir(),
             'kernel.environment' => 'test',
-            'kernel.root_dir' => realpath(__DIR__ . '/../../src'),
+            'kernel.root_dir' => \realpath(__DIR__ . '/../../src'),
         ]));
     }
 
@@ -135,7 +302,11 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     {
         $bundle = new ProophEventStoreBundle();
         $bundle->build($container);
-        $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveDefinitionTemplatesPass()]);
+        $container->getCompilerPassConfig()->setOptimizationPasses([
+            \class_exists(ResolveChildDefinitionsPass::class)
+                ? new ResolveChildDefinitionsPass()
+                : new ResolveDefinitionTemplatesPass(),
+        ]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
 
         $container->compile();
@@ -151,7 +322,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         } elseif ($this instanceof YamlEventStoreExtensionTest) {
             $dumper = new YamlDumper($container);
         }
-        self::assertInstanceOf(Dumper::class, $dumper, sprintf('Test type "%s" not supported', get_class($this)));
+        self::assertInstanceOf(Dumper::class, $dumper, \sprintf('Test type "%s" not supported', \get_class($this)));
         self::assertNotEmpty($dumper->dump());
     }
 }

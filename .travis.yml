@@ -10,34 +10,47 @@ cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.php-cs-fixer
-    - vendor
+
+php:
+ - 7.1
+ - 7.2
+
+env:
+  global:
+    - EXECUTE_CS_CHECK=false
+    - TEST_COVERAGE=false
+  matrix:
+    - DEPENDENCIES="--prefer-lowest --prefer-stable"
+    - DEPENDENCIES=""
 
 matrix:
   fast_finish: true
   include:
-    - php: 7.1
-      env:
-        - EXECUTE_CS_CHECK=true
-        - EXECUTE_TEST_COVERALLS=true
+    - php: 7.2
+      env: DEPENDENCIES="" EXECUTE_CS_CHECK=true TEST_COVERAGE=true
+  exclude:
+    - php: 7.2
+      env: DEPENDENCIES=""
 
 before_install:
-  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - phpenv config-rm xdebug.ini || return 0
   - composer self-update
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --no-update satooshi/php-coveralls:dev-master ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer require --no-update satooshi/php-coveralls:^1.0 ; fi
 
 install:
-  - travis_retry composer install --no-interaction --prefer-source
+  - travis_retry composer update --no-interaction --prefer-dist $DEPENDENCIES
   - composer info -i
 
+before_script:
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then mkdir -p "$HOME/.php-cs-fixer" ; fi
+
 script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml ; fi
-  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit ; fi
-  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run; fi
+  - ./vendor/bin/phpstan analyse -c phpstan.neon -l 7 src
 
 after_script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then php vendor/bin/coveralls -v; fi
 
 notifications:
   webhooks:

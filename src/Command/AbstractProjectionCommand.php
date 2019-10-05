@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\Command;
 
-use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\Bundle\EventStore\Projection\Projection;
 use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\Projection\Projector;
+use Prooph\EventStore\Projection\ReadModel;
 use Prooph\EventStore\Projection\ReadModelProjector;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractProjectionCommand extends ContainerAwareCommand
+abstract class AbstractProjectionCommand extends Command
 {
     use FormatsOutput;
 
@@ -38,7 +39,7 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
     protected $readModel;
 
     /**
-     * @var ReadModelProjector|Projector
+     * @var Projector|ReadModelProjector
      */
     protected $projector;
 
@@ -46,6 +47,33 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
      * @var Projection|ReadModelProjection
      */
     protected $projection;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $projectionManagerForProjectionsLocator;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $projectionsLocator;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $projectionReadModelLocator;
+
+    public function __construct(
+        ContainerInterface $projectionManagerForProjectionsLocator,
+        ContainerInterface $projectionsLocator,
+        ContainerInterface $projectionReadModelLocator
+    ) {
+        $this->projectionManagerForProjectionsLocator = $projectionManagerForProjectionsLocator;
+        $this->projectionsLocator = $projectionsLocator;
+        $this->projectionReadModelLocator = $projectionReadModelLocator;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -60,23 +88,21 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
 
         $this->projectionName = $input->getArgument(static::ARGUMENT_PROJECTION_NAME);
 
-        $container = $this->getContainer();
-
-        if (! $container->has(sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
-            throw new RuntimeException(sprintf('ProjectionManager for "%s" not found', $this->projectionName));
+        if (! $this->projectionManagerForProjectionsLocator->has($this->projectionName)) {
+            throw new RuntimeException(\sprintf('ProjectionManager for "%s" not found', $this->projectionName));
         }
-        $this->projectionManager = $container->get(sprintf('%s.%s.projection_manager', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
+        $this->projectionManager = $this->projectionManagerForProjectionsLocator->get($this->projectionName);
 
-        if (! $container->has(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
-            throw new RuntimeException(sprintf('Projection "%s" not found', $this->projectionName));
+        if (! $this->projectionsLocator->has($this->projectionName)) {
+            throw new RuntimeException(\sprintf('Projection "%s" not found', $this->projectionName));
         }
-        $this->projection = $container->get(sprintf('%s.%s', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
+        $this->projection = $this->projectionsLocator->get($this->projectionName);
 
         if ($this->projection instanceof ReadModelProjection) {
-            if (! $container->has(sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName))) {
-                throw new RuntimeException(sprintf('ReadModel for "%s" not found', $this->projectionName));
+            if (! $this->projectionReadModelLocator->has($this->projectionName)) {
+                throw new RuntimeException(\sprintf('ReadModel for "%s" not found', $this->projectionName));
             }
-            $this->readModel = $container->get(sprintf('%s.%s.read_model', ProophEventStoreExtension::TAG_PROJECTION, $this->projectionName));
+            $this->readModel = $this->projectionReadModelLocator->get($this->projectionName);
 
             $this->projector = $this->projectionManager->createReadModelProjection($this->projectionName, $this->readModel);
         }
@@ -88,13 +114,13 @@ abstract class AbstractProjectionCommand extends ContainerAwareCommand
         if (null === $this->projector) {
             throw new RuntimeException('Projection was not created');
         }
-        $output->writeln(sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
+        $output->writeln(\sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
         try {
             $state = $this->projectionManager->fetchProjectionStatus($this->projectionName)->getValue();
         } catch (\Prooph\EventStore\Exception\RuntimeException $e) {
             $state = 'unknown';
         }
-        $output->writeln(sprintf('<action>Current status: <highlight>%s</highlight></action>', $state));
+        $output->writeln(\sprintf('<action>Current status: <highlight>%s</highlight></action>', $state));
         $output->writeln('====================');
     }
 }

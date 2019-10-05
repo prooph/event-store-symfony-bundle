@@ -3,7 +3,7 @@
  * prooph (http://getprooph.org/)
  *
  * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 prooph software GmbH (http://prooph-software.com/)
+ * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
  * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
  */
 
@@ -14,6 +14,7 @@ namespace Prooph\Bundle\EventStore;
 use PDO;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
+use Prooph\EventStore\EventStoreDecorator;
 use Prooph\EventStore\InMemoryEventStore;
 use Prooph\EventStore\Pdo\MariaDbEventStore;
 use Prooph\EventStore\Pdo\MySqlEventStore;
@@ -32,34 +33,51 @@ class ProjectionManagerFactory
         string $eventStreamsTable = 'event_streams',
         string $projectionsTable = 'projections'
     ): ProjectionManager {
-        $checkConnection = function () use ($connection) {
+        $checkConnection = function () use ($connection): PDO {
             if (! $connection instanceof PDO) {
                 throw new RuntimeException('PDO connection missing');
             }
+
+            return $connection;
         };
 
-        if ($eventStore instanceof InMemoryEventStore) {
+        $realEventStore = $this->getTheRealEventStore($eventStore);
+
+        if ($realEventStore instanceof InMemoryEventStore) {
             return new InMemoryProjectionManager($eventStore);
         }
 
-        if ($eventStore instanceof PostgresEventStore) {
-            $checkConnection();
-
-            return new PostgresProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+        if ($realEventStore instanceof PostgresEventStore) {
+            return new PostgresProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        if ($eventStore instanceof MySqlEventStore) {
-            $checkConnection();
-
-            return new MySqlProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+        if ($realEventStore instanceof MySqlEventStore) {
+            return new MySqlProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        if ($eventStore instanceof MariaDbEventStore) {
-            $checkConnection();
-
-            return new MariaDbProjectionManager($eventStore, $connection, $eventStreamsTable, $projectionsTable);
+        if ($realEventStore instanceof MariaDbEventStore) {
+            return new MariaDbProjectionManager($eventStore, $checkConnection(), $eventStreamsTable, $projectionsTable);
         }
 
-        throw new RuntimeException(sprintf('ProjectionManager for %s not implemented.', get_class($eventStore)));
+        throw new RuntimeException(\sprintf('ProjectionManager for %s not implemented.', \get_class($realEventStore)));
+    }
+
+    /**
+     * Gets the "real" event store in case we were provided with an EventStoreDecorator.
+     * That's the one that will really perfom the actions.
+     *
+     * @param EventStore $eventStore
+     *
+     * @return EventStore
+     */
+    private function getTheRealEventStore(EventStore $eventStore): EventStore
+    {
+        $realEventStore = $eventStore;
+
+        while ($realEventStore instanceof EventStoreDecorator) {
+            $realEventStore = $realEventStore->getInnerEventStore();
+        }
+
+        return $realEventStore;
     }
 }

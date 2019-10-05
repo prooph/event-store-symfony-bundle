@@ -1,8 +1,12 @@
 services:
     'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole':
         class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole
+        public: true
+
     'prooph_test.bundle.snapshot_store.in_memory':
         class: Prooph\SnapshotStore\InMemorySnapshotStore
+        public: true
 
     'ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator':
         class: ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator
+        public: true
