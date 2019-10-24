@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractProjectionCommand extends Command
@@ -22,6 +23,14 @@ abstract class AbstractProjectionCommand extends Command
     use FormatsOutput;
 
     protected const ARGUMENT_PROJECTION_NAME = 'projection-name';
+
+    protected const PROJECTOR_OPTIONS = [
+        Projector::OPTION_CACHE_SIZE,
+        Projector::OPTION_SLEEP,
+        Projector::OPTION_PERSIST_BLOCK_SIZE,
+        Projector::OPTION_LOCK_TIMEOUT_MS,
+        Projector::OPTION_UPDATE_LOCK_THRESHOLD,
+    ];
 
     /**
      * @var ProjectionManager
@@ -78,6 +87,9 @@ abstract class AbstractProjectionCommand extends Command
     protected function configure()
     {
         $this->addArgument(static::ARGUMENT_PROJECTION_NAME, InputArgument::REQUIRED, 'The name of the Projection');
+        foreach (self::PROJECTOR_OPTIONS as $option) {
+            $this->addOption($option, null, InputOption::VALUE_OPTIONAL);
+        }
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -87,6 +99,13 @@ abstract class AbstractProjectionCommand extends Command
         $this->formatOutput($output);
 
         $this->projectionName = $input->getArgument(static::ARGUMENT_PROJECTION_NAME);
+
+        $options = [];
+        foreach (self::PROJECTOR_OPTIONS as $option) {
+            if ($input->getOption($option)) {
+                $options[$option] = (int) $input->getOption($option);
+            }
+        }
 
         if (! $this->projectionManagerForProjectionsLocator->has($this->projectionName)) {
             throw new RuntimeException(\sprintf('ProjectionManager for "%s" not found', $this->projectionName));
@@ -104,11 +123,11 @@ abstract class AbstractProjectionCommand extends Command
             }
             $this->readModel = $this->projectionReadModelLocator->get($this->projectionName);
 
-            $this->projector = $this->projectionManager->createReadModelProjection($this->projectionName, $this->readModel);
+            $this->projector = $this->projectionManager->createReadModelProjection($this->projectionName, $this->readModel, $options);
         }
 
         if ($this->projection instanceof Projection) {
-            $this->projector = $this->projectionManager->createProjection($this->projectionName);
+            $this->projector = $this->projectionManager->createProjection($this->projectionName, $options);
         }
 
         if (null === $this->projector) {
