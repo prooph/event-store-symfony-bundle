@@ -28,7 +28,7 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('prooph_event_store');
         // Keep compatibility with symfony/config < 4.2
-        if (!\method_exists($treeBuilder, 'getRootNode')) {
+        if (! \method_exists($treeBuilder, 'getRootNode')) {
             $root = $treeBuilder->root('prooph_event_store');
         } else {
             $root = $treeBuilder->getRootNode();
@@ -44,7 +44,7 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('projections');
         // Keep compatibility with symfony/config < 4.2
-        if (!\method_exists($treeBuilder, 'getRootNode')) {
+        if (! \method_exists($treeBuilder, 'getRootNode')) {
             $projectionsNode = $treeBuilder->root('projections');
         } else {
             $projectionsNode = $treeBuilder->getRootNode();
@@ -115,7 +115,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('repositories');
 
         // Keep compatibility with symfony/config < 4.2
-        if (!\method_exists($treeBuilder, 'getRootNode')) {
+        if (! \method_exists($treeBuilder, 'getRootNode')) {
             $repositoriesNode = $treeBuilder->root('repositories');
         } else {
             $repositoriesNode = $treeBuilder->getRootNode();

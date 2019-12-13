@@ -8,6 +8,7 @@ use LogicException;
 use Prooph\Bundle\EventStore\Messenger\EventStoreTransactionMiddleware;
 use Prooph\EventStore\TransactionalEventStore;
 use stdClass;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -58,9 +59,7 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
         $this->eventStore->expects($this->once())
             ->method('rollback');
 
-        $envelop = new Envelope(new stdClass(), [
-            new HandledStamp('dummy', 'dummy'),
-        ]);
+        $envelop = (new Envelope(new stdClass()))->with(new HandledStamp('dummy', 'dummy'));
 
         $exception = null;
         try {

@@ -1,5 +1,5 @@
 language: php
-
+sudo: false
 dist: xenial
 
 branches:
@@ -13,53 +13,82 @@ cache:
 
 env:
   global:
-    - EXECUTE_CS_CHECK=false
-    - COVERAGE=false
-    - SYMFONY_REQUIRE="3.4.*"
-    - COMPOSER_FLAGS="--prefer-stable"
-
-matrix:
-  include:
-    - php: 7.1
-      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" EXECUTE_CS_CHECK=true COVERAGE=true
-    - php: 7.2
-    - php: 7.3
-      env: SYMFONY_REQUIRE="4.3.*"
-    - php: 7.4
-      env: SYMFONY_REQUIRE="4.3.*"
-    - php: 7.4
-      env: SYMFONY_REQUIRE="5.0.*"
-    - php: 7.4
-      env: SYMFONY_REQUIRE="5.1.*@dev"
-    - php: nightly
-      env: SYMFONY_REQUIRE="4.3.*"
-  allow_failures:
-    # Allow failures on next Symfony minor, should always be tested on newest stable PHP branch
-    - php: 7.4
-      env: SYMFONY_REQUIRE="5.1.*@dev"
-    - php: nightly
-      env: SYMFONY_REQUIRE="4.3.*"
+    - COMPOSER_MEMORY_LIMIT=-1
 
 before_install:
-  - phpenv config-rm xdebug.ini || return 0
-  - travis_retry composer self-update
-  - if [[ $COVERAGE == 'true' ]]; then composer require --no-update satooshi/php-coveralls:^1.0 ; fi
+  - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+  - composer self-update
+  - composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-master
 
 install:
-  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --quiet; fi
-  - composer update ${COMPOSER_FLAGS} --no-interaction
-
-before_script:
-  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then mkdir -p "$HOME/.php-cs-fixer" ; fi
-  - composer global require --no-scripts --no-plugins symfony/flex
+  - travis_retry composer update -n --prefer-dist --prefer-stable
 
 script:
-  - if [[ $COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
-  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run; fi
-  - ./vendor/bin/phpstan analyse -c phpstan.neon -l 7 src
+  - ./vendor/bin/phpunit -v
 
-after_script:
-  - if [[ $TEST_COVERAGE == 'true' ]]; then php vendor/bin/coveralls -v; fi
+jobs:
+  include:
+    - php: 7.1
+      env: LOWEST SYMFONY_DEPRECATIONS_HELP=weak
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-lowest --prefer-stable --prefer-dist
+
+    - php: 7.2
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+
+    # Test against latest Symfony 3.4
+    - php: 7.3
+      env: SYMFONY_REQUIRE="3.4.*"
+      install:
+        - composer require lendable/symfony-messenger-polyfill
+        - travis_retry composer update -n --prefer-dist
+
+    # Test against latest Symfony 4.3
+    - php: 7.3
+      env: SYMFONY_REQUIRE="4.3.*"
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+
+    # Test against latest Symfony 4.4
+    - php: 7.3
+      env: SYMFONY_REQUIRE="4.4.*"
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+
+    # Test against latest Symfony 5.0
+    - php: 7.3
+      env: SYMFONY_REQUIRE="5.0.*"
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+
+    - stage: Code Quality
+      env: CODING_STANDARDS
+      php: 7.3
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+      script:
+        - ./vendor/bin/php-cs-fixer fix -v --diff --dry-run
+        - ./vendor/bin/phpstan analyse -c phpstan.neon -l 7 src
+
+    - stage: Coverage
+      php: 7.3
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+      before_script:
+        - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
+        - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
+        - composer require --no-update satooshi/php-coveralls:^1.0
+      script:
+        - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+        - ./vendor/bin/coveralls -v
 
 notifications:
   webhooks:
