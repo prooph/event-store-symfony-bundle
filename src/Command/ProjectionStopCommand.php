@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionStopCommand extends AbstractProjectionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this

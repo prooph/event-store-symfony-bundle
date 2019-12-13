@@ -1,5 +1,7 @@
 parameters:
     reportUnmatchedIgnoredErrors: false
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         # Only available in ArrayNodeDefinition which is given
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
@@ -9,6 +11,7 @@ parameters:
         # TreeBuilder in Symfony 4.2 and up has a constructor and a getRootNode() method
         - '#Class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not have a constructor and must be instantiated without any parameters\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder::getRootNode\(\)#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder::root\(\)#'
         # More Symfony 4.2 compatibility errors
         - '#Parameter \#2 \$deleteEmittedEvents of method Prooph\\EventStore\\Projection\\ProjectionManager::deleteProjection\(\) expects bool, array<string>\|bool\|string\|null given\.#'
         - '#Property Prooph\\Bundle\\EventStore\\Command\\AbstractProjectionCommand::\$projectionName \(string\) does not accept array<string>\|string\|null\.#'
@@ -19,3 +22,4 @@ parameters:
         - '#Class Prooph\\EventStore\\Pdo\\MariaDbEventStore not found\.#'
         - '#Method Prooph\\Bundle\\EventStore\\ProjectionManagerFactory::createProjectionManager\(\) should return Prooph\\EventStore\\Projection\\ProjectionManager but returns Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager\.#'
         - '#Instantiated class Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager not found\.#'
+        - '#Parameter \#1 $argument of class ReflectionClass constructor expects class-string<T of object>\|T of object, string\|null given.#'

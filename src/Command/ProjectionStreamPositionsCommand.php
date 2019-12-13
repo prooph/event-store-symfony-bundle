@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionStreamPositionsCommand extends AbstractProjectionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this

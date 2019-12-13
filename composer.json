@@ -72,7 +72,8 @@
     "prooph/php-cs-fixer-config": "^0.2.1",
     "matthiasnoback/symfony-dependency-injection-test": "^4.1",
     "phpstan/phpstan": "^0.12",
-    "symfony/messenger": "^4.3 || ^5.0"
+    "symfony/messenger": "^4.3 || ^5.0",
+    "phpstan/phpstan-symfony": "^0.12.1"
   },
   "suggest": {
     "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"

@@ -12,7 +12,7 @@ class ProjectionDeleteCommand extends AbstractProjectionCommand
 {
     protected const OPTION_WITH_EVENTS = 'with-emitted-events';
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
@@ -21,7 +21,7 @@ class ProjectionDeleteCommand extends AbstractProjectionCommand
             ->addOption(static::OPTION_WITH_EVENTS, 'w', InputOption::VALUE_NONE, 'Delete with emitted events');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $withEvents = $input->getOption(self::OPTION_WITH_EVENTS);
         if ($withEvents) {
@@ -30,5 +30,7 @@ class ProjectionDeleteCommand extends AbstractProjectionCommand
             $output->writeln(\sprintf('<action>Deleting projection </action><highlight>%s</highlight>', $this->projectionName));
         }
         $this->projectionManager->deleteProjection($this->projectionName, $withEvents);
+
+        return 0;
     }
 }

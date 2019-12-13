@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class MetadataEnricherPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (! $container->hasParameter('prooph_event_store.stores')) {
             return;
@@ -30,6 +30,8 @@ class MetadataEnricherPass implements CompilerPassInterface
 
         foreach ($stores as $name => $store) {
             $storeEnricherPlugins = $container->findTaggedServiceIds(\sprintf('prooph_event_store.%s.metadata_enricher', $name));
+
+            /** @var array<string, string> $plugins */
             $plugins = \array_merge($globalPlugins, $storeEnricherPlugins);
             $enrichers = [];
 

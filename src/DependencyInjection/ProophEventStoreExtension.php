@@ -134,7 +134,7 @@ final class ProophEventStoreExtension extends Extension
      * @param array            $config
      * @param ContainerBuilder $container
      */
-    private function loadEventStores(string $class, array $config, ContainerBuilder $container)
+    private function loadEventStores(string $class, array $config, ContainerBuilder $container): void
     {
         $eventStores = [];
 
@@ -163,7 +163,7 @@ final class ProophEventStoreExtension extends Extension
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Prooph\Bundle\EventStore\Exception\RuntimeException
      */
-    private function loadEventStore(string $name, array $options, ContainerBuilder $container)
+    private function loadEventStore(string $name, array $options, ContainerBuilder $container): void
     {
         $eventStoreId = 'prooph_event_store.'.$name;
         $eventStoreDefinition = $container

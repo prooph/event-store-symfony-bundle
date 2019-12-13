@@ -40,7 +40,7 @@ class ProjectionNamesCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('event-store:projection:names')
@@ -64,6 +64,7 @@ class ProjectionNamesCommand extends Command
             });
         }
 
+        /** @var string|null $filter */
         $filter = $input->getArgument(self::ARGUMENT_FILTER);
         $regex = $input->getOption(static::OPTION_REGEX);
 
@@ -80,8 +81,10 @@ class ProjectionNamesCommand extends Command
         $output->writeln('</action>');
 
         $names = [];
-        $offset = (int) $input->getOption(self::OPTION_OFFSET);
-        $limit = (int) $input->getOption(self::OPTION_LIMIT);
+        /** @var int $offset */
+        $offset = $input->getOption(self::OPTION_OFFSET);
+        /** @var int $limit */
+        $limit = $input->getOption(self::OPTION_LIMIT);
         $maxNeeded = $offset + $limit;
 
         foreach ($managerNames as $managerName) {

@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 trait FormatsOutput
 {
-    protected function formatOutput(OutputInterface $output)
+    protected function formatOutput(OutputInterface $output): void
     {
         $outputFormatter = $output->getFormatter();
         $outputFormatter->setStyle('header', new OutputFormatterStyle('green', null));

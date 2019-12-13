@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionStateCommand extends AbstractProjectionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
@@ -20,7 +20,10 @@ class ProjectionStateCommand extends AbstractProjectionCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<action>Current state:</action>');
-        $output->writeln(\json_encode($this->projectionManager->fetchProjectionState($this->projectionName)));
+
+        /** @var string $state */
+        $state = \json_encode($this->projectionManager->fetchProjectionState($this->projectionName));
+        $output->writeln($state);
 
         return 0;
     }
