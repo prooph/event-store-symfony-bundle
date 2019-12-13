@@ -21,5 +21,7 @@ class ProjectionStateCommand extends AbstractProjectionCommand
     {
         $output->writeln('<action>Current state:</action>');
         $output->writeln(\json_encode($this->projectionManager->fetchProjectionState($this->projectionName)));
+
+        return 0;
     }
 }

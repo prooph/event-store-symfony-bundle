@@ -26,5 +26,7 @@ class ProjectionStreamPositionsCommand extends AbstractProjectionCommand
             $table->addRow([$stream, $position]);
         }
         $table->render();
+
+        return 0;
     }
 }

@@ -34,5 +34,7 @@ class ProjectionRunCommand extends AbstractProjectionCommand
         $projector = $this->projection->project($this->projector);
         $projector->run($keepRunning);
         $output->writeln(\sprintf('<action>Projection <highlight>%s</highlight> completed.</action>', $this->projectionName));
+
+        return 0;
     }
 }

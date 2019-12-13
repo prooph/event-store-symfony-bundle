@@ -28,7 +28,7 @@ class ProjectionManagerFactoryTest extends TestCase
      */
     private $sut;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sut = new ProjectionManagerFactory();
     }

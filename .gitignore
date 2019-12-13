@@ -13,3 +13,4 @@ doc/html
 .php_cs.cache
 /test/Command/Fixture/var/*
 !/test/Command/Fixture/var/.gitkeep
+.phpunit.result.cache

@@ -110,5 +110,7 @@ class ProjectionNamesCommand extends Command
             ->setRows($names);
 
         $table->render();
+
+        return 0;
     }
 }

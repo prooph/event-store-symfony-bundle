@@ -21,12 +21,12 @@ class TestKernel extends Kernel
 
     public function getLogDir(): string
     {
-        return $this->getRootDir() . '/var/logs';
+        return $this->getProjectDir() . '/test/Command/Fixture/var/logs';
     }
 
     public function getCacheDir()
     {
-        return $this->getRootDir() . '/var/cache';
+        return $this->getProjectDir() . '/test/Command/Fixture/var/cache';
     }
 
     public function build(ContainerBuilder $container)

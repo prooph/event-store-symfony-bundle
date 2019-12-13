@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class MetadataEnricherPassTest extends CompilerPassTestCase
 {
-    protected function registerCompilerPass(ContainerBuilder $container)
+    protected function registerCompilerPass(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new MetadataEnricherPass());
     }

@@ -25,6 +25,8 @@ services:
   Prooph\EventStore\InMemoryEventStore:
     class: Prooph\EventStore\InMemoryEventStore
 
+  ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel: ~
+
   test.prooph_event_store.main_store:
     alias: prooph_event_store.main_store
     public: true

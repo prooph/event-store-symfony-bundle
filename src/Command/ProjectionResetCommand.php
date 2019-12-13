@@ -21,5 +21,7 @@ class ProjectionResetCommand extends AbstractProjectionCommand
     {
         $output->writeln(\sprintf('<action>Resetting projection <highlight>%s</highlight></action>', $this->projectionName));
         $this->projectionManager->resetProjection($this->projectionName);
+
+        return 0;
     }
 }

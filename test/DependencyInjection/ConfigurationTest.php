@@ -15,15 +15,17 @@ use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggr
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
-    protected function getContainerExtension()
+    protected function getContainerExtension(): ExtensionInterface
     {
         return new ProophEventStoreExtension();
     }
 
-    protected function getConfiguration()
+    protected function getConfiguration(): ConfigurationInterface
     {
         return new Configuration();
     }

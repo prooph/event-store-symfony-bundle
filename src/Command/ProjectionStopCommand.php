@@ -21,5 +21,7 @@ class ProjectionStopCommand extends AbstractProjectionCommand
     {
         $output->writeln(\sprintf('<action>Stopping projection <highlight>%s</highlight></action>', $this->projectionName));
         $this->projectionManager->stopProjection($this->projectionName);
+
+        return 0;
     }
 }

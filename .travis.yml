@@ -1,6 +1,6 @@
-sudo: false
-
 language: php
+
+dist: xenial
 
 branches:
   except:
@@ -11,41 +11,50 @@ cache:
     - $HOME/.composer/cache
     - $HOME/.php-cs-fixer
 
-php:
- - 7.1
- - 7.2
-
 env:
   global:
     - EXECUTE_CS_CHECK=false
-    - TEST_COVERAGE=false
-  matrix:
-    - DEPENDENCIES="--prefer-lowest --prefer-stable"
-    - DEPENDENCIES=""
+    - COVERAGE=false
+    - SYMFONY_REQUIRE="3.4.*"
+    - COMPOSER_FLAGS="--prefer-stable"
 
 matrix:
-  fast_finish: true
   include:
+    - php: 7.1
+      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" EXECUTE_CS_CHECK=true COVERAGE=true
     - php: 7.2
-      env: DEPENDENCIES="" EXECUTE_CS_CHECK=true TEST_COVERAGE=true
-  exclude:
-    - php: 7.2
-      env: DEPENDENCIES=""
+    - php: 7.3
+      env: SYMFONY_REQUIRE="4.4.*"
+    - php: 7.4
+      env: SYMFONY_REQUIRE="4.4.*"
+    - php: 7.4
+      env: SYMFONY_REQUIRE="5.0.*"
+    - php: 7.4
+      env: SYMFONY_REQUIRE="5.1.*@dev"
+    - php: nightly
+      env: SYMFONY_REQUIRE="4.4.*"
+  allow_failures:
+    # Allow failures on next Symfony minor, should always be tested on newest stable PHP branch
+    - php: 7.4
+      env: SYMFONY_REQUIRE="5.1.*@dev"
+    - php: nightly
+      env: SYMFONY_REQUIRE="4.4.*"
 
 before_install:
   - phpenv config-rm xdebug.ini || return 0
-  - composer self-update
-  - if [[ $TEST_COVERAGE == 'true' ]]; then composer require --no-update satooshi/php-coveralls:^1.0 ; fi
+  - travis_retry composer self-update
+  - if [[ $COVERAGE == 'true' ]]; then composer require --no-update satooshi/php-coveralls:^1.0 ; fi
 
 install:
-  - travis_retry composer update --no-interaction --prefer-dist $DEPENDENCIES
-  - composer info -i
+  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --quiet; fi
+  - composer update ${COMPOSER_FLAGS} --no-interaction
 
 before_script:
   - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then mkdir -p "$HOME/.php-cs-fixer" ; fi
+  - composer global require --no-scripts --no-plugins symfony/flex
 
 script:
-  - if [[ $TEST_COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
+  - if [[ $COVERAGE == 'true' ]]; then php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-clover ./build/logs/clover.xml; else ./vendor/bin/phpunit; fi
   - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run; fi
   - ./vendor/bin/phpstan analyse -c phpstan.neon -l 7 src
 

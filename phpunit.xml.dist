@@ -4,8 +4,7 @@
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         syntaxCheck="true"
+         convertWarningsToExceptions="false"
          backupGlobals="true"
          backupStaticAttributes="false">
 
