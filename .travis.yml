@@ -29,9 +29,9 @@ script:
 jobs:
   include:
     - php: 7.1
-      env: LOWEST SYMFONY_DEPRECATIONS_HELP=weak
+      env: LOWEST SYMFONY_DEPRECATIONS_HELP=weak SYMFONY_REQUIRE="3.4.*"
       install:
-        - composer require --dev symfony/messenger --no-update
+        - composer require --dev lendable/symfony-messenger-polyfill --no-update
         - travis_retry composer update -n --prefer-lowest --prefer-stable --prefer-dist
 
     - php: 7.2
@@ -39,22 +39,28 @@ jobs:
         - composer require --dev symfony/messenger --no-update
         - travis_retry composer update -n --prefer-dist
 
-    # Test against latest Symfony 3.4
     - php: 7.3
+      install:
+        - composer require --dev symfony/messenger --no-update
+        - travis_retry composer update -n --prefer-dist
+
+
+    # Test against latest Symfony 3.4
+    - php: 7.4
       env: SYMFONY_REQUIRE="3.4.*"
       install:
-        - composer require lendable/symfony-messenger-polyfill
+        - composer require --dev lendable/symfony-messenger-polyfill --no-update
         - travis_retry composer update -n --prefer-dist
 
     # Test against latest Symfony 4.4
-    - php: 7.3
+    - php: 7.4
       env: SYMFONY_REQUIRE="4.4.*"
       install:
         - composer require --dev symfony/messenger --no-update
         - travis_retry composer update -n --prefer-dist
 
     # Test against latest Symfony 5.0
-    - php: 7.3
+    - php: 7.4
       env: SYMFONY_REQUIRE="5.0.*"
       install:
         - composer require --dev symfony/messenger --no-update
@@ -62,7 +68,7 @@ jobs:
 
     - stage: Code Quality
       env: CODING_STANDARDS
-      php: 7.3
+      php: 7.4
       install:
         - composer require --dev symfony/messenger --no-update
         - travis_retry composer update -n --prefer-dist
@@ -71,7 +77,7 @@ jobs:
         - ./vendor/bin/phpstan analyse -c phpstan.neon -l 7 src
 
     - stage: Coverage
-      php: 7.3
+      php: 7.4
       install:
         - composer require --dev symfony/messenger --no-update
         - travis_retry composer update -n --prefer-dist
