@@ -54,10 +54,10 @@
     "php": "^7.1",
     "ext-pdo": "*",
     "ext-json": "*",
-    "symfony/config": "^3.4 || ^4.3 || ^5.0",
-    "symfony/dependency-injection": "^3.4 || ^4.3 || ^5.0",
-    "symfony/http-kernel": "^3.4 || ^4.3 || ^5.0",
-    "symfony/framework-bundle": "^3.4 || ^4.3 || ^5.0",
+    "symfony/config": "^3.4 || ^4.4 || ^5.0",
+    "symfony/dependency-injection": "^3.4 || ^4.4 || ^5.0",
+    "symfony/http-kernel": "^3.4 || ^4.4 || ^5.0",
+    "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
     "prooph/event-store": "^7.0"
   },
   "require-dev": {
@@ -65,7 +65,7 @@
     "prooph/snapshot-store": "^1.0",
     "prooph/pdo-event-store": "^1.0",
     "phpunit/phpunit": "^7 || ^8",
-    "symfony/yaml" : "^3.4 || ^4.3 || ^5.0",
+    "symfony/yaml" : "^3.4 || ^4.4 || ^5.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
     "friendsofphp/php-cs-fixer": "^2.8.1",

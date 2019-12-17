@@ -46,13 +46,6 @@ jobs:
         - composer require lendable/symfony-messenger-polyfill
         - travis_retry composer update -n --prefer-dist
 
-    # Test against latest Symfony 4.3
-    - php: 7.3
-      env: SYMFONY_REQUIRE="4.3.*"
-      install:
-        - composer require --dev symfony/messenger --no-update
-        - travis_retry composer update -n --prefer-dist
-
     # Test against latest Symfony 4.4
     - php: 7.3
       env: SYMFONY_REQUIRE="4.4.*"
