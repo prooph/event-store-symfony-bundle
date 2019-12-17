@@ -8,7 +8,6 @@ use LogicException;
 use Prooph\Bundle\EventStore\Messenger\EventStoreTransactionMiddleware;
 use Prooph\EventStore\TransactionalEventStore;
 use stdClass;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -54,7 +53,7 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
 
     public function testItResetsHandledStampsOnHandlerFailedException(): void
     {
-        if (! class_exists(HandlerFailedException::class)) {
+        if (! \class_exists(HandlerFailedException::class)) {
             $this->markTestSkipped('Symfony Messenger 4.2 does not support HandlerFailedException');
         }
 
