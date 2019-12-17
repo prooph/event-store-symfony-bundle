@@ -84,10 +84,10 @@ jobs:
       before_script:
         - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
         - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
-        - composer require --no-update satooshi/php-coveralls:^1.0
+        - composer require --dev php-coveralls/php-coveralls
       script:
         - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
-        - ./vendor/bin/coveralls -v
+        - ./vendor/bin/php-coveralls -v
 
 notifications:
   webhooks:
