@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class PluginLocatorPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (! $container->hasParameter('prooph_event_store.stores')) {
             return;
@@ -28,6 +28,7 @@ final class PluginLocatorPass implements CompilerPassInterface
             $storePlugins[] = $container->findTaggedServiceIds(\sprintf('prooph_event_store.%s.plugin', $name));
         }
 
+        /** @var array<string, string> $plugins */
         $plugins = \array_merge($globalPlugins, ...$storePlugins);
 
         $locatorPlugins = [];

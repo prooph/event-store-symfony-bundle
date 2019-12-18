@@ -19,6 +19,9 @@ use Prooph\SnapshotStore\SnapshotStore;
 
 class RepositoryFactory
 {
+    /**
+     * @return mixed
+     */
     public function create(
         string $repositoryClass,
         EventStore $eventStore,

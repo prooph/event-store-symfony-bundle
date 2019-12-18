@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionResetCommand extends AbstractProjectionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
@@ -21,5 +21,7 @@ class ProjectionResetCommand extends AbstractProjectionCommand
     {
         $output->writeln(\sprintf('<action>Resetting projection <highlight>%s</highlight></action>', $this->projectionName));
         $this->projectionManager->resetProjection($this->projectionName);
+
+        return 0;
     }
 }

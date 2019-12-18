@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProjectionStopCommand extends AbstractProjectionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
@@ -21,5 +21,7 @@ class ProjectionStopCommand extends AbstractProjectionCommand
     {
         $output->writeln(\sprintf('<action>Stopping projection <highlight>%s</highlight></action>', $this->projectionName));
         $this->projectionManager->stopProjection($this->projectionName);
+
+        return 0;
     }
 }

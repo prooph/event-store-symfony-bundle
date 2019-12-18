@@ -75,12 +75,12 @@ abstract class AbstractProjectionCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument(static::ARGUMENT_PROJECTION_NAME, InputArgument::REQUIRED, 'The name of the Projection');
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $input->validate();
 
@@ -89,18 +89,18 @@ abstract class AbstractProjectionCommand extends Command
         $this->projectionName = $input->getArgument(static::ARGUMENT_PROJECTION_NAME);
 
         if (! $this->projectionManagerForProjectionsLocator->has($this->projectionName)) {
-            throw new RuntimeException(\sprintf('ProjectionManager for "%s" not found', $this->projectionName));
+            throw new RuntimeException(\vsprintf('ProjectionManager for "%s" not found', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
         }
         $this->projectionManager = $this->projectionManagerForProjectionsLocator->get($this->projectionName);
 
         if (! $this->projectionsLocator->has($this->projectionName)) {
-            throw new RuntimeException(\sprintf('Projection "%s" not found', $this->projectionName));
+            throw new RuntimeException(\vsprintf('Projection "%s" not found', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
         }
         $this->projection = $this->projectionsLocator->get($this->projectionName);
 
         if ($this->projection instanceof ReadModelProjection) {
             if (! $this->projectionReadModelLocator->has($this->projectionName)) {
-                throw new RuntimeException(\sprintf('ReadModel for "%s" not found', $this->projectionName));
+                throw new RuntimeException(\vsprintf('ReadModel for "%s" not found', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
             }
             $this->readModel = $this->projectionReadModelLocator->get($this->projectionName);
 
@@ -114,7 +114,7 @@ abstract class AbstractProjectionCommand extends Command
         if (null === $this->projector) {
             throw new RuntimeException('Projection was not created');
         }
-        $output->writeln(\sprintf('<header>Initialized projection "%s"</header>', $this->projectionName));
+        $output->writeln(\vsprintf('<header>Initialized projection "%s"</header>', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
         try {
             $state = $this->projectionManager->fetchProjectionStatus($this->projectionName)->getValue();
         } catch (\Prooph\EventStore\Exception\RuntimeException $e) {

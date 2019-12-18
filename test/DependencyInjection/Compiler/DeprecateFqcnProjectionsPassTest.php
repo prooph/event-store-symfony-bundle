@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  */
 class DeprecateFqcnProjectionsPassTest extends CompilerPassTestCase
 {
-    protected function registerCompilerPass(ContainerBuilder $container)
+    protected function registerCompilerPass(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new DeprecateFqcnProjectionsPass());
     }
