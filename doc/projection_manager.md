@@ -252,4 +252,139 @@ As with the tag the `read_model` is necessary only if the projection implements 
 
 Since both ways will produce the same result, it is up to you which of them you choose. 
 
-## Running projections
+## Projection options
+
+If you run projection you would want to pass options to it. This can be done in two ways.
+
+### Central
+
+Scalar options can be added to projection defined directly at the `projection_manager`:
+
+```yaml
+# app/config/config.yml or (flex) config/packages/prooph_event_store.yaml
+prooph_event_store:
+    projection_managers:
+        acme_projection_manager:
+            event_store: 'prooph_event_store.pdo_mysql_event_store'
+            connection: 'pdo.connection'
+            projections:
+                todo_projection:
+                    read_model: 'proophessor.projection.read_model.todo' 
+                    projection: 'proophessor.projection.todo'
+                    options:
+                        cache_size: 1000
+                        sleep: 100000
+                        persist_block_size: 1000
+                        lock_timeout_ms: 1000
+                        trigger_pcntl_dispatch: false
+                        update_lock_threshold: 0
+```
+
+### Tagged service
+
+If you want more complex usage, you can define tagged service which implements `\Prooph\Bundle\EventStore\Projection\ProjectionOptions`. 
+It should be tagged as `prooph_event_store.projection_options` with `projection_name` attribute pointing to specific projection.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Prooph\ProophessorDo\Projection\Options;
+
+use Prooph\Bundle\EventStore\Projection\ProjectionOptions;
+use Prooph\EventStore\Pdo\Projection\GapDetection;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+
+final class ToDoProjectionOptions implements ProjectionOptions
+{
+    private ParameterBag $parameterBag;
+
+    public function __construct(ParameterBag $parameterBag)
+    {
+        $this->parameterBag = $parameterBag;
+    }
+    
+    public function options(): array
+    {
+        return [
+            'cache_size' => $this->parameterBag->get('projection.cache_size'),
+            'sleep' => $this->parameterBag->get('projection.sleep'),
+            'persist_block_size' => $this->parameterBag->get('projection.persist_block_size'),
+            'lock_timeout_ms' => $this->parameterBag->get('projection.lock_timeout_ms'),
+            'trigger_pcntl_dispatch' => $this->parameterBag->get('projection.trigger_pcntl_dispatch'),
+            'update_lock_threshold' => $this->parameterBag->get('projection.update_lock_threshold'),
+            'gap_detection' => new GapDetection([0, 5, 5, 10, 15, 25, 40, 65, 105]),
+        ];
+    }
+}
+```
+
+```yaml
+services:
+    Prooph\ProophessorDo\Projection\Options\ToDoProjectionOptions:
+        tags:
+            - { name: prooph_event_store.projection_options, projection_name: todo_projection }
+```
+
+## Manage projections
+
+Running a projection
+```
+$ bin/console event-store:projection:run [options] [--] <projection-name>
+
+Arguments:
+  projection-name       The name of the Projection
+
+Options:
+    -o, --run-once        Loop the projection only once, then exit
+```
+
+Stopping a projection
+```
+$ bin/console event-store:projection:stop <projection-name>
+
+Arguments:
+  projection-name       The name of the Projection
+```
+
+Resetting a projection
+```
+$ bin/console event-store:projection:reset <projection-name>
+
+Arguments:
+  projection-name       The name of the Projection
+```
+
+Showing the current projection state
+```
+$ bin/console event-store:projection:state <projection-name>
+
+Arguments:
+  projection-name       The name of the Projection
+```
+
+Deleting a projection
+```
+$ bin/console event-store:projection:delete [options] [--] <projection-name>
+
+Arguments:
+  projection-name            The name of the Projection
+
+Options:
+  -w, --with-emitted-events  Delete with emitted events
+```
+
+Showing a list of all projection names. Can be filtered.
+```
+$ bin/console event-store:projection:names [options] [--] [<filter>]
+
+Arguments:
+  filter                 Filter by this string
+
+Options:
+  -r, --regex            Enable regex syntax for filter
+  -l, --limit=LIMIT      Limit the result set [default: 20]
+  -o, --offset=OFFSET    Offset for result set [default: 0]
+  -m, --manager=MANAGER  Manager for result set
+```

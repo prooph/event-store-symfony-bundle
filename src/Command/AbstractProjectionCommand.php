@@ -63,14 +63,21 @@ abstract class AbstractProjectionCommand extends Command
      */
     protected $projectionReadModelLocator;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $projectionOptionsLocator;
+
     public function __construct(
         ContainerInterface $projectionManagerForProjectionsLocator,
         ContainerInterface $projectionsLocator,
-        ContainerInterface $projectionReadModelLocator
+        ContainerInterface $projectionReadModelLocator,
+        ContainerInterface $projectionOptionsLocator
     ) {
         $this->projectionManagerForProjectionsLocator = $projectionManagerForProjectionsLocator;
         $this->projectionsLocator = $projectionsLocator;
         $this->projectionReadModelLocator = $projectionReadModelLocator;
+        $this->projectionOptionsLocator = $projectionOptionsLocator;
 
         parent::__construct();
     }
@@ -97,6 +104,7 @@ abstract class AbstractProjectionCommand extends Command
             throw new RuntimeException(\vsprintf('Projection "%s" not found', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
         }
         $this->projection = $this->projectionsLocator->get($this->projectionName);
+        $projectionOptions = $this->projectionOptionsLocator->has($this->projectionName) ? $this->projectionOptionsLocator->get($this->projectionName)->options() : [];
 
         if ($this->projection instanceof ReadModelProjection) {
             if (! $this->projectionReadModelLocator->has($this->projectionName)) {
@@ -104,11 +112,11 @@ abstract class AbstractProjectionCommand extends Command
             }
             $this->readModel = $this->projectionReadModelLocator->get($this->projectionName);
 
-            $this->projector = $this->projectionManager->createReadModelProjection($this->projectionName, $this->readModel);
+            $this->projector = $this->projectionManager->createReadModelProjection($this->projectionName, $this->readModel, $projectionOptions);
         }
 
         if ($this->projection instanceof Projection) {
-            $this->projector = $this->projectionManager->createProjection($this->projectionName);
+            $this->projector = $this->projectionManager->createProjection($this->projectionName, $projectionOptions);
         }
 
         if (null === $this->projector) {

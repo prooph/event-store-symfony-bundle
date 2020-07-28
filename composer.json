@@ -58,12 +58,13 @@
     "symfony/dependency-injection": "^3.4 || ^4.4 || ^5.0",
     "symfony/http-kernel": "^3.4 || ^4.4 || ^5.0",
     "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
+    "symfony/messenger": "^4.2 || ^4.4 || ^5.0",
     "prooph/event-store": "^7.0"
   },
   "require-dev": {
     "prooph/event-sourcing": "^5.0",
     "prooph/snapshot-store": "^1.0",
-    "prooph/pdo-event-store": "^1.0",
+    "prooph/pdo-event-store": "^1.12",
     "phpunit/phpunit": "^7 || ^8",
     "symfony/yaml" : "^3.4 || ^4.4 || ^5.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",

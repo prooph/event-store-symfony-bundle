@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 final class ProophEventStoreExtension extends Extension
 {
     public const TAG_PROJECTION = 'prooph_event_store.projection';
+    public const TAG_PROJECTION_OPTIONS = 'prooph_event_store.projection_options';
 
     public function getNamespace(): string
     {
@@ -60,17 +61,20 @@ final class ProophEventStoreExtension extends Extension
         $projectionManagerForProjectionsLocator = [];
         $projectionsLocator = [];
         $readModelsLocator = [];
+        $projectionOptionsLocator = [];
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
             $projectionManagerId = "prooph_event_store.projection_manager.$projectionManagerName";
             self::defineProjectionManager($container, $projectionManagerId, $projectionManagerConfig);
 
-            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator] = self::collectProjectionsForLocators(
+            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator, $projectionOptionsLocator] = self::collectProjectionsForLocators(
+                $container,
                 $projectionManagerConfig['projections'],
                 $projectionManagerId,
                 $projectionManagerForProjectionsLocator,
                 $projectionsLocator,
-                $readModelsLocator
+                $readModelsLocator,
+                $projectionOptionsLocator
             );
 
             $projectionManagers[$projectionManagerName] = "prooph_event_store.$projectionManagerName";
@@ -83,6 +87,7 @@ final class ProophEventStoreExtension extends Extension
         self::defineServiceLocator($container, 'prooph_event_store.projection_manager_for_projections_locator', $projectionManagerForProjectionsLocator);
         self::defineServiceLocator($container, 'prooph_event_store.projection_read_models_locator', $readModelsLocator);
         self::defineServiceLocator($container, 'prooph_event_store.projections_locator', $projectionsLocator);
+        self::defineServiceLocator($container, 'prooph_event_store.projection_options_locator', $projectionOptionsLocator);
     }
 
     private static function defineProjectionManager(ContainerBuilder $container, string $serviceId, array $config): void
@@ -108,11 +113,13 @@ final class ProophEventStoreExtension extends Extension
     }
 
     private static function collectProjectionsForLocators(
+        ContainerBuilder $container,
         array $projections,
         string $projectionManagerId,
         array $projectionManagerForProjectionsLocator,
         array $projectionsLocator,
-        array $readModelsLocator
+        array $readModelsLocator,
+        array $projectionOptionsLocator
     ): array {
         foreach ($projections as $projectionName => $projectionConfig) {
             if (isset($projectionConfig['read_model'])) {
@@ -121,9 +128,22 @@ final class ProophEventStoreExtension extends Extension
 
             $projectionsLocator[$projectionName] = new Reference($projectionConfig['projection']);
             $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectionManagerId);
+
+            $projectionOptionsId = \sprintf('prooph_event_store.projection_options.%s', $projectionName);
+            self::defineProjectionOptions($container, $projectionOptionsId, $projectionConfig['options']);
+            $projectionOptionsLocator[$projectionName] = new Reference($projectionOptionsId);
         }
 
-        return [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator];
+        return [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator, $projectionOptionsLocator];
+    }
+
+    private static function defineProjectionOptions(ContainerBuilder $container, string $serviceId, array $projectionOptions): void
+    {
+        $definition = new ChildDefinition('prooph_event_store.projection_options');
+        $definition->setFactory([new Reference('prooph_event_store.projection_options_factory'), 'createProjectionOptions']);
+        $definition->setArguments([$projectionOptions]);
+
+        $container->setDefinition($serviceId, $definition);
     }
 
     /**

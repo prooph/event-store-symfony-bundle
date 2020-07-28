@@ -63,6 +63,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'todo_projection' => [
                             'read_model' => TodoReadModel::class,
                             'projection' => TodoProjection::class,
+                            'options' => [],
                         ],
                     ],
                     'event_streams_table' => 'event_streams',
