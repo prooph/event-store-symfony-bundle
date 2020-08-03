@@ -173,6 +173,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $managerLocator = $container->get('test.prooph_event_store.projection_manager_for_projections_locator');
         $projectionsLocator = $container->get('test.prooph_event_store.projections_locator');
         $readModelLocator = $container->get('test.prooph_event_store.projection_read_models_locator');
+        $projectionOptionsLocator = $container->get('test.prooph_event_store.projection_options_locator');
 
         self::assertTrue(
             $managerLocator->has('todo_projection'),
@@ -185,6 +186,10 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         self::assertTrue(
             $readModelLocator->has('todo_projection'),
             'The read model for the todo_projection is not available through the dedicated service locator'
+        );
+        self::assertTrue(
+            $projectionOptionsLocator->has('todo_projection'),
+            'The projection options for the todo_projection is not available through the dedicated service locator'
         );
     }
 

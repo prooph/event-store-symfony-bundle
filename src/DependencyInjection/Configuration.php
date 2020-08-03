@@ -74,6 +74,13 @@ final class Configuration implements ConfigurationInterface
                         ->then($removeFirstCharacter)
                     ->end()
                 ->end()
+                ->arrayNode('options')
+                    ->canBeUnset()
+                    ->addDefaultsIfNotSet()
+                    ->treatFalseLike([])
+                    ->treatNullLike([])
+                    ->ignoreExtraKeys(false)
+                ->end()
             ->end();
 
         $node

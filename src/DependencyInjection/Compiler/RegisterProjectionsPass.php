@@ -80,7 +80,7 @@ final class RegisterProjectionsPass implements CompilerPassInterface
         array $serviceMap
     ): void {
         $definition = $container->getDefinition($locatorId);
-        $definition->replaceArgument(0, \array_merge($serviceMap, $definition->getArgument(0)));
+        $definition->replaceArgument(0, \array_merge($definition->getArgument(0), $serviceMap));
     }
 
     /**

@@ -30,6 +30,7 @@
 
         <srv:service id="test.prooph_event_store.projection_manager_for_projections_locator" alias="prooph_event_store.projection_manager_for_projections_locator" public="true" />
         <srv:service id="test.prooph_event_store.projections_locator" alias="prooph_event_store.projections_locator" public="true" />
+        <srv:service id="test.prooph_event_store.projection_options_locator" alias="prooph_event_store.projection_options_locator" public="true" />
         <srv:service id="test.prooph_event_store.projection_read_models_locator" alias="prooph_event_store.projection_read_models_locator" public="true" />
     </srv:services>
 </srv:container>

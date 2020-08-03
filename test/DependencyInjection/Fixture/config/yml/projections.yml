@@ -26,6 +26,10 @@ services:
     alias: prooph_event_store.projections_locator
     public: true
 
+  test.prooph_event_store.projection_options_locator:
+    alias: prooph_event_store.projection_options_locator
+    public: true
+
   test.prooph_event_store.projection_read_models_locator:
     alias: prooph_event_store.projection_read_models_locator
     public: true
