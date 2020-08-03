@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionDeleteCommand
  */
 class ProjectionDeleteCommandTest extends KernelTestCase
@@ -24,7 +25,7 @@ class ProjectionDeleteCommandTest extends KernelTestCase
      * @test
      * @dataProvider provideProjectionNames
      */
-    public function it_deletes_a_projection(string $projectionName): void
+    public function it_deletes_a_projection(string $projectionName, array $commandOptions): void
     {
         $kernel = static::createKernel();
         $kernel->boot();
@@ -32,20 +33,22 @@ class ProjectionDeleteCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:delete'));
         try {
-            $commandTester->execute(['projection-name' => $projectionName]);
+            $commandTester->execute(['projection-name' => $projectionName] + $commandOptions);
         } catch (RuntimeException $notSupported) {
-            $this->assertContains('Deleting a projection is not supported', $notSupported->getMessage());
+            self::assertContains('Deleting a projection is not supported', $notSupported->getMessage());
 
             return;
         }
-        $this->fail('The projection was not deleted');
+        self::fail('The projection was not deleted');
     }
 
     public static function provideProjectionNames(): array
     {
         return [
-            'projection' => ['black_hole_projection'],
-            'read_model_projection' => ['black_hole_read_model_projection'],
+            'projection' => ['black_hole_projection', []],
+            'read_model_projection' => ['black_hole_read_model_projection', []],
+            'projection_with_command_options' => ['black_hole_projection', ['--with-emitted-events' => true]],
+            'read_model_projection_with_command_options' => ['black_hole_read_model_projection', ['--with-emitted-events' => true]],
         ];
     }
 }

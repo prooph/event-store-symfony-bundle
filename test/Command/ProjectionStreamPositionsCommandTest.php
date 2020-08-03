@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionStreamPositionsCommand
  */
 class ProjectionStreamPositionsCommandTest extends KernelTestCase
@@ -49,8 +50,8 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:positions'));
         $commandTester->execute(['projection-name' => 'black_hole_projection']);
-        $this->assertContains('main_stream', $commandTester->getDisplay());
-        $this->assertContains(' 1 ', $commandTester->getDisplay());
+        self::assertContains('main_stream', $commandTester->getDisplay());
+        self::assertContains(' 1 ', $commandTester->getDisplay());
     }
 
     /** @test */
@@ -77,7 +78,7 @@ class ProjectionStreamPositionsCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:positions'));
         $commandTester->execute(['projection-name' => 'black_hole_read_model_projection']);
-        $this->assertContains('main_stream', $commandTester->getDisplay());
-        $this->assertContains(' 1 ', $commandTester->getDisplay());
+        self::assertContains('main_stream', $commandTester->getDisplay());
+        self::assertContains(' 1 ', $commandTester->getDisplay());
     }
 }

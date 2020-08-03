@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionRunCommand
  */
 class ProjectionRunCommandTest extends KernelTestCase
@@ -45,7 +46,7 @@ class ProjectionRunCommandTest extends KernelTestCase
         $commandTester = new CommandTester($app->find('event-store:projection:run'));
         $commandTester->execute(['projection-name' => $projectionName, '--run-once' => true]);
 
-        $this->assertSame(
+        self::assertSame(
             ['main_stream' => 1],
             $manager->fetchProjectionStreamPositions($projectionName)
         );

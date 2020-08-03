@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionNamesCommand
  */
 class ProjectionNamesCommandTest extends KernelTestCase
@@ -36,8 +37,8 @@ class ProjectionNamesCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:names'));
         $commandTester->execute([]);
-        $this->assertContains('main_projection_manager', $commandTester->getDisplay());
-        $this->assertContains($projectionName, $commandTester->getDisplay());
+        self::assertContains('main_projection_manager', $commandTester->getDisplay());
+        self::assertContains($projectionName, $commandTester->getDisplay());
     }
 
     public static function provideProjectionNames(): array
@@ -75,15 +76,15 @@ class ProjectionNamesCommandTest extends KernelTestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['--limit' => $limit]);
-        $this->assertContains('main_projection_manager', $commandTester->getDisplay());
+        self::assertContains('main_projection_manager', $commandTester->getDisplay());
 
         $expectedProjectionNames = \array_slice($projectionNames, 0, $limit);
         $unexpectedProjectionNames = \array_slice($projectionNames, $limit);
         foreach ($expectedProjectionNames as $projectionName) {
-            $this->assertContains($projectionName, $commandTester->getDisplay());
+            self::assertContains($projectionName, $commandTester->getDisplay());
         }
         foreach ($unexpectedProjectionNames as $projectionName) {
-            $this->assertNotContains($projectionName, $commandTester->getDisplay());
+            self::assertNotContains($projectionName, $commandTester->getDisplay());
         }
     }
 

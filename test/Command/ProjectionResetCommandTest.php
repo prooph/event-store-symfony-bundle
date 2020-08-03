@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionResetCommand
  */
 class ProjectionResetCommandTest extends KernelTestCase
@@ -34,11 +35,11 @@ class ProjectionResetCommandTest extends KernelTestCase
         try {
             $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
-            $this->assertContains('Resetting a projection is not supported', $notSupported->getMessage());
+            self::assertContains('Resetting a projection is not supported', $notSupported->getMessage());
 
             return;
         }
-        $this->fail('The projection was not reset');
+        self::fail('The projection was not reset');
     }
 
     public static function provideProjectionNames(): array

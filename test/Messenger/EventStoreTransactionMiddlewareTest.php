@@ -37,12 +37,10 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
         $this->middleware->handle(new Envelope(new stdClass()), $this->getStackMock());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Thrown from next middleware.
-     */
     public function testTransactionIsRolledBackOnException(): void
     {
+        $this->expectExceptionMessage('Thrown from next middleware.');
+        $this->expectException(\RuntimeException::class);
         $this->eventStore->expects($this->once())
             ->method('beginTransaction');
         $this->eventStore->expects($this->once())
@@ -73,8 +71,8 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
             $exception = $e;
         }
 
-        $this->assertInstanceOf(HandlerFailedException::class, $exception);
+        self::assertInstanceOf(HandlerFailedException::class, $exception);
         /** @var HandlerFailedException $exception */
-        $this->assertSame([], $exception->getEnvelope()->all(HandledStamp::class));
+        self::assertSame([], $exception->getEnvelope()->all(HandledStamp::class));
     }
 }

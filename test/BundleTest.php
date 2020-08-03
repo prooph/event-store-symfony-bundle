@@ -12,8 +12,9 @@ declare(strict_types=1);
 namespace ProophTest\Bundle\EventStore;
 
 use PHPUnit\Framework\TestCase;
-use Prooph\Bundle\EventStore\DependencyInjection\Compiler\MetadataEnricherPass;
-use Prooph\Bundle\EventStore\DependencyInjection\Compiler\PluginsPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\DeprecateFqcnProjectionsPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\ProjectionOptionsPass;
+use Prooph\Bundle\EventStore\DependencyInjection\Compiler\RegisterProjectionsPass;
 use Prooph\Bundle\EventStore\ProophEventStoreBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -31,18 +32,20 @@ class BundleTest extends TestCase
         $config = $container->getCompilerPassConfig();
         $passes = $config->getBeforeOptimizationPasses();
 
-        $foundPluginPass = false;
-        $foundMetadataEnricherPass = false;
+        self::assertPassRegistered($passes, RegisterProjectionsPass::class);
+        self::assertPassRegistered($passes, ProjectionOptionsPass::class);
+        self::assertPassRegistered($passes, DeprecateFqcnProjectionsPass::class);
+    }
 
+    private static function assertPassRegistered(array $passes, string $class): void
+    {
+        $passFound = false;
         foreach ($passes as $pass) {
-            if ($pass instanceof PluginsPass) {
-                $foundPluginPass = true;
-            } elseif ($pass instanceof MetadataEnricherPass) {
-                $foundMetadataEnricherPass = true;
+            if ($pass instanceof $class) {
+                $passFound = true;
             }
         }
 
-        self::assertTrue($foundPluginPass, 'PluginsPass was not found');
-        self::assertTrue($foundMetadataEnricherPass, 'MetadataEnricherPass was not found');
+        self::assertTrue($passFound, \sprintf('%s was not found', $class));
     }
 }

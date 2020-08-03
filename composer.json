@@ -62,8 +62,6 @@
     "prooph/event-store": "^7.0"
   },
   "require-dev": {
-    "prooph/event-sourcing": "^5.0",
-    "prooph/snapshot-store": "^1.0",
     "prooph/pdo-event-store": "^1.12",
     "phpunit/phpunit": "^7 || ^8",
     "symfony/yaml" : "^3.4 || ^4.4 || ^5.0",

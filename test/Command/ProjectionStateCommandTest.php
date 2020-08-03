@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionStateCommand
  */
 class ProjectionStateCommandTest extends KernelTestCase
@@ -31,9 +32,9 @@ class ProjectionStateCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:state'));
         $commandTester->execute(['projection-name' => $projectionName]);
-        $this->assertContains($projectionName, $commandTester->getDisplay());
-        $this->assertContains('Current status', $commandTester->getDisplay());
-        $this->assertContains('Current state', $commandTester->getDisplay());
+        self::assertContains($projectionName, $commandTester->getDisplay());
+        self::assertContains('Current status', $commandTester->getDisplay());
+        self::assertContains('Current state', $commandTester->getDisplay());
     }
 
     public static function provideProjectionNames(): array

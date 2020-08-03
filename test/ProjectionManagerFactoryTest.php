@@ -63,6 +63,17 @@ class ProjectionManagerFactoryTest extends TestCase
         $this->assertInstanceOf($expectedProjectionManagerType, $projectionManager);
     }
 
+    /**
+     * @test
+     */
+    public function it_should_throw_an_exception_when_invalid_connection_is_passed(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('PDO connection missing');
+
+        $this->sut->createProjectionManager($this->createAnEventStore(PostgresEventStore::class));
+    }
+
     public function provideEventStores(): array
     {
         $postgresEventStore = $this->createAnEventStore(PostgresEventStore::class);

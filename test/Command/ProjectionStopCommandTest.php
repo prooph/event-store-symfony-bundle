@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionStopCommand
  */
 class ProjectionStopCommandTest extends KernelTestCase
@@ -34,11 +35,11 @@ class ProjectionStopCommandTest extends KernelTestCase
         try {
             $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
-            $this->assertContains('Stopping a projection is not supported', $notSupported->getMessage());
+            self::assertContains('Stopping a projection is not supported', $notSupported->getMessage());
 
             return;
         }
-        $this->fail('The projection was not stopped');
+        self::fail('The projection was not stopped');
     }
 
     public static function provideProjectionNames(): array
