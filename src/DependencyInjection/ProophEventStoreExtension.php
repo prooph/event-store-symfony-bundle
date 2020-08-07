@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
-use Prooph\Bundle\EventStore\Exception\RuntimeException;
 use Prooph\EventStore\EventStore;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -201,37 +200,6 @@ final class ProophEventStoreExtension extends Extension
                     new Reference('prooph_event_store.plugins_locator'),
                 ]
             );
-
-        if (! empty($options['repositories'])) {
-            foreach ($options['repositories'] as $repositoryName => $repositoryConfig) {
-                $repositoryClass = $repositoryConfig['repository_class'] ?? $repositoryName;
-
-                if (! \class_exists($repositoryClass)) {
-                    throw new RuntimeException(\sprintf(
-                        'You must configure the class of repository "%s" either by configuring the \'repository_class\' key or by directly using the FQCN as the repository key.',
-                        $repositoryClass
-                    ));
-                }
-
-                $repositoryDefinition = $container
-                    ->setDefinition(
-                        $repositoryName,
-                        new ChildDefinition('prooph_event_store.repository_definition')
-                    )
-                    ->setArguments(
-                        [
-                            $repositoryClass,
-                            new Reference($eventStoreId),
-                            $repositoryConfig['aggregate_type'],
-                            new Reference($repositoryConfig['aggregate_translator']),
-                            $repositoryConfig['snapshot_store'] ? new Reference($repositoryConfig['snapshot_store']) : null,
-                            $repositoryConfig['stream_name'],
-                            $repositoryConfig['one_stream_per_aggregate'],
-                            $repositoryConfig['disable_identity_map'] ?? false,
-                        ]
-                    );
-            }
-        }
 
         // define metadata enrichers
         $metadataEnricherAggregateId = \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $name);

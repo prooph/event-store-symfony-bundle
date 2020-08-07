@@ -20,6 +20,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionStreamPositionsCommand
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  */
 class ProjectionStreamPositionsCommandTest extends KernelTestCase
 {

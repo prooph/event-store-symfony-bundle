@@ -12,6 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionNamesCommand
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  */
 class ProjectionNamesCommandTest extends KernelTestCase
 {

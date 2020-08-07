@@ -19,8 +19,6 @@ use Prooph\Common\Messaging\Message;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\StreamName;
-use Prooph\SnapshotStore\SnapshotStore;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole as BlackHolePlugin;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -56,23 +54,8 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $eventStore = $container->get('prooph_event_store.main_store');
         self::assertInstanceOf(EventStore::class, $eventStore);
 
-        $repository = $container->get('todo_list');
-        self::assertInstanceOf(BlackHoleRepository::class, $repository);
-
-        $snapshotStore = $container->get('prooph_test.bundle.snapshot_store.in_memory');
-        self::assertInstanceOf(SnapshotStore::class, $snapshotStore);
-
         $projectionManager = $container->get('prooph_event_store.projection_manager.main_projection_manager');
         self::assertInstanceOf(ProjectionManager::class, $projectionManager);
-    }
-
-    /** @test */
-    public function it_registers_repository_with_short_syntax(): void
-    {
-        $container = $this->loadContainer('event_store');
-
-        $repository = $container->get(BlackHoleRepository::class);
-        self::assertInstanceOf(BlackHoleRepository::class, $repository);
     }
 
     /** @test */
@@ -88,9 +71,6 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
             //* @var $eventStore EventStore */
             $eventStore = $container->get('prooph_event_store.' . $name);
             self::assertInstanceOf(EventStore::class, $eventStore);
-
-            $repository = $container->get($name . '.todo_list');
-            self::assertInstanceOf(BlackHoleRepository::class, $repository);
         }
     }
 
@@ -230,36 +210,6 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     public function it_expects_projection_nodes_to_have_a_projection_key(): void
     {
         $this->loadContainer('missing_projection_key');
-    }
-
-    /**
-     * @test
-     * @expectedException Prooph\Bundle\EventStore\Exception\RuntimeException
-     * @expectedExceptionMessage You must configure the class of repository "todo_list" either by configuring the 'repository_class' key or by directly using the FQCN as the repository key.
-     */
-    public function it_expects_repository_nodes_to_have_a_repository_class()
-    {
-        $this->loadContainer('missing_repository_class');
-    }
-
-    /**
-     * @test
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "aggregate_type" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
-     */
-    public function it_expects_repository_nodes_to_have_an_aggregate_type_key()
-    {
-        $this->loadContainer('missing_aggregate_type_key');
-    }
-
-    /**
-     * @test
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "aggregate_translator" at path "prooph_event_store.stores.main_store.repositories.todo_list" must be configured.
-     */
-    public function it_expects_repository_nodes_to_have_an_aggregate_translator_key()
-    {
-        $this->loadContainer('missing_aggregate_translator_key');
     }
 
     private function loadContainer($fixture, CompilerPassInterface $compilerPass = null)

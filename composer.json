@@ -62,8 +62,6 @@
     "prooph/event-store": "^7.0"
   },
   "require-dev": {
-    "prooph/event-sourcing": "^5.0",
-    "prooph/snapshot-store": "^1.0",
     "prooph/pdo-event-store": "^1.12",
     "phpunit/phpunit": "^7 || ^8",
     "symfony/yaml" : "^3.4 || ^4.4 || ^5.0",
@@ -73,9 +71,6 @@
     "prooph/php-cs-fixer-config": "^0.2.1",
     "matthiasnoback/symfony-dependency-injection-test": "^3.1 || ^4.1",
     "phpstan/phpstan": "^0.12"
-  },
-  "suggest": {
-    "prooph/event-store-bus-bridge": "To Marry CQRS (ProophSerivceBus) with Event Sourcing"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

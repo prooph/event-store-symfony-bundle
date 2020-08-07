@@ -12,6 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionDeleteCommand
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  */
 class ProjectionDeleteCommandTest extends KernelTestCase
 {

@@ -11,6 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @covers \Prooph\Bundle\EventStore\Command\ProjectionStateCommand
+ * @covers \Prooph\Bundle\EventStore\Command\AbstractProjectionCommand
  */
 class ProjectionStateCommandTest extends KernelTestCase
 {
