@@ -22,10 +22,6 @@
         <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\ProjectionManagerFactory"/>
         <service id="prooph_event_store.projection_options" class="Prooph\Bundle\EventStore\Projection\Options\ProjectionOptions" abstract="true" public="true" />
         <service id="prooph_event_store.projection_options_factory" class="Prooph\Bundle\EventStore\Projection\Options\ProjectionOptionsFactory"/>
-        <service id="prooph_event_store.repository_definition" class="Prooph\EventSourcing\Aggregate\AggregateRepository" abstract="true" public="true">
-            <factory service="prooph_event_store.repository_factory" method="create" />
-        </service>
-        <service id="prooph_event_store.repository_factory" class="Prooph\Bundle\EventStore\RepositoryFactory" />
         <service id="prooph_event_store.action_event_emitter_factory" class="Prooph\Bundle\EventStore\Factory\DefaultActionEventEmitterFactory" />
         <service id="prooph_event_store.action_event_emitter" class="Prooph\Common\Event\ProophActionEventEmitter" />
         <service id="prooph_event_store.message_converter" class="Prooph\Common\Messaging\NoOpMessageConverter" />

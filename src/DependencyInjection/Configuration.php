@@ -119,49 +119,12 @@ final class Configuration implements ConfigurationInterface
      */
     private function addEventStoreSection(ArrayNodeDefinition $node): void
     {
-        $treeBuilder = new TreeBuilder('repositories');
-
-        // Keep compatibility with symfony/config < 4.2
-        if (! \method_exists($treeBuilder, 'getRootNode')) {
-            $repositoriesNode = $treeBuilder->root('repositories');
-        } else {
-            $repositoriesNode = $treeBuilder->getRootNode();
-        }
-
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;
         };
         $removeFirstCharacter = function ($v) {
             return \substr($v, 1);
         };
-
-        /** @var ArrayNodeDefinition $repositoryNode */
-        $repositoryNode = $repositoriesNode
-            ->requiresAtLeastOneElement()
-            ->useAttributeAsKey('name')
-            ->prototype('array');
-
-        $repositoryNode
-            ->children()
-                ->scalarNode('repository_class')->end()
-                ->scalarNode('aggregate_type')->isRequired()->end()
-                ->scalarNode('aggregate_translator')->isRequired()
-                    ->beforeNormalization()
-                        ->ifTrue($beginsWithAt)
-                        ->then($removeFirstCharacter)
-                    ->end()
-                ->end()
-                ->scalarNode('snapshot_store')
-                    ->defaultValue(null)
-                    ->beforeNormalization()
-                        ->ifTrue($beginsWithAt)
-                        ->then($removeFirstCharacter)
-                    ->end()
-                ->end()
-                ->scalarNode('stream_name')->defaultValue(null)->end()
-                ->booleanNode('one_stream_per_aggregate')->defaultValue(false)->end()
-                ->booleanNode('disable_identity_map')->defaultValue(false)->end()
-            ->end();
 
         $node
             ->fixXmlConfig('store', 'stores')
@@ -170,7 +133,6 @@ final class Configuration implements ConfigurationInterface
                 ->requiresAtLeastOneElement()
                 ->useAttributeAsKey('name')
                 ->prototype('array')
-                ->fixXmlConfig('repository', 'repositories')
                 ->children()
                     ->scalarNode('event_emitter')
                         ->defaultValue(ProophActionEventEmitter::class)
@@ -197,7 +159,6 @@ final class Configuration implements ConfigurationInterface
                             ->then($removeFirstCharacter)
                         ->end()
                     ->end()
-                    ->append($repositoriesNode)
                 ->end()
             ->end();
     }

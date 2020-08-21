@@ -10,9 +10,6 @@ use Prooph\Bundle\EventStore\DependencyInjection\ProophEventStoreExtension;
 use Prooph\Common\Event\ProophActionEventEmitter;
 use Prooph\EventStore\InMemoryEventStore;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\EventStore\BlackHole;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregate;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleAggregateTranslator;
-use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Model\BlackHoleRepository;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoProjection;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Projection\TodoReadModel;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -40,17 +37,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'stores' => [
                 'main_store' => [
                     'event_store' => BlackHole::class,
-                    'repositories' => [
-                        'todo_list' => [
-                            'repository_class' => BlackHoleRepository::class,
-                            'aggregate_type' => BlackHoleAggregate::class,
-                            'aggregate_translator' => BlackHoleAggregateTranslator::class,
-                            'stream_name' => 'test',
-                            'one_stream_per_aggregate' => true,
-                            'disable_identity_map' => true,
-                            'snapshot_store' => 'prooph_test.bundle.snapshot_store.in_memory',
-                        ],
-                    ],
                     'event_emitter' => ProophActionEventEmitter::class,
                     'wrap_action_event_emitter' => true,
                 ],
