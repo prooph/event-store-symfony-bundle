@@ -6,10 +6,11 @@
     {"event_store": "event_store.md"},
     {"projection_manager": "projection_manager.md"},
     {"configuration_reference": "configuration_reference.md"},
-    {"messenger": "messenger.md"}
+    {"messenger": "messenger.md"},
+    {"migrating_from_0.8.0": "migrating_from_0.8.0.md"}
   ],
   "target": "./html",
   "tocDepth": 2,
   "template": "../vendor/prooph/bookdown-template/templates/main.php",
-  "copyright": "Copyright (c) 2016 - 2020 <a href=\"http://getprooph.org/\" title=\"prooph maintainers\">prooph maintainers</a> <br/> Powered by <a href=\"https://github.com/tobiju/bookdown-bootswatch-templates\" title=\"Visit project to generate your own docs\">Bookdown Bootswatch Templates</a>"
+  "copyright": "Copyright (c) 2016 - 2021 <a href=\"http://getprooph.org/\" title=\"prooph maintainers\">prooph maintainers</a> <br/> Powered by <a href=\"https://github.com/tobiju/bookdown-bootswatch-templates\" title=\"Visit project to generate your own docs\">Bookdown Bootswatch Templates</a>"
 }

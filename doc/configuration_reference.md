@@ -7,17 +7,9 @@ prooph_event_store:
             event_emitter: Prooph\Common\Event\ProophActionEventEmitter
             wrap_action_event_emitter: true
             event_store: Prooph\EventStore\Pdo\MysqlEventStore
-            repositories:
-                todo_list:
-                    repository_class: Prooph\ProophessorDo\Infrastructure\Repository\EventStoreUserCollection
-                    aggregate_type: Prooph\ProophessorDo\Model\User\User
-                    aggregate_translator: prooph_event_sourcing.aggregate_translator
-                    snapshot_store: ~
-                    stream_name: ~
-                    one_stream_per_aggregate: false
     projection_managers:
         main_manager:
-            event_store: Prooph\EventStore\Pdo\MysqlEventStore
+            event_store: 'prooph_event_store.acme_store'
             connection: 'doctrine.pdo.connection'
             event_streams_table: 'event_streams'
             projection_table: 'projections'
@@ -52,7 +44,6 @@ The default value should be fine for most use cases.
 Should the given event store be decorated by an ActionEventEmitterEventStore?
 In most cases you should keep this with the default value `true`.
 
-
 ### event_store
 
 *Required*
@@ -60,31 +51,35 @@ In most cases you should keep this with the default value `true`.
 The id of a service whose class implements `Prooph\EventStore\EventStore`.
 Please have a look at [the event store section](./event_store.md) of this documentation for further details.
 
-#### stream_name
-
-*Optional*
-
-You can pass a string as custom stream name if you want.
-
-#### one_stream_per_aggregate
-
-*Optional*
-
-Should the repository create an own single stream for each aggregate?  
-See section *Using different Stream Strategies* for of [the event store section](./event_store.md) of this documentation for further details.
-
 ## projection_managers
 
 ### event_store
 
+This should be reference of an EventStore which will be injected into ProjectionManager. Be aware, that this shouldn't be 
+ID of a service that implements `Prooph\EventStore\EventStore`, but service configured in `stores` section, eg. `prooph_event_store.acme_store`. 
+This will inject proper service which can be configured with additional functions like plugins or enrichers.
+
 ### connection
+
+If you are using PDO-based `EventStore`, manager require you to inject the `PDO` instance. 
+Please have a look at [the projection manager section](./projection_manager.md) of this documentation for further details. 
 
 ### event_streams_table
 
 ### projection_table
 
+Self-explanatory. Table name in which Projection Manager will hold current information about managed projections.
+
 ### projections
+
+Collection of projections managed by Projection Manager.
 
 #### read_model
 
+ID of a service that implements `Prooph\EventStore\Projection\ReadModel` interface for persistent projections. 
+ReadModel is used to update data in (you guessed) read-only data storage.
+
 #### projection
+
+ID of a service that implements `Prooph\Bundle\EventStore\Projection\Projection` or `Prooph\Bundle\EventStore\Projection\ReadModelProjection` 
+for persistent projections. Implementation should configure how events of a certain Aggregate will be handled while running projection.

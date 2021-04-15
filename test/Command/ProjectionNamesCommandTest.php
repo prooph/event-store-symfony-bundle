@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\Command;
@@ -37,8 +46,8 @@ class ProjectionNamesCommandTest extends KernelTestCase
         $app = new Application($kernel);
         $commandTester = new CommandTester($app->find('event-store:projection:names'));
         $commandTester->execute([]);
-        $this->assertContains('main_projection_manager', $commandTester->getDisplay());
-        $this->assertContains($projectionName, $commandTester->getDisplay());
+        self::assertStringContainsString('main_projection_manager', $commandTester->getDisplay());
+        self::assertStringContainsString($projectionName, $commandTester->getDisplay());
     }
 
     public static function provideProjectionNames(): array
@@ -71,20 +80,20 @@ class ProjectionNamesCommandTest extends KernelTestCase
         $command = $app->find('event-store:projection:names');
 
         if (null === $limit) {
-            $limit = $command->getDefinition()->getOption('limit')->getDefault();
+            $limit = (int) $command->getDefinition()->getOption('limit')->getDefault();
         }
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['--limit' => $limit]);
-        $this->assertContains('main_projection_manager', $commandTester->getDisplay());
+        self::assertStringContainsString('main_projection_manager', $commandTester->getDisplay());
 
         $expectedProjectionNames = \array_slice($projectionNames, 0, $limit);
         $unexpectedProjectionNames = \array_slice($projectionNames, $limit);
         foreach ($expectedProjectionNames as $projectionName) {
-            $this->assertContains($projectionName, $commandTester->getDisplay());
+            self::assertStringContainsString($projectionName, $commandTester->getDisplay());
         }
         foreach ($unexpectedProjectionNames as $projectionName) {
-            $this->assertNotContains($projectionName, $commandTester->getDisplay());
+            self::assertStringNotContainsString($projectionName, $commandTester->getDisplay());
         }
     }
 

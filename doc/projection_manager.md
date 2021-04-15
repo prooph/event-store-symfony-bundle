@@ -16,10 +16,25 @@ prooph_event_store:
             connection: 'pdo.connection'
 ```
 
-Currently the bundle is limited to support Projection Managers for Event Stores
+Currently, the bundle is limited to support Projection Managers for Event Stores
 that are either part of the [prooph/pdo-event-store package](https://github.com/prooph/pdo-event-store)
 or an `Prooph\EventStore\InMemoryEventStore`.
 In the latter case you can omit the `connection`.
+
+!!!Be aware, that Event Store is passed by name `prooph_event_store.pdo_mysql_event_store`. During compilation, bundle wraps
+EventStore with a decorator and register it under `prooph_event_store.<NAME>` ID. 
+
+Having configuration as follows:
+
+```yaml
+prooph_event_store:
+    stores:
+        default:
+            event_store: 'prooph_event_store.pdo_mysql_event_store'
+```
+
+`prooph_event_store.default` should be used if you have to reference your Event Store, otherwise you will be referencing 
+a service without additional plugins nor enrichers.
 
 Because a projection manager is worthless without connections he can manage, let's configure some projections.
 

@@ -12,6 +12,12 @@ Run `composer require prooph/event-store-symfony-bundle` to install prooph event
 
 > See [Symfony Proophessor-Do demo application](https://github.com/prooph/proophessor-do-symfony) for an example.
 
+## Migration from 0.8.0 to 0.9.0
+
+After 0.8.0 `prooph/event-sourcing` dependency was dropped. If you implemented your business logic based on that component 
+you can still run your application although, you will have to do some additional work. 
+Please follow [migration instructions](doc/migrating_from_0.8.0.md) for that. 
+
 ## Documentation
 For the latest online documentation visit [http://getprooph.org/](http://getprooph.org/ "Latest documentation").
 

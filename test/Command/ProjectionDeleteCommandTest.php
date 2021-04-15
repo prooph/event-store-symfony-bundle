@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\Command;
@@ -35,11 +44,11 @@ class ProjectionDeleteCommandTest extends KernelTestCase
         try {
             $commandTester->execute(['projection-name' => $projectionName]);
         } catch (RuntimeException $notSupported) {
-            $this->assertContains('Deleting a projection is not supported', $notSupported->getMessage());
+            self::assertStringContainsString('Deleting a projection is not supported', $notSupported->getMessage());
 
             return;
         }
-        $this->fail('The projection was not deleted');
+        self::fail('The projection was not deleted');
     }
 
     public static function provideProjectionNames(): array

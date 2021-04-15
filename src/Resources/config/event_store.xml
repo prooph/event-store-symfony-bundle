@@ -19,7 +19,7 @@
         <service id="prooph_event_store.projection_definition" class="Prooph\EventStore\Projection\ProjectionManager" abstract="true" public="true">
             <factory service="prooph_event_store.projection_factory" method="createProjectionManager" />
         </service>
-        <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\ProjectionManagerFactory"/>
+        <service id="prooph_event_store.projection_factory" class="Prooph\Bundle\EventStore\Factory\ProjectionManagerFactory"/>
         <service id="prooph_event_store.projection_options" class="Prooph\Bundle\EventStore\Projection\Options\ProjectionOptions" abstract="true" public="true" />
         <service id="prooph_event_store.projection_options_factory" class="Prooph\Bundle\EventStore\Projection\Options\ProjectionOptionsFactory"/>
         <service id="prooph_event_store.action_event_emitter_factory" class="Prooph\Bundle\EventStore\Factory\DefaultActionEventEmitterFactory" />

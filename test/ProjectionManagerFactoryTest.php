@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore;
@@ -7,7 +16,7 @@ namespace ProophTest\Bundle\EventStore;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
-use Prooph\Bundle\EventStore\ProjectionManagerFactory;
+use Prooph\Bundle\EventStore\Factory\ProjectionManagerFactory;
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\EventStoreDecorator;
@@ -23,10 +32,7 @@ use Prooph\EventStore\Projection\InMemoryProjectionManager;
 
 class ProjectionManagerFactoryTest extends TestCase
 {
-    /**
-     * @var ProjectionManagerFactory
-     */
-    private $sut;
+    private ProjectionManagerFactory $sut;
 
     protected function setUp(): void
     {
@@ -36,7 +42,7 @@ class ProjectionManagerFactoryTest extends TestCase
     /**
      * @test
      */
-    public function it_should_not_accept_an_unknown_event_store()
+    public function it_should_not_accept_an_unknown_event_store(): void
     {
         $unknownEventStore = $this->getMockForAbstractClass(EventStore::class);
 
@@ -56,11 +62,23 @@ class ProjectionManagerFactoryTest extends TestCase
     public function it_should_create_a_projection_manager(
         string $expectedProjectionManagerType,
         EventStore $eventStore
-    ) {
+    ): void {
         $connection = $this->createAPdoObject();
         $projectionManager = $this->sut->createProjectionManager($eventStore, $connection);
 
-        $this->assertInstanceOf($expectedProjectionManagerType, $projectionManager);
+        self::assertInstanceOf($expectedProjectionManagerType, $projectionManager);
+    }
+
+    /**
+     * @test
+     */
+    public function it_cannot_create_a_pdo_manager_without_pdo_connection(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('PDO connection missing');
+
+        $eventStore = $this->createAnEventStore(PostgresEventStore::class);
+        $this->sut->createProjectionManager($eventStore);
     }
 
     public function provideEventStores(): array
@@ -133,7 +151,7 @@ class ProjectionManagerFactoryTest extends TestCase
     private function createAnEventStoreDecorator(EventStore $decoratedEventStore): EventStoreDecorator
     {
         $eventStoreDecorator = $this->getMockForAbstractClass(EventStoreDecorator::class);
-        $eventStoreDecorator->expects($this->any())
+        $eventStoreDecorator
             ->method('getInnerEventStore')
             ->willReturn($decoratedEventStore);
 

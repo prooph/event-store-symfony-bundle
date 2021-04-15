@@ -4,7 +4,7 @@ prooph_event_store:
             event_store: Prooph\EventStore\InMemoryEventStore
     projection_managers:
         main_projection_manager:
-            event_store: Prooph\EventStore\InMemoryEventStore
+            event_store: '@prooph_event_store.main_store'
             projections:
                 black_hole_projection:
                     projection: ProophTest\Bundle\EventStore\Command\Fixture\Projection\BlackHoleProjection
