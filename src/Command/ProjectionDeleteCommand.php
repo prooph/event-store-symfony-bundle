@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\Command;
@@ -24,11 +33,14 @@ class ProjectionDeleteCommand extends AbstractProjectionCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $withEvents = $input->getOption(self::OPTION_WITH_EVENTS);
-        if ($withEvents) {
-            $output->writeln(\sprintf('<action>Deleting projection <highlight>%s</highlight> with emitted events</action>', $this->projectionName));
-        } else {
-            $output->writeln(\sprintf('<action>Deleting projection </action><highlight>%s</highlight>', $this->projectionName));
-        }
+
+        $message = \sprintf(
+            '<action>Deleting projection <highlight>%s</highlight>%s</action>',
+            $this->projectionName,
+            $withEvents ? ' with emitted events' : ' without emitted events',
+        );
+        $output->writeln($message);
+
         $this->projectionManager->deleteProjection($this->projectionName, $withEvents);
 
         return 0;

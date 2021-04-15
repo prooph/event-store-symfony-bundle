@@ -43,7 +43,7 @@ services:
 > to learn about the different strategies.
 > See below for further information within this bundle.
 
-Do not be confused about the fact that the we defined a service with a class called event store – we are not done yet.
+Do not be confused about the fact that we defined a service with a class called event store – we are not done yet.
 But we are ready to configure the event store:
 
 ```yaml

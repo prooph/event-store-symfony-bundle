@@ -1,10 +1,12 @@
 <?php
+
 /**
- * prooph (http://getprooph.org/)
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
- * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
- * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -12,6 +14,7 @@ declare(strict_types=1);
 namespace Prooph\Bundle\EventStore\DependencyInjection;
 
 use Prooph\EventStore\EventStore;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,9 +24,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * Defines and load event store instances.
- */
 final class ProophEventStoreExtension extends Extension
 {
     public const TAG_PROJECTION = 'prooph_event_store.projection';
@@ -34,7 +34,7 @@ final class ProophEventStoreExtension extends Extension
         return 'http://getprooph.org/schemas/symfony-dic/prooph';
     }
 
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
     {
         return new Configuration();
     }
@@ -46,14 +46,14 @@ final class ProophEventStoreExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('event_store.xml');
 
-        self::loadProjectionManagers($config, $container);
-
         if (! empty($config['stores'])) {
-            $this->loadEventStores(EventStore::class, $config, $container);
+            $this->loadEventStores($config, $container);
         }
+
+        $this->loadProjectionManagers($config, $container);
     }
 
-    private static function loadProjectionManagers(array $config, ContainerBuilder $container): void
+    private function loadProjectionManagers(array $config, ContainerBuilder $container): void
     {
         $projectionManagers = [];
         $projectionManagersLocator = [];
@@ -64,9 +64,9 @@ final class ProophEventStoreExtension extends Extension
 
         foreach ($config['projection_managers'] as $projectionManagerName => $projectionManagerConfig) {
             $projectionManagerId = "prooph_event_store.projection_manager.$projectionManagerName";
-            self::defineProjectionManager($container, $projectionManagerId, $projectionManagerConfig);
+            $this->defineProjectionManager($container, $projectionManagerId, $projectionManagerConfig);
 
-            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator, $projectionOptionsLocator] = self::collectProjectionsForLocators(
+            [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator, $projectionOptionsLocator] = $this->collectProjectionsForLocators(
                 $container,
                 $projectionManagerConfig['projections'],
                 $projectionManagerId,
@@ -82,14 +82,14 @@ final class ProophEventStoreExtension extends Extension
 
         $container->setParameter('prooph_event_store.projection_managers', $projectionManagers);
 
-        self::defineServiceLocator($container, 'prooph_event_store.projection_managers_locator', $projectionManagersLocator);
-        self::defineServiceLocator($container, 'prooph_event_store.projection_manager_for_projections_locator', $projectionManagerForProjectionsLocator);
-        self::defineServiceLocator($container, 'prooph_event_store.projection_read_models_locator', $readModelsLocator);
-        self::defineServiceLocator($container, 'prooph_event_store.projections_locator', $projectionsLocator);
-        self::defineServiceLocator($container, 'prooph_event_store.projection_options_locator', $projectionOptionsLocator);
+        $this->defineServiceLocator($container, 'prooph_event_store.projection_managers_locator', $projectionManagersLocator);
+        $this->defineServiceLocator($container, 'prooph_event_store.projection_manager_for_projections_locator', $projectionManagerForProjectionsLocator);
+        $this->defineServiceLocator($container, 'prooph_event_store.projection_read_models_locator', $readModelsLocator);
+        $this->defineServiceLocator($container, 'prooph_event_store.projections_locator', $projectionsLocator);
+        $this->defineServiceLocator($container, 'prooph_event_store.projection_options_locator', $projectionOptionsLocator);
     }
 
-    private static function defineProjectionManager(ContainerBuilder $container, string $serviceId, array $config): void
+    private function defineProjectionManager(ContainerBuilder $container, string $serviceId, array $config): void
     {
         $projectionManagerDefinition = new ChildDefinition('prooph_event_store.projection_definition');
         $projectionManagerDefinition
@@ -104,14 +104,14 @@ final class ProophEventStoreExtension extends Extension
         $container->setDefinition($serviceId, $projectionManagerDefinition);
     }
 
-    private static function defineServiceLocator(ContainerBuilder $container, string $id, array $serviceMap): void
+    private function defineServiceLocator(ContainerBuilder $container, string $id, array $serviceMap): void
     {
         $definition = new Definition(ServiceLocator::class, [$serviceMap]);
         $definition->addTag('container.service_locator');
         $container->setDefinition($id, $definition);
     }
 
-    private static function collectProjectionsForLocators(
+    private function collectProjectionsForLocators(
         ContainerBuilder $container,
         array $projections,
         string $projectionManagerId,
@@ -129,14 +129,14 @@ final class ProophEventStoreExtension extends Extension
             $projectionManagerForProjectionsLocator[$projectionName] = new Reference($projectionManagerId);
 
             $projectionOptionsId = \sprintf('prooph_event_store.projection_options.%s', $projectionName);
-            self::defineProjectionOptions($container, $projectionOptionsId, $projectionConfig['options']);
+            $this->defineProjectionOptions($container, $projectionOptionsId, $projectionConfig['options']);
             $projectionOptionsLocator[$projectionName] = new Reference($projectionOptionsId);
         }
 
         return [$projectionManagerForProjectionsLocator, $projectionsLocator, $readModelsLocator, $projectionOptionsLocator];
     }
 
-    private static function defineProjectionOptions(ContainerBuilder $container, string $serviceId, array $projectionOptions): void
+    private function defineProjectionOptions(ContainerBuilder $container, string $serviceId, array $projectionOptions): void
     {
         $definition = new ChildDefinition('prooph_event_store.projection_options');
         $definition->setFactory([new Reference('prooph_event_store.projection_options_factory'), 'createProjectionOptions']);
@@ -149,11 +149,10 @@ final class ProophEventStoreExtension extends Extension
      * Loads event store configuration depending on type. For configuration examples, please take look at
      * test/DependencyInjection/Fixture/config files
      *
-     * @param string           $class
-     * @param array            $config
+     * @param array $config
      * @param ContainerBuilder $container
      */
-    private function loadEventStores(string $class, array $config, ContainerBuilder $container): void
+    private function loadEventStores(array $config, ContainerBuilder $container): void
     {
         $eventStores = [];
 
@@ -163,31 +162,18 @@ final class ProophEventStoreExtension extends Extension
         $container->setParameter('prooph_event_store.stores', $eventStores);
 
         $def = $container->getDefinition('prooph_event_store.store_definition');
-        $def->setClass($class);
+        $def->setClass(EventStore::class);
 
         foreach ($config['stores'] as $name => $options) {
             $this->loadEventStore($name, $options, $container);
         }
     }
 
-    /**
-     * Initializes specific event store class with plugins and metadata enricher. Each class dependency must be set
-     * via a container or reference definition.
-     *
-     * @param string           $name
-     * @param array            $options
-     * @param ContainerBuilder $container
-     *
-     * @throws \Symfony\Component\DependencyInjection\Exception\BadMethodCallException
-     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @throws \Prooph\Bundle\EventStore\Exception\RuntimeException
-     */
     private function loadEventStore(string $name, array $options, ContainerBuilder $container): void
     {
-        $eventStoreId = 'prooph_event_store.'.$name;
-        $eventStoreDefinition = $container
+        $container
             ->setDefinition(
-                $eventStoreId,
+                \sprintf('prooph_event_store.%s', $name),
                 new ChildDefinition('prooph_event_store.store_definition')
             )
             ->setArguments(
@@ -202,19 +188,15 @@ final class ProophEventStoreExtension extends Extension
             );
 
         // define metadata enrichers
-        $metadataEnricherAggregateId = \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $name);
-
-        $metadataEnricherAggregateDefinition = $container
+        $container
             ->setDefinition(
-                $metadataEnricherAggregateId,
+                \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_aggregate', $name),
                 new ChildDefinition('prooph_event_store.metadata_enricher_aggregate_definition')
             );
 
-        $metadataEnricherId = \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name);
-
-        $metadataEnricherDefinition = $container
+        $container
             ->setDefinition(
-                $metadataEnricherId,
+                \sprintf('prooph_event_store.%s.%s', 'metadata_enricher_plugin', $name),
                 new ChildDefinition('prooph_event_store.metadata_enricher_plugin_definition')
             );
     }

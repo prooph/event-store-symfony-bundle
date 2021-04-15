@@ -51,7 +51,7 @@
     }
   },
   "require": {
-    "php": "^7.1",
+    "php": "^7.4|^8.0",
     "ext-pdo": "*",
     "ext-json": "*",
     "symfony/config": "^3.4 || ^4.4 || ^5.0",
@@ -63,12 +63,12 @@
   },
   "require-dev": {
     "prooph/pdo-event-store": "^1.12",
-    "phpunit/phpunit": "^7 || ^8",
+    "phpunit/phpunit": "^8 || ^9",
     "symfony/yaml" : "^3.4 || ^4.4 || ^5.0",
     "bookdown/bookdown": "1.x-dev as 1.0.0",
     "prooph/bookdown-template": "^0.2.3",
     "friendsofphp/php-cs-fixer": "^2.8.1",
-    "prooph/php-cs-fixer-config": "^0.2.1",
+    "prooph/php-cs-fixer-config": "^0.4",
     "matthiasnoback/symfony-dependency-injection-test": "^3.1 || ^4.1",
     "phpstan/phpstan": "^0.12"
   },
@@ -89,7 +89,8 @@
     "cs-fix": "php-cs-fixer fix -v --diff",
     "test": "phpunit --no-coverage",
     "test-coverage": "phpunit",
-    "docs": "bookdown doc/bookdown.json"
+    "docs": "bookdown doc/bookdown.json",
+    "phpstan": "phpstan analyse -c phpstan.neon -l 6 src"
   },
   "archive": {
     "exclude": [

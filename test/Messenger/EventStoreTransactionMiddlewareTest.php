@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace ProophTest\Bundle\EventStore\Messenger;
@@ -29,23 +38,21 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
 
     public function testMiddlewareWrapsInTransactionAndFlushes(): void
     {
-        $this->eventStore->expects($this->once())
+        $this->eventStore->expects(self::once())
             ->method('beginTransaction');
-        $this->eventStore->expects($this->once())
+        $this->eventStore->expects(self::once())
             ->method('commit');
 
         $this->middleware->handle(new Envelope(new stdClass()), $this->getStackMock());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Thrown from next middleware.
-     */
     public function testTransactionIsRolledBackOnException(): void
     {
-        $this->eventStore->expects($this->once())
+        $this->expectExceptionMessage('Thrown from next middleware.');
+        $this->expectException(\RuntimeException::class);
+        $this->eventStore->expects(self::once())
             ->method('beginTransaction');
-        $this->eventStore->expects($this->once())
+        $this->eventStore->expects(self::once())
             ->method('rollback');
 
         $this->middleware->handle(new Envelope(new stdClass()), $this->getThrowingStackMock());
@@ -54,12 +61,12 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
     public function testItResetsHandledStampsOnHandlerFailedException(): void
     {
         if (! \class_exists(HandlerFailedException::class)) {
-            $this->markTestSkipped('Symfony Messenger 4.2 does not support HandlerFailedException');
+            self::markTestSkipped('Symfony Messenger 4.2 does not support HandlerFailedException');
         }
 
-        $this->eventStore->expects($this->once())
+        $this->eventStore->expects(self::once())
             ->method('beginTransaction');
-        $this->eventStore->expects($this->once())
+        $this->eventStore->expects(self::once())
             ->method('rollback');
 
         $envelop = (new Envelope(new stdClass()))->with(new HandledStamp('dummy', 'dummy'));
@@ -73,8 +80,8 @@ class EventStoreTransactionMiddlewareTest extends MiddlewareTestCase
             $exception = $e;
         }
 
-        $this->assertInstanceOf(HandlerFailedException::class, $exception);
+        self::assertInstanceOf(HandlerFailedException::class, $exception);
         /** @var HandlerFailedException $exception */
-        $this->assertSame([], $exception->getEnvelope()->all(HandledStamp::class));
+        self::assertSame([], $exception->getEnvelope()->all(HandledStamp::class));
     }
 }

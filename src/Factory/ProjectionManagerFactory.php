@@ -1,15 +1,17 @@
 <?php
+
 /**
- * prooph (http://getprooph.org/)
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
- * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
- * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
-namespace Prooph\Bundle\EventStore;
+namespace Prooph\Bundle\EventStore\Factory;
 
 use PDO;
 use Prooph\Bundle\EventStore\Exception\RuntimeException;
@@ -33,7 +35,7 @@ class ProjectionManagerFactory
         string $eventStreamsTable = 'event_streams',
         string $projectionsTable = 'projections'
     ): ProjectionManager {
-        $checkConnection = function () use ($connection): PDO {
+        $checkConnection = static function () use ($connection): PDO {
             if (! $connection instanceof PDO) {
                 throw new RuntimeException('PDO connection missing');
             }

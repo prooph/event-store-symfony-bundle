@@ -1,10 +1,12 @@
 <?php
+
 /**
- * prooph (http://getprooph.org/)
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
- * @see       https://github.com/prooph/event-store-symfony-bundle for the canonical source repository
- * @copyright Copyright (c) 2016 - 2019 Alexander Miertsch <kontakt@codeliner.ws>
- * @license   https://github.com/prooph/event-store-symfony-bundle/blob/master/LICENSE.md New BSD License
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -20,6 +22,7 @@ use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Projection\ProjectionManager;
 use Prooph\EventStore\StreamName;
 use ProophTest\Bundle\EventStore\DependencyInjection\Fixture\Plugin\BlackHole as BlackHolePlugin;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
@@ -129,7 +132,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $plugin = $container->get(BlackHolePlugin::class);
         $eventStore = $container->get('prooph_event_store.main_store');
 
-        $this->assertContains($eventStore, $plugin->stores);
+        self::assertContains($eventStore, $plugin->stores);
     }
 
     /** @test */
@@ -142,7 +145,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $withPluginStore = $container->get('prooph_event_store.with_plugin_store');
         $withoutPluginStore = $container->get('prooph_event_store.without_plugin_store');
 
-        $this->assertContains($withPluginStore, $plugin->stores);
+        self::assertContains($withPluginStore, $plugin->stores);
         $this->assertNotContains($withoutPluginStore, $plugin->stores);
     }
 
@@ -204,11 +207,12 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
     /**
      * @test
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The child node "projection" at path "prooph_event_store.projection_managers.main_projection_manager.projections.todo_projection" must be configured.
+     *
+     *
      */
     public function it_expects_projection_nodes_to_have_a_projection_key(): void
     {
+        $this->expectException(InvalidConfigurationException::class);
         $this->loadContainer('missing_projection_key');
     }
 

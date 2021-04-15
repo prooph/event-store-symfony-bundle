@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of prooph/event-store-symfony-bundle.
+ * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace Prooph\Bundle\EventStore\Command;
@@ -22,15 +31,8 @@ class ProjectionNamesCommand extends Command
     private const OPTION_OFFSET = 'offset';
     private const OPTION_MANAGER = 'manager';
 
-    /**
-     * @var ContainerInterface
-     */
-    private $projectionManagersLocator;
-
-    /**
-     * @var array
-     */
-    private $projectionManagerNames;
+    private ContainerInterface $projectionManagersLocator;
+    private array $projectionManagerNames;
 
     public function __construct(ContainerInterface $projectionManagersLocator, array $projectionManagerNames)
     {
@@ -47,12 +49,12 @@ class ProjectionNamesCommand extends Command
             ->setDescription('Shows a list of all projection names. Can be filtered.')
             ->addArgument(self::ARGUMENT_FILTER, InputArgument::OPTIONAL, 'Filter by this string')
             ->addOption(self::OPTION_REGEX, 'r', InputOption::VALUE_NONE, 'Enable regex syntax for filter')
-            ->addOption(self::OPTION_LIMIT, 'l', InputOption::VALUE_REQUIRED, 'Limit the result set', 20)
-            ->addOption(self::OPTION_OFFSET, 'o', InputOption::VALUE_REQUIRED, 'Offset for result set', 0)
+            ->addOption(self::OPTION_LIMIT, 'l', InputOption::VALUE_REQUIRED, 'Limit the result set', '20')
+            ->addOption(self::OPTION_OFFSET, 'o', InputOption::VALUE_REQUIRED, 'Offset for result set', '0')
             ->addOption(self::OPTION_MANAGER, 'm', InputOption::VALUE_REQUIRED, 'Manager for result set', null);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->formatOutput($output);
 
@@ -81,10 +83,8 @@ class ProjectionNamesCommand extends Command
         $output->writeln('</action>');
 
         $names = [];
-        /** @var int $offset */
-        $offset = $input->getOption(self::OPTION_OFFSET);
-        /** @var int $limit */
-        $limit = $input->getOption(self::OPTION_LIMIT);
+        $offset = (int) $input->getOption(self::OPTION_OFFSET);
+        $limit = (int) $input->getOption(self::OPTION_LIMIT);
         $maxNeeded = $offset + $limit;
 
         foreach ($managerNames as $managerName) {
@@ -100,7 +100,7 @@ class ProjectionNamesCommand extends Command
                 $names[] = [$managerName, $projectionName];
             }
 
-            if (\count($names) >= $maxNeeded) {
+            if (--$maxNeeded <= 0) {
                 break;
             }
         }
