@@ -1,9 +1,9 @@
 # Migrating from 0.8.0
 
-Due to [the future of prooph components](https://www.sasaprolic.com/2018/08/the-future-of-prooph-components.html) 
-and [ES/Service-Bus discussion](https://github.com/prooph/event-sourcing/issues/90) 
-, `prooph/event-sourcing` dependency was dropped for this bundle after `0.8.0`. You can still use it, but additional work 
-must be done after upgrading this bundle to `0.9.0` or further.
+Due to [the future of prooph components](https://www.sasaprolic.com/2018/08/the-future-of-prooph-components.html)
+and [ES/Service-Bus discussion](https://github.com/prooph/event-sourcing/issues/90)
+, `prooph/event-sourcing` dependency was dropped for this bundle after `0.8.0`. You can still use it, but additional
+work must be done after upgrading this bundle to `0.9.0` or further.
 
 ## Explicit installation of event sourcing component
 
@@ -15,8 +15,8 @@ $ composer install prooph/event-sourcing
 
 ## Explicit definition of aggregate repositories
 
-Aggregate repositories were part of `prooph/event-sourcing` and without it, bundle will no longer register repositories
-as a services. You have to configure those by yourself. Let's consider following configuration
+Aggregate repositories are part of `prooph/event-sourcing` however, bundle will no longer register repositories as a
+services. You have to configure those by yourself. Let's consider following configuration:
 
 ```yaml
 prooph_event_store:
@@ -52,7 +52,7 @@ services:
     app.event_store.pdo:
         class: \PDO
 
-    app.event_store.mysql.persistence_strategy:
+    app.event_store.postgres.persistence_strategy:
         class: Prooph\EventStore\Pdo\PersistenceStrategy\PostgresSimpleStreamStrategy
 ```
 
@@ -63,7 +63,42 @@ to
    aggregate, so it can be injected into repository
 2. define each repository as a service
 
-Your configuration should be transformed as follows
+However, `AggregateRepository` requires such dependencies as `Prooph\EventSourcing\Aggregate\AggregateType`
+and/or `Prooph\EventStore\StreamName`. It can be a bit overhead defining those as services as well. Since your
+repository class is defined as a service already, you can
+overwrite `Prooph\EventSourcing\Aggregate\AggregateRepository::__construct` like this:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence;
+
+use App\Domain\Model\SomeAggregate;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateType;
+use Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator;
+use Prooph\EventStore\EventStore;
+use Prooph\EventStore\StreamName;
+use Prooph\SnapshotStore\SnapshotStore;
+
+class SomeAggregateRepository extends AggregateRepository
+{
+    public function __construct(EventStore $eventStore, SnapshotStore $snapshotStore)
+    {
+        parent::__construct(
+            $eventStore,
+            AggregateType::fromAggregateRootClass(SomeAggregate::class),
+            new AggregateTranslator(),
+            $snapshotStore,
+            new StreamName('some_aggregate_stream')
+        );
+    }
+}
+```
+
+This will let you use autowiring without any additional configuration. Your configuration should look as follows:
 
 ```yaml
 prooph_event_store:
@@ -81,39 +116,17 @@ prooph_event_store:
                     projection: App\Infrastructure\Projection\SomeProjection
 
 services:
-    Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator: ~
 
     Prooph\EventStore\EventStore:
-        class: 'Prooph\EventStore\Pdo\PostgresEventStore'
-        arguments:
-            - '@prooph_event_store.message_factory'
-            - '@app.event_store.pdo'
-            - '@app.event_store.persistence_strategy'
-
-    app.some_aggregate.type:
-       class: 'Prooph\EventSourcing\Aggregate\AggregateType'
-       factory: [ 'Prooph\EventSourcing\Aggregate\AggregateType', 'fromAggregateRootClass' ]
+       class: 'Prooph\EventStore\Pdo\PostgresEventStore'
        arguments:
-          - 'App\Domain\Model\SomeAggregate'
-
-    app.some_aggregate.stream:
-       class: 'Prooph\EventStore\StreamName'
-       arguments:
-          - 'some_aggregate_stream'
-
-    App\Infrastructure\Persistence\SomeAggregateRepository:
-        arguments:
-            $eventStore: '@prooph_event_store.default'
-            $aggregateType: '@app.some_aggregate.type'
-            $aggregateTranslator: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
-            $streamName: '@app.some_aggregate.stream'
-            $oneStreamPerAggregate: true
+          - '@prooph_event_store.message_factory'
+          - '@app.event_store.pdo'
+          - '@app.event_store.persistence_strategy'
 
     app.event_store.pdo:
-        class: \PDO
+       class: \PDO
 
-    app.event_store.mysql.persistence_strategy:
+    app.event_store.postgres.persistence_strategy:
         class: Prooph\EventStore\Pdo\PersistenceStrategy\PostgresSimpleStreamStrategy
 ```
-
-A bit overloading, but writing Event Sourcing component by yourself is quite easy (it takes few classes to work).
