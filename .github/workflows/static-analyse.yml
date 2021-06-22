@@ -1,3 +1,5 @@
+name: "Static analyse"
+
 on:
     push:
     pull_request:
