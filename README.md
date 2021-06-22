@@ -1,5 +1,6 @@
 # ProophEventStore Symfony bundle
-[![Build Status](https://travis-ci.org/prooph/event-store-symfony-bundle.svg?branch=master)](https://travis-ci.org/prooph/event-store-symfony-bundle)
+[![Tests Status](https://github.com/prooph/event-store-symfony-bundle/actions/workflows/tests.yml/badge.svg)](https://github.com/prooph/event-store-symfony-bundle/actions/workflows/tests.yml)
+[![Analyse Status](https://github.com/prooph/event-store-symfony-bundle/actions/workflows/static-analyse.yml/badge.svg)](https://github.com/prooph/event-store-symfony-bundle/actions/workflows/static-analyse.yml)
 [![Coverage Status](https://coveralls.io/repos/prooph/event-store-symfony-bundle/badge.svg?branch=master&service=github)](https://coveralls.io/github/prooph/event-store-symfony-bundle?branch=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/prooph/improoph)
 
