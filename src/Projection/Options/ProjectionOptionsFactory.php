@@ -25,6 +25,10 @@ final class ProjectionOptionsFactory
         return new ProjectionOptions($config);
     }
 
+    /**
+     * @param mixed $value
+     * @param string $key
+     */
     private static function mapOptions(&$value, string $key): void
     {
         if ($key === PdoEventStoreProjector::OPTION_GAP_DETECTION) {

@@ -1,0 +1,49 @@
+on:
+    push:
+    pull_request:
+
+jobs:
+    tests:
+        name: Analyse
+        strategy:
+            matrix:
+                php-version:
+                    - "8.0"
+                operating-system:
+                    - "ubuntu-latest"
+        runs-on: ${{ matrix.operating-system }}
+        env:
+            COMPOSER_MEMORY_LIMIT: -1
+            CODING_STANDARDS: 1
+        steps:
+            -   name: "Checkout"
+                uses: "actions/checkout@v2"
+
+            -   name: "Setup PHP"
+                uses: "shivammathur/setup-php@v2"
+                with:
+                    tools: composer:v2
+                    php-version: "${{ matrix.php-version }}"
+                    ini-values: memory_limit=-1
+
+            -   name: "Get Composer Cache Directory"
+                id: composer-cache
+                run: |
+                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: "Cache Composer dependencies"
+                uses: "actions/cache@v2"
+                with:
+                    path: |
+                        ${{ steps.composer-cache.outputs.dir }}
+                    key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.lock') }}"
+                    restore-keys: |
+                        php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-
+
+            -   name: "Install dependencies"
+                run: "composer update -n --prefer-dist"
+
+            -   name: "Analyse"
+                run: |
+                    ./vendor/bin/php-cs-fixer fix -v --diff --dry-run
+                    ./vendor/bin/phpstan analyse -c phpstan.neon -l 6 src
