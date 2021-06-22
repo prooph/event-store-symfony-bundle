@@ -293,6 +293,9 @@ prooph_event_store:
                         lock_timeout_ms: 1000
                         trigger_pcntl_dispatch: false
                         update_lock_threshold: 0
+                        gap_detection:
+                            retry_config: [0, 5, 10, 15, 30, 60, 90]
+                            detection_window: 'P1M'
 ```
 
 ### Tagged service
