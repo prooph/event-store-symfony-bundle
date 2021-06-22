@@ -73,7 +73,7 @@ final class ProjectionOptionsPassTest extends CompilerPassTestCase
     }
 
     /** @test */
-    public function it_registers_tagged_projection_optionss()
+    public function it_registers_tagged_projection_options(): void
     {
         $this->registerProjectionOptions(
             'foo.projection_options',
