@@ -33,7 +33,7 @@ class TestKernel extends Kernel
         return $this->getProjectDir() . '/test/Command/Fixture/var/logs';
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getProjectDir() . '/test/Command/Fixture/var/cache';
     }
