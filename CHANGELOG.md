@@ -6,6 +6,17 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- Support for Symfony 6
+- Support for PHP 8.1
+
+### Deprecated
+
+- Support for Symfony 3.x and 4.x (Use version v9.x)
+
+## [0.5.0] - 2018-05-03
+
+### Added
+
  - Allow services referenced in config to be prefixed with @ (#41)
  - Add FQCN alias for `Prooph\Common\messaging\MessageFactory` (#45, thanks to @gquemener)
 
