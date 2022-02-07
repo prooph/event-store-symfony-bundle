@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -53,7 +53,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
 
         self::assertEquals(EventStore::class, $config->getClass());
 
-        /* @var $eventStore EventStore */
+        // @var $eventStore EventStore
         $eventStore = $container->get('prooph_event_store.main_store');
         self::assertInstanceOf(EventStore::class, $eventStore);
 
@@ -94,7 +94,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
             ->willReturnSelf();
 
         $container = $this->loadContainer('metadata_enricher_global');
-        /* @var EventStore $store */
+        // @var EventStore $store
         $store = $container->get('prooph_event_store.main_store');
 
         $store->appendTo(new StreamName('any'), new ArrayIterator([$message]));
@@ -114,9 +114,9 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $notEnrichedMessage->expects($this->never())->method('withAddedMetadata');
 
         $container = $this->loadContainer('metadata_enricher');
-        /* @var EventStore $withEnricherStore */
+        // @var EventStore $withEnricherStore
         $withEnricherStore = $container->get('prooph_event_store.with_enricher_store');
-        /* @var EventStore $withoutEnricherStore */
+        // @var EventStore $withoutEnricherStore
         $withoutEnricherStore = $container->get('prooph_event_store.without_enricher_store');
 
         $withEnricherStore->appendTo(new StreamName('any'), new ArrayIterator([$enrichedMessage]));

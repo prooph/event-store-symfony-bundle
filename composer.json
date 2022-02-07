@@ -67,8 +67,8 @@
     "symfony/yaml" : "^3.4 || ^4.4 || ^5.2 || ^6.0",
     "bookdown/bookdown": "^1.1",
     "prooph/bookdown-template": "^0.3",
-    "friendsofphp/php-cs-fixer": "^2.8.1",
-    "prooph/php-cs-fixer-config": "^0.4",
+    "friendsofphp/php-cs-fixer": "^3.5",
+    "prooph/php-cs-fixer-config": "^0.5.0",
     "matthiasnoback/symfony-dependency-injection-test": "^3.1 || ^4.1",
     "phpstan/phpstan": "^0.12"
   },

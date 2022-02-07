@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,12 +26,17 @@ class ProjectionNamesCommand extends Command
     use FormatsOutput;
 
     private const ARGUMENT_FILTER = 'filter';
+
     private const OPTION_REGEX = 'regex';
+
     private const OPTION_LIMIT = 'limit';
+
     private const OPTION_OFFSET = 'offset';
+
     private const OPTION_MANAGER = 'manager';
 
     private ContainerInterface $projectionManagersLocator;
+
     private array $projectionManagerNames;
 
     public function __construct(ContainerInterface $projectionManagersLocator, array $projectionManagerNames)

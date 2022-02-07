@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2021 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2021 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -49,8 +49,11 @@ abstract class AbstractProjectionCommand extends Command
     protected $projection;
 
     private ContainerInterface $projectionManagerForProjectionsLocator;
+
     private ContainerInterface $projectionsLocator;
+
     private ContainerInterface $projectionReadModelLocator;
+
     private ContainerInterface $projectionOptionsLocator;
 
     public function __construct(
@@ -108,6 +111,7 @@ abstract class AbstractProjectionCommand extends Command
             throw new RuntimeException('Projection was not created');
         }
         $output->writeln(\vsprintf('<header>Initialized projection "%s"</header>', \is_array($this->projectionName) ? $this->projectionName : [$this->projectionName]));
+
         try {
             $state = $this->projectionManager->fetchProjectionStatus($this->projectionName)->getValue();
         } catch (\Prooph\EventStore\Exception\RuntimeException $e) {

@@ -10,14 +10,15 @@ jobs:
         strategy:
             matrix:
                 symfony-version:
-                    - "3.4.*"
-                    - "4.4.*"
                     - "5.2.*"
+                    - "6.0.*"
                 php-version:
                     - "7.4"
                     - "8.0"
+                    - "8.1"
                 operating-system:
                     - "ubuntu-latest"
+
         runs-on: ${{ matrix.operating-system }}
         env:
             COMPOSER_MEMORY_LIMIT: -1
