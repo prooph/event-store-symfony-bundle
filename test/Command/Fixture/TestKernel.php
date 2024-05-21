@@ -38,7 +38,7 @@ class TestKernel extends Kernel
         return $this->getProjectDir() . '/test/Command/Fixture/var/cache';
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new AddConsoleCommandPass());
         parent::build($container);
