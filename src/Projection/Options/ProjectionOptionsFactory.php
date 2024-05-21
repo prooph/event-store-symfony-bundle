@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@ final class ProjectionOptionsFactory
 {
     public static function createProjectionOptions(array $config): ProjectionOptions
     {
-        \array_walk($config, ['self', 'mapOptions']);
+        \array_walk($config, [self::class, 'mapOptions']);
 
         return new ProjectionOptions($config);
     }

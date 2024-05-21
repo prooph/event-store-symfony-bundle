@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,12 +27,12 @@ class ProjectionRunCommand extends AbstractProjectionCommand
         $this
             ->setName('event-store:projection:run')
             ->setDescription('Runs a projection')
-            ->addOption(static::OPTION_RUN_ONCE, 'o', InputOption::VALUE_NONE, 'Loop the projection only once, then exit');
+            ->addOption(self::OPTION_RUN_ONCE, 'o', InputOption::VALUE_NONE, 'Loop the projection only once, then exit');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $keepRunning = ! $input->getOption(static::OPTION_RUN_ONCE);
+        $keepRunning = ! $input->getOption(self::OPTION_RUN_ONCE);
         $output->writeln(
             \sprintf(
                 '<action>Starting projection <highlight>%s</highlight>. Keep running: <highlight>%s</highlight></action>',

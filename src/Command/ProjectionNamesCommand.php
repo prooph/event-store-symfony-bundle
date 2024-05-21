@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2022 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2022 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -73,7 +73,7 @@ class ProjectionNamesCommand extends Command
 
         /** @var string|null $filter */
         $filter = $input->getArgument(self::ARGUMENT_FILTER);
-        $regex = $input->getOption(static::OPTION_REGEX);
+        $regex = $input->getOption(self::OPTION_REGEX);
 
         $output->write(\sprintf('<action>Projection names'));
         if ($filter) {
