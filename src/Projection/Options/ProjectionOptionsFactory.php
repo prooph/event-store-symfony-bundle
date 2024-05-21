@@ -20,7 +20,7 @@ final class ProjectionOptionsFactory
 {
     public static function createProjectionOptions(array $config): ProjectionOptions
     {
-        \array_walk($config, ['self', 'mapOptions']);
+        \array_walk($config, [self::class, 'mapOptions']);
 
         return new ProjectionOptions($config);
     }

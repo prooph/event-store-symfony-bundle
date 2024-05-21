@@ -27,12 +27,12 @@ class ProjectionRunCommand extends AbstractProjectionCommand
         $this
             ->setName('event-store:projection:run')
             ->setDescription('Runs a projection')
-            ->addOption(static::OPTION_RUN_ONCE, 'o', InputOption::VALUE_NONE, 'Loop the projection only once, then exit');
+            ->addOption(self::OPTION_RUN_ONCE, 'o', InputOption::VALUE_NONE, 'Loop the projection only once, then exit');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $keepRunning = ! $input->getOption(static::OPTION_RUN_ONCE);
+        $keepRunning = ! $input->getOption(self::OPTION_RUN_ONCE);
         $output->writeln(
             \sprintf(
                 '<action>Starting projection <highlight>%s</highlight>. Keep running: <highlight>%s</highlight></action>',
