@@ -26,7 +26,7 @@ final class Configuration implements ConfigurationInterface
      *
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('prooph_event_store');
         // Keep compatibility with symfony/config < 4.2
