@@ -51,6 +51,9 @@ jobs:
             -   name: "Require php-coveralls/php-coveralls and symfony/flex"
                 run: "composer global require php-coveralls/php-coveralls symfony/flex --no-scripts --no-plugins"
 
+            -   name: "Enable symfony/flex plugin"
+                run: "composer global config --no-scripts --no-plugins allow-plugins.symfony/flex true"
+
             -   name: "Install dependencies"
                 run: "SYMFONY_REQUIRE='${{ matrix.symfony-version }}' composer update -n --prefer-dist"
 
