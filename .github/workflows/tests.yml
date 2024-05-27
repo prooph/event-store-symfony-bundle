@@ -28,7 +28,7 @@ jobs:
             COMPOSER_MEMORY_LIMIT: -1
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2"
+                uses: "actions/checkout@v4"
 
             -   name: "Setup PHP"
                 uses: "shivammathur/setup-php@v2"
@@ -43,7 +43,7 @@ jobs:
                 run: |
                     echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   name: "Cache Composer dependencies"
-                uses: "actions/cache@v2"
+                uses: "actions/cache@v4"
                 with:
                     path: |
                         ${{ steps.composer-cache.outputs.dir }}
