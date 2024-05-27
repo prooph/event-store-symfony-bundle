@@ -19,6 +19,9 @@ jobs:
                     - "8.3"
                 operating-system:
                     - "ubuntu-latest"
+                exclude:
+                    - symfony-version: "7.0.*"
+                      php-version: "8.1"
 
         runs-on: ${{ matrix.operating-system }}
         env:
