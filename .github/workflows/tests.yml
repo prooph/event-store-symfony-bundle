@@ -48,11 +48,11 @@ jobs:
                     restore-keys: |
                         php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-
 
-            -   name: "Require php-coveralls/php-coveralls"
-                run: "composer global require php-coveralls/php-coveralls"
+            -   name: "Require php-coveralls/php-coveralls and symfony/flex"
+                run: "composer global require php-coveralls/php-coveralls symfony/flex --no-scripts --no-plugins"
 
             -   name: "Install dependencies"
-                run: "composer update -n --prefer-dist"
+                run: "SYMFONY_REQUIRE='${{ matrix.symfony-version }}' composer update -n --prefer-dist"
 
             -   name: "Test"
                 run: "composer test-coverage"
