@@ -19,13 +19,16 @@ jobs:
                     - "8.3"
                 operating-system:
                     - "ubuntu-latest"
+                exclude:
+                    - symfony-version: "7.0.*"
+                      php-version: "8.1"
 
         runs-on: ${{ matrix.operating-system }}
         env:
             COMPOSER_MEMORY_LIMIT: -1
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2"
+                uses: "actions/checkout@v4"
 
             -   name: "Setup PHP"
                 uses: "shivammathur/setup-php@v2"
@@ -40,7 +43,7 @@ jobs:
                 run: |
                     echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   name: "Cache Composer dependencies"
-                uses: "actions/cache@v2"
+                uses: "actions/cache@v4"
                 with:
                     path: |
                         ${{ steps.composer-cache.outputs.dir }}
@@ -48,11 +51,14 @@ jobs:
                     restore-keys: |
                         php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-
 
-            -   name: "Require php-coveralls/php-coveralls"
-                run: "composer global require php-coveralls/php-coveralls"
+            -   name: "Require php-coveralls/php-coveralls and symfony/flex"
+                run: "composer global require php-coveralls/php-coveralls symfony/flex --no-scripts --no-plugins"
+
+            -   name: "Enable symfony/flex plugin"
+                run: "composer global config --no-scripts --no-plugins allow-plugins.symfony/flex true"
 
             -   name: "Install dependencies"
-                run: "composer update -n --prefer-dist"
+                run: "SYMFONY_REQUIRE='${{ matrix.symfony-version }}' composer update -n --prefer-dist"
 
             -   name: "Test"
                 run: "composer test-coverage"
