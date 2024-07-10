@@ -63,7 +63,7 @@
   },
   "require-dev": {
     "prooph/pdo-event-store": "^1.12",
-    "phpunit/phpunit": "^9",
+    "phpunit/phpunit": "^11",
     "symfony/yaml" : "^5.4 || ^6.4 || ^7.0",
     "bookdown/bookdown": "^1.1",
     "prooph/bookdown-template": "^0.3",
