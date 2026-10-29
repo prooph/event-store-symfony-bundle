@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2026 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2026 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -62,7 +62,7 @@ class ProjectionNamesCommandTest extends KernelTestCase
      * @test
      * @dataProvider provideLimitOptions
      */
-    public function it_lists_correct_amount_of_projections(int $amountToGenerate, int $limit = null): void
+    public function it_lists_correct_amount_of_projections(int $amountToGenerate, ?int $limit = null): void
     {
         $kernel = static::createKernel();
         $kernel->boot();

@@ -22,14 +22,7 @@ Please follow [migration instructions](doc/migrating_from_0.8.0.md) for that.
 ## Documentation
 For the latest online documentation visit [http://getprooph.org/](http://getprooph.org/ "Latest documentation").
 
-Documentation is [in the doc tree](doc/), and can be compiled using [bookdown](http://bookdown.io)
-
-```console
-$ ./vendor/bin/bookdown doc/bookdown.json
-$ php -S 0.0.0.0:8080 -t doc/html/
-```
-
-Then browse to [http://localhost:8080/](http://localhost:8080/)
+Documentation is [in the doc tree](doc/).
 
 ## Support
 

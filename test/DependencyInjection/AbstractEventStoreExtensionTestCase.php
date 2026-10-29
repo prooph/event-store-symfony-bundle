@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2026 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2026 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,7 +26,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
-use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\Dumper;
 use Symfony\Component\DependencyInjection\Dumper\XmlDumper;
@@ -216,7 +215,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
         $this->loadContainer('missing_projection_key');
     }
 
-    private function loadContainer($fixture, CompilerPassInterface $compilerPass = null)
+    private function loadContainer($fixture, ?CompilerPassInterface $compilerPass = null)
     {
         $container = $this->getContainer();
 
@@ -261,11 +260,7 @@ abstract class AbstractEventStoreExtensionTestCase extends TestCase
     {
         $bundle = new ProophEventStoreBundle();
         $bundle->build($container);
-        $container->getCompilerPassConfig()->setOptimizationPasses([
-            \class_exists(ResolveChildDefinitionsPass::class)
-                ? new ResolveChildDefinitionsPass()
-                : new ResolveDefinitionTemplatesPass(),
-        ]);
+        $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveChildDefinitionsPass()]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
 
         $container->compile();

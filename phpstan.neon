@@ -22,4 +22,4 @@ parameters:
         - '#Class Prooph\\EventStore\\Pdo\\MariaDbEventStore not found\.#'
         - '#Method Prooph\\Bundle\\EventStore\\ProjectionManagerFactory::createProjectionManager\(\) should return Prooph\\EventStore\\Projection\\ProjectionManager but returns Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager\.#'
         - '#Instantiated class Prooph\\EventStore\\Pdo\\Projection\\MariaDbProjectionManager not found\.#'
-        - '#Parameter \#1 $argument of class ReflectionClass constructor expects class-string<T of object>\|T of object, string\|null given.#'
+        - '#Parameter \#1 \$argument of class ReflectionClass constructor expects class-string<T of object>\|T of object, string\|null given.#'

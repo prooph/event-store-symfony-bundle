@@ -12,16 +12,31 @@ jobs:
                 symfony-version:
                     - "5.4.*"
                     - "6.4.*"
-                    - "7.0.*"
+                    - "7.4.*"
+                    - "8.0.*"
+                    - "8.1.*"
                 php-version:
                     - "8.1"
                     - "8.2"
                     - "8.3"
+                    - "8.4"
                 operating-system:
                     - "ubuntu-latest"
                 exclude:
-                    - symfony-version: "7.0.*"
+                    - symfony-version: "7.4.*"
                       php-version: "8.1"
+                    - symfony-version: "8.0.*"
+                      php-version: "8.1"
+                    - symfony-version: "8.0.*"
+                      php-version: "8.2"
+                    - symfony-version: "8.0.*"
+                      php-version: "8.3"
+                    - symfony-version: "8.1.*"
+                      php-version: "8.1"
+                    - symfony-version: "8.1.*"
+                      php-version: "8.2"
+                    - symfony-version: "8.1.*"
+                      php-version: "8.3"
 
         runs-on: ${{ matrix.operating-system }}
         env:

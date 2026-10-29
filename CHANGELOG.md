@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [Unreleased]
+
+### Added
+
+- Support for Symfony 8
+
+### Changed
+
+- The bundle's own service definitions moved from XML to the PHP config format, as Symfony 8
+  removed the XML configuration format. Configuring the bundle in XML still works on Symfony 7
+  and below.
+
 ## [0.5.0] - 2018-05-03
 
 ### Added

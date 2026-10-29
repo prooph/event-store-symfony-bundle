@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2026 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2026 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,12 +29,7 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('prooph_event_store');
-        // Keep compatibility with symfony/config < 4.2
-        if (! \method_exists($treeBuilder, 'getRootNode')) {
-            $root = $treeBuilder->root('prooph_event_store');
-        } else {
-            $root = $treeBuilder->getRootNode();
-        }
+        $root = $treeBuilder->getRootNode();
 
         $this->addEventStoreSection($root);
         $this->addProjectionManagerSection($root);
@@ -45,12 +40,7 @@ final class Configuration implements ConfigurationInterface
     public function addProjectionManagerSection(ArrayNodeDefinition $node): void
     {
         $treeBuilder = new TreeBuilder('projections');
-        // Keep compatibility with symfony/config < 4.2
-        if (! \method_exists($treeBuilder, 'getRootNode')) {
-            $projectionsNode = $treeBuilder->root('projections');
-        } else {
-            $projectionsNode = $treeBuilder->getRootNode();
-        }
+        $projectionsNode = $treeBuilder->getRootNode();
 
         $beginsWithAt = function ($v) {
             return \strpos($v, '@') === 0;

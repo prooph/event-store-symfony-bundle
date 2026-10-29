@@ -54,22 +54,20 @@
     "php": "^7.4|^8.0",
     "ext-pdo": "*",
     "ext-json": "*",
-    "symfony/config": "^5.4 || ^6.4 || ^7.0",
-    "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.0",
-    "symfony/http-kernel": "^5.4.39 || ^6.4 || ^7.0",
-    "symfony/framework-bundle": "^5.4 || ^6.4 || ^7.0",
-    "symfony/messenger": "^5.4 || ^6.4 || ^7.0",
+    "symfony/config": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+    "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+    "symfony/http-kernel": "^5.4.39 || ^6.4 || ^7.0 || ^8.0",
+    "symfony/framework-bundle": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+    "symfony/messenger": "^5.4 || ^6.4 || ^7.0 || ^8.0",
     "prooph/event-store": "^7.9.0"
   },
   "require-dev": {
     "prooph/pdo-event-store": "^1.12",
-    "phpunit/phpunit": "^9",
-    "symfony/yaml" : "^5.4 || ^6.4 || ^7.0",
-    "bookdown/bookdown": "^1.1",
-    "prooph/bookdown-template": "^0.3",
+    "phpunit/phpunit": "^10.5",
+    "symfony/yaml" : "^5.4 || ^6.4 || ^7.0 || ^8.0",
     "friendsofphp/php-cs-fixer": "^3.5",
     "prooph/php-cs-fixer-config": "^0.5.0",
-    "matthiasnoback/symfony-dependency-injection-test": "^3.1 || ^4.1 || ^5.1",
+    "matthiasnoback/symfony-dependency-injection-test": "^6.3",
     "phpstan/phpstan": "^1.5"
   },
   "minimum-stability": "dev",
@@ -89,7 +87,6 @@
     "cs-fix": "php-cs-fixer fix -v --diff",
     "test": "phpunit --no-coverage",
     "test-coverage": "phpunit",
-    "docs": "bookdown doc/bookdown.json",
     "phpstan": "phpstan analyse -c phpstan.neon -l 6 src"
   },
   "archive": {

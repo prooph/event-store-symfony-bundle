@@ -2,8 +2,8 @@
 
 /**
  * This file is part of prooph/event-store-symfony-bundle.
- * (c) 2014-2024 Alexander Miertsch <kontakt@codeliner.ws>
- * (c) 2015-2024 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * (c) 2014-2026 Alexander Miertsch <kontakt@codeliner.ws>
+ * (c) 2015-2026 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -54,17 +54,17 @@ class BlackHole implements EventStore
     public function load(
         StreamName $streamName,
         int $fromNumber = 1,
-        int $count = null,
-        MetadataMatcher $metadataMatcher = null
+        ?int $count = null,
+        ?MetadataMatcher $metadataMatcher = null
     ): Iterator {
         // TODO: Implement load() method.
     }
 
     public function loadReverse(
         StreamName $streamName,
-        int $fromNumber = null,
-        int $count = null,
-        MetadataMatcher $metadataMatcher = null
+        ?int $fromNumber = null,
+        ?int $count = null,
+        ?MetadataMatcher $metadataMatcher = null
     ): Iterator {
         // TODO: Implement loadReverse() method.
     }
